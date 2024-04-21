@@ -9,6 +9,7 @@ import org.example.server.repositories.OptionRepository;
 import org.example.server.repositories.QuestionRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -62,6 +63,41 @@ public class OptionService {
             return responseDto;
         }
         responseDto.setMessage("couldn't find the option with the id : " + id);
+        return responseDto;
+    }
+    public ResponseDto modifyOption(Option option){
+        Optional<Option> oldOp = repository.findById(option.getId());
+        if (oldOp.isPresent())
+        {
+            responseDto.setResult(repository.save(option));
+            responseDto.setWorked(true);
+            responseDto.setMessage("Changed Option Successfully");
+            return responseDto;
+        }
+        responseDto.setMessage("Couldn't find the wanted Option");
+        return responseDto;
+    }
+
+    public ResponseDto getOptionsByQuestionId(Long id){
+
+        var question = questionRepository.findById(id);
+
+
+        if (question.isPresent()) {
+            Optional<List<Option>> options = repository.findByQuestionId(id);
+
+            if (options.isPresent()) {
+                responseDto.setResult(options.get());
+                responseDto.setWorked(true);
+                responseDto.setMessage("Found Options of question number :" + id);
+                return responseDto;
+
+            }
+            responseDto.setMessage("no options were found for this question ");
+            return responseDto;
+
+        }
+        responseDto.setMessage("no question with this Id was found ");
         return responseDto;
     }
 

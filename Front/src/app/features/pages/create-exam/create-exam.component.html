@@ -1,0 +1,263 @@
+<div class="drawer lg:drawer-open">
+  <input id="my-drawer-2" type="checkbox" class="drawer-toggle" />
+  <div class="drawer-content flex flex-col">
+    <!-- Page content here -->
+
+    <div class="navbar bg-base-100">
+      <div class="flex-1">
+        <a class="btn btn-ghost text-xl"># {{ exam.name }} </a>
+      </div>
+
+      <div class="flex-none">
+        <label
+          aria-disabled="true"
+          for="my-drawer-2"
+          class="btn btn-primary drawer-button lg:hidden"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            class="inline-block w-5 h-5 stroke-current"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"
+            ></path>
+          </svg>
+        </label>
+      </div>
+    </div>
+    <!--First Step -->
+
+    <div class="hero min-h-screen bg-base-200 flex items-center">
+      <div class="hero-content text-left flex-grow" [formGroup]="examForm">
+        <div *ngIf="currentStep === 0" class="max-w-md mx-auto" data-aos="fade-right">
+          <h1 class="text-5xl font-bold">
+            What’s the name of your Exam?
+          </h1>
+          <p class="py-6">
+            This will be the name of your Exam — choose something
+            that makes sense
+          </p>
+
+          <textarea
+            placeholder="Exam Name..."
+            formControlName="name"
+            class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
+          ></textarea>
+
+          <button
+            type="submit"
+            class="btn btn-primary rounded-xl"
+            [disabled]="!examForm.controls['name'].valid"
+
+            (click)="onCreateExam(currentStep)"
+          >
+            Next
+          </button>
+        </div>
+        <div *ngIf="currentStep==1" class="max-w-md mx-auto" data-aos="fade-right">
+          <h1 class="text-5xl font-bold">
+           Describe your exam
+          </h1>
+          <p class="py-6">
+            This could be anything: jusr make it make sense
+          </p>
+
+          <textarea
+
+            placeholder="Ex: Budget,autumn,campaign ..."
+            formControlName="description"
+            class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
+          ></textarea>
+
+          <button
+            type="submit"
+            class="btn btn-primary rounded-xl"
+            [disabled]="!examForm.controls['description'].valid"
+
+            (click)="onCreateExam(currentStep)"
+          >
+            Next
+          </button>
+
+        </div>
+        <div *ngIf="currentStep==2" class="max-w-md mx-auto" data-aos="fade-right">
+          <h1 class="text-5xl font-bold">
+            Set a timer for your exam
+          </h1>
+          <p class="py-6">
+              It's in minutes
+            </p>
+
+          <textarea
+            placeholder="Ex: 60,120,180 ..."
+            formControlName="timer"
+            type="number"
+            class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
+          ></textarea>
+
+          <button
+            type="submit"
+            class="btn btn-primary rounded-xl"
+            [disabled]="!examForm.controls['timer'].valid"
+
+            (click)="onCreateExam(currentStep)"
+          >
+            Next
+          </button>
+
+        </div>
+        <div *ngIf="currentStep==3" class="max-w-md mx-auto" data-aos="fade-right">
+          <h1 class="text-5xl font-bold">
+            Do you want the Questions to be randomized for each student?
+          </h1>
+          <div class="py-6">
+            <select formControlName="randomizeQuestions" class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500">
+              <option value="true">Yes</option>
+              <option value="false">No</option>
+            </select>
+          </div>
+
+          <button type="submit" class="btn btn-primary rounded-xl"
+
+                  (click)="onCreateExam(currentStep)">Next</button>
+        </div>
+
+        <div *ngIf="currentStep==4" class="max-w-md mx-auto" data-aos="fade-right">
+          <h1 class="text-5xl font-bold">
+            Do you want the Exam to be public for all student?
+          </h1>
+          <div class="py-6">
+            <select formControlName="isPublic" class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500">
+              <option value="true">Yes</option>
+              <option value="false">No</option>
+            </select>
+          </div>
+
+          <button type="submit" class="btn btn-primary rounded-xl" (click)="onCreateExam(currentStep)">Next</button>
+        </div>
+        <div *ngIf="currentStep==5" class="max-w-md mx-auto" data-aos="fade-right">
+          <h1 class="text-5xl font-bold">
+            What is the Difficulty of the exam
+          </h1>
+          <div class="py-6">
+            <select formControlName="difficultyLevel" class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500">
+              <option value="EASY">Easy</option>
+              <option value="MEDIUM">Medium</option>
+              <option value="HARD">Hard</option>
+
+            </select>
+          </div>
+
+          <button type="submit" class="btn btn-primary rounded-xl" (click)="onCreateExam(currentStep)">Next</button>
+        </div>
+        <!--Questions Here Step -->
+      </div>
+      <div class="hero-content text-left flex-grow" [formGroup]="questionForm">
+
+        <div *ngIf="currentStep==6" class="max-w-md mx-auto" data-aos="fade-right">
+          <h1 class="text-5xl font-bold">
+            Enter Question Information
+          </h1>
+          <p class="py-6">
+            Press Next To Save It
+          </p>
+
+          <div class="py-4">
+            <label for="questionName" class="block text-xl font-semibold mb-2">Question Name:</label>
+            <textarea id="questionName" placeholder="Enter question name..." formControlName="name" class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500" required></textarea>
+          </div>
+
+          <div class="py-4">
+            <label for="questionDescription" class="block text-xl font-semibold mb-2">Question Description:</label>
+            <textarea id="questionDescription" placeholder="Enter question description..." formControlName="description" class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"></textarea>
+          </div>
+
+          <div class="py-4">
+            <label for="questionType" class="block text-xl font-semibold mb-2">Question Type:</label>
+            <select id="questionType" formControlName="type" class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500">
+              <option value="QCM">QCM (Multiple Choice)</option>
+              <option value="NORMAL">Normal</option>
+            </select>
+          </div>
+          <div *ngIf="questionForm.controls['type'].value !=='QCM'" class="py-4">
+            <label for="answer" class="block text-xl font-semibold mb-2">Answer:</label>
+            <textarea id="answer" placeholder="Enter question's Answer ..." formControlName="answer" class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"></textarea>
+          </div>
+          <div *ngIf="questionForm.controls['type'].value ==='QCM'" class="" [formGroup]="optionForm">
+            <div class="py-4">
+              <label for="option" class="block text-xl font-semibold mb-2">Option Value:</label>
+              <textarea id="option" placeholder="Enter question name..." formControlName="value" class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"></textarea>
+            </div>
+            <div class="py-4">
+              <label for="OptionC" class="block text-xl font-semibold mb-2">Question Type:</label>
+              <select id="OptionC" formControlName="isCorrect" class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500">
+                <option value="true">Correct</option>
+                <option value="false">false</option>
+              </select>
+            </div>
+            <button type="submit" class="btn btn-primary rounded-xl" (click)="onAddOption()">Add Option</button>
+
+
+          </div>
+
+          <div class="py-4">
+            <label for="questionTimer" class="block text-xl font-semibold mb-2">Question Timer:</label>
+            <textarea id="questionTimer" placeholder="Enter question timer in seconds..." formControlName="timer" type="number" class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"></textarea>
+          </div>
+          <div class="py-4">
+            <label for="questionscore" class="block text-xl font-semibold mb-2">Question Score:</label>
+            <textarea id="questionscore" datatype="number" placeholder="Enter question timer in seconds..." formControlName="score" type="number" class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"></textarea>
+          </div>
+
+          <div class="py-4">
+            <label for="questionDifficulty" class="block text-xl font-semibold mb-2">Question Difficulty:</label>
+            <select id="questionDifficulty" formControlName="difficultyLevel" class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500">
+              <option value="EASY">Easy</option>
+              <option value="MEDIUM">Medium</option>
+              <option value="HARD">Hard</option>
+            </select>
+          </div>
+
+          <button type="submit"  [disabled]="!questionForm.valid" class="btn btn-primary rounded-xl" (click)="onCreateExam(currentStep)">Next</button>
+          <button type="submit" class="btn btn-primary rounded-xl m-4" (click)="onSaveExam()">Save</button>
+        </div>
+
+
+      </div>
+
+    </div>
+
+
+    <!-- add channel here -->
+  </div>
+  <div class="drawer-side">
+    <label
+      for="my-drawer-2"
+      aria-label="close sidebar"
+      class="drawer-overlay"
+    ></label>
+    <ul class="menu p-4 w-80 min-h-full bg-base-100 text-base-content">
+      <!-- Sidebar content here -->
+      <a class="btn btn-ghost text-xl">{{ exam.name }}</a>
+
+      <ul class="menu mt-10 bg-base-100 w-56 rounded-box">
+        <li>
+          <details open>
+            <summary class=" ">questions</summary>
+            <ul>
+              <li>
+                <a>#{{ exam.questions.name}}</a>
+              </li>
+            </ul>
+          </details>
+        </li>
+      </ul>
+      <div class="divider"></div>
+    </ul>
+  </div>
+</div>

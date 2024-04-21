@@ -1,0 +1,53 @@
+<div class="hero min-h-screen bg-base-200">
+  <div class="hero-content flex-col lg:flex-row-reverse">
+    <div class="text-center lg:text-left">
+      <h1 class="text-5xl font-bold">Register now!</h1>
+      <p class="py-6">
+        Create an account to access exclusive features. Quaerat fugiat ut
+        assumenda excepturi exercitationem quasi. In deleniti eaque aut
+        repudiandae et a id nisi.
+      </p>
+    </div>
+    <div class="card shrink-0 w-full max-w-md shadow-2xl bg-base-100">
+      <form class="card-body" [formGroup]="registerForm" (ngSubmit)="onRegister()" >
+        <div class="form-control">
+          <label class="label">
+            <span class="label-text">Full Name</span>
+          </label>
+          <input formControlName="firstname" type="text" placeholder="firstname" class="input input-bordered"
+                 required />
+        </div>
+        <div class="form-control">
+          <label class="label">
+            <span class="label-text">Age</span>
+          </label>
+          <input formControlName="lastname" type="text" placeholder="lastname" class="input input-bordered" required />
+        </div>
+        <div class="form-control">
+          <label class="label" for="email">
+            <span class="label-text">Email</span>
+          </label>
+          <input id="email" formControlName="email" type="email" placeholder="Email" class="input input-bordered" required />
+        </div>
+        <div class="form-control">
+          <label class="label">
+            <span class="label-text">Password</span>
+          </label>
+          <input formControlName="password" type="password" placeholder="Password" class="input input-bordered"
+                 required />
+        </div>
+        <div class="form-control">
+          <label class="label">
+            <span class="label-text">Confirm Password</span>
+          </label>
+          <input formControlName="confirm_password" type="password" placeholder="Confirm Password"
+                 class="input input-bordered" required />
+        </div>
+
+        <div class="form-control mt-6">
+          <button type="submit" class="btn btn-primary">Register</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

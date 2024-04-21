@@ -1,0 +1,44 @@
+<div class="navbar bg-base-100">
+  <div class="flex-1">
+    <a routerLink="/Home" class="btn btn-ghost text-xl">SpeedEx</a>
+  </div>
+  <div class="flex-none">
+    <div class="dropdown dropdown-end">
+      <div tabindex="0" role="button" class="btn btn-ghost btn-circle">
+        <div class="indicator">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0" />
+          </svg>
+          <span class="badge badge-sm indicator-item">8</span>
+        </div>
+      </div>
+      <div tabindex="0" class="mt-3 z-[1] card card-compact dropdown-content w-52 bg-base-100 shadow">
+        <div class="card-body">
+          <span class="font-bold text-lg">8 Items</span>
+          <span class="text-info">Subtotal: $999</span>
+          <div class="card-actions">
+            <button class="btn btn-primary btn-block">View cart</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="dropdown dropdown-end">
+      <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
+        <div class="w-10 rounded-full">
+          <img alt="Profile Picture" [src]=profilepic />
+        </div>
+      </div>
+      <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
+        <li>
+          <a routerLink="/Profile" class="justify-between">
+            Profile
+            <span class="badge">New</span>
+          </a>
+        </li>
+        <li><a>Settings</a></li>
+        <li><a routerLink="/Create" class="btn btn-primary"> Create new exam</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>

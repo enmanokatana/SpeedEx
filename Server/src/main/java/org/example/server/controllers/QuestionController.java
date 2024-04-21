@@ -1,6 +1,7 @@
 package org.example.server.controllers;
 
 import lombok.RequiredArgsConstructor;
+import org.example.server.Dtos.QuestionDto;
 import org.example.server.models.Question;
 import org.example.server.models.ResponseDto;
 import org.example.server.services.QuestionService;
@@ -23,7 +24,7 @@ public class QuestionController {
         return questionService.getQuestionById(id);
     }    @PostMapping
     public ResponseDto AddQuestion(
-            @RequestBody Question question
+            @RequestBody QuestionDto question
             )throws Exception{
         return questionService.CreateQuestion(question
         );

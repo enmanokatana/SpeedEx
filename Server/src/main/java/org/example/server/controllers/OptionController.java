@@ -34,6 +34,12 @@ public class OptionController {
     ){
         return optionService.deleteOption(id);
     }
+    @PutMapping
+    public ResponseDto ModifyOption(
+            @RequestParam Option option
+    ){
+        return optionService.modifyOption(option);
+    }
 
 
 

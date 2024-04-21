@@ -1,0 +1,16 @@
+<app-header></app-header>
+
+<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 m-5">
+  <div *ngFor="let workspace of workspaces" class="card card-compact bg-base-100 shadow-xl">
+    <div class="card-body">
+      <h2 class="card-title items-center">{{workspace.name}}</h2>
+      <figure><img src="https://daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.jpg" alt="Shoes" /></figure>
+      <div class="card-actions justify-end">
+        <button class="btn btn-primary">Consult</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Repeat this block for each additional card -->
+
+</div>
