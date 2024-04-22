@@ -8,27 +8,140 @@
     <div role="tablist" class="tabs tabs-lifted">
       <input type="radio" name="my_tabs_2" role="tab" class="tab" aria-label="Tab 1" />
       <div role="tabpanel" class="tab-content bg-base-100 border-base-300 rounded-box p-6 ">
-        <div class="w-full rounded-box">
+        <div class="w-full h-48 rounded-box">
           <div class="carousel-item">
-            <img class="w-full h-80 mx-40 rounded-3xl" src="https://daisyui.com/images/stock/photo-1601004890684-d8cbf643f5f2.jpg" alt="Burger" />
+            <img class="w-full mx-40 rounded-3xl" src="https://daisyui.com/images/stock/photo-1601004890684-d8cbf643f5f2.jpg" alt="Burger" />
           </div>
         </div>         </div>
 
       <input type="radio" name="my_tabs_2" role="tab" class="tab" aria-label="Exams" checked />
-      <div role="tabpanel" class="tab-content bg-base-100 border-base-300 rounded-box p-6 size-auto">
+      <div role="tabpanel" class="tab-content bg-base-100  rounded-box p-6 mx-20 size-auto">
         <div class="w-full rounded-box">
           <div class="carousel-item">
             <img class="w-full h-80 mx-40 rounded-3xl" src="https://daisyui.com/images/stock/photo-1601004890684-d8cbf643f5f2.jpg" alt="Burger" />
           </div>
         </div>
+        <div class="w-full rounded-box mt-4 ">
+          <div class="flex justify-between">
+            <div class="py-4">
+              <label for="questionDifficulty" class="block text-xl font-semibold mb-2">Filter By:</label>
+              <select id="questionDifficulty"  class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500">
+                <option value="EASY">QCM</option>
+                <option value="MEDIUM">Normal</option>
+                <option value="HARD">Hard</option>
+              </select>
+            </div>
+            <button [routerLink]="['/Create',id]" class="btn btn-primary mt-10">
+              Create new Exam
+            </button>
+          </div>
+
+          <div class="flex justify-center">
+            <div class="card w-3/4 bg-base-100 shadow-xl">
+              <div class="card-body">
+                <h2 class="card-title">Exam Title!</h2>    <!-- Exam Name-->
+
+                <p>If a dog chews shoes whose shoes does he choose?</p>    <!-- Exam description-->
+
+                <div class="card-actions justify-end">
+                  <button class="btn ">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM12.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM18.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
+                  </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+        </div>
       </div>
 
       <input type="radio" name="my_tabs_2" role="tab" class="tab" aria-label="Persons" />
-      <div role="tabpanel" class="tab-content bg-base-100 border-base-300 rounded-box p-6">
+      <div role="tabpanel" class="tab-content bg-base-100  rounded-box p-6 mx-20">
         <div class="w-full rounded-box">
           <div class="carousel-item">
-            <img class="w-full h-80 mx-40 rounded-3xl" src="https://daisyui.com/images/stock/photo-1601004890684-d8cbf643f5f2.jpg" alt="Burger" />
+            <img class="w-full h-80  rounded-3xl" src="https://daisyui.com/images/stock/photo-1601004890684-d8cbf643f5f2.jpg" alt="Burger" />
           </div>
+        </div>
+        <h1 class="mt-5 ml-4 text-2xl font-bold ">Admin</h1>
+
+        <div class="overflow-x-auto flex justify-center mt-5 ">
+
+          <table class="table border-t">
+            <!-- head -->
+            <thead>
+            <tr>
+            </tr>
+            </thead>
+            <tbody>
+            <!-- row 1 -->
+            <tr>
+              <td>
+                <div class="flex items-center gap-3">
+                  <div class="avatar">
+                    <div class="mask mask-squircle w-12 h-12">
+                      <img *ngIf="WorkSpaceAdmin.profileImg!==null" [src]="WorkSpaceAdmin.profileImg" />
+                      <div
+                        *ngIf="WorkSpaceAdmin.profileImg == null"
+                        class="w-10 h-10 rounded-full mr-2 flex items-center justify-center bg-gray-300 text-gray-600"
+                      >
+                        {{ WorkSpaceAdmin.lastname.charAt(0).toUpperCase() }}
+                      </div>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="font-bold">{{ WorkSpaceAdmin.lastname }} {{ WorkSpaceAdmin.firstname }}</div>
+                    <div class="text-sm opacity-50">{{ WorkSpaceAdmin.email }}</div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+            <!-- row 2 -->
+
+            </tbody>
+          </table>
+        </div> <!-- Admin Table-->
+
+        <h1 class="mt-5 ml-30 text-2xl font-bold ">Students</h1>    <!-- Student Table-->
+
+        <div class="overflow-x-auto flex justify-center mt-5 ">
+
+          <table class="table border-t">
+            <!-- head -->
+            <thead>
+            <tr>
+            </tr>
+            </thead>
+            <tbody>
+            <!-- row 1 -->
+            <tr *ngFor="let user of WorkSpaceUsers">
+              <td>
+                <div class="flex items-center gap-3">
+                  <div class="avatar">
+                    <div class="mask mask-squircle w-12 h-12">
+                      <img *ngIf="user.profileImg!==null" [src]="user.profileImg" />
+                      <div
+                        *ngIf="user.profileImg == null"
+                        class="w-10 h-10 rounded-full mr-2 flex items-center justify-center bg-gray-300 text-gray-600"
+                      >
+                        {{ user.lastname.charAt(0).toUpperCase() }}
+                      </div>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="font-bold">{{ user.lastname }} {{ user.firstname }}</div>
+                    <div class="text-sm opacity-50">{{ user.email }}</div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+
+            <!-- row 2 -->
+
+            </tbody>
+          </table>
         </div>
       </div>
     </div>

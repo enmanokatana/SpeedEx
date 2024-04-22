@@ -86,7 +86,8 @@ public class QuestionService {
             responseDto.setWorked(true);
             responseDto.setMessage("Question Added Successfully ");
             return responseDto;
-        }
+        } responseDto.setWorked(false);
+        responseDto.setResult(null);
         responseDto.setResult("Exam isn't found ");
         return responseDto;
 
@@ -99,7 +100,8 @@ public class QuestionService {
             responseDto.setWorked(true);
             return responseDto;
 
-        }
+        } responseDto.setWorked(false);
+        responseDto.setResult(null);
         responseDto.setMessage("$No Question with this id {id} was found ");
 
         return responseDto;

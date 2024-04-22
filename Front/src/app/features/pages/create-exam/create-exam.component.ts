@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {ExamService} from "../../../core/services/exam/exam.service";
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
 import {NgIf} from "@angular/common";
-import {Router} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 
 @Component({
   selector: 'app-create-exam',
@@ -15,7 +15,7 @@ import {Router} from "@angular/router";
   styleUrl: './create-exam.component.css'
 })
 export class CreateExamComponent implements OnInit{
-
+  id!:any;
   currentStep:any = 0;
   exam : any = {
     id:0,
@@ -28,6 +28,7 @@ export class CreateExamComponent implements OnInit{
     difficultyLevel :"EASY",
     questions:[],
     user:localStorage.getItem('id'),
+    workspace:0,
 
 }
 question : any={
@@ -45,7 +46,8 @@ options : any[]=[]
   passingScore:any=0;
   constructor(private examService:ExamService,
               private builder:FormBuilder,
-              private router:Router) {
+              private router:Router,
+              private route:ActivatedRoute) {
 
   }
   examForm!:FormGroup;
@@ -53,6 +55,7 @@ options : any[]=[]
   optionForm!:FormGroup;
 
   ngOnInit() {
+    this.id= this.route.snapshot.paramMap.get('id');
     this.examForm = this.builder.group({
       name:this.builder.control('',Validators.required),
       timer:this.builder.control(60,Validators.required),
@@ -141,15 +144,13 @@ options : any[]=[]
   }
   onSaveExam(){
     this.exam.passingScore = this.passingScore/2;
-
+    this.exam.workspace =this.id;
     this.examService.CreateExam(this.exam).subscribe({
       next:(response)=> {
-        console.log(response)
-
-
+        console.log(response);
       },
       error:(err)=>{
-        console.log(err)
+        console.log(err);
       },
       complete:()=>{
         this.router.navigate(['Home']);

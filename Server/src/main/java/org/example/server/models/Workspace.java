@@ -34,4 +34,9 @@ public class Workspace {
     @JsonIgnore
     private List<User> users;
 
+    @OneToMany(mappedBy = "workspace",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    private  List<Exam> exams;
+
+
+
 }

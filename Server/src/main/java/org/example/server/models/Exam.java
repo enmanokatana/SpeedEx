@@ -52,4 +52,8 @@ public class Exam {
     @JsonIgnore
     private User user;
 
+    @ManyToOne
+    @JsonIgnore
+    private Workspace workspace;
+
 }

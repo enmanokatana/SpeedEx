@@ -6,11 +6,9 @@
       <h2 class="card-title items-center">{{workspace.name}}</h2>
       <figure><img src="https://daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.jpg" alt="Shoes" /></figure>
       <div class="card-actions justify-end">
-        <button class="btn btn-primary">Consult</button>
+        <button [routerLink]="['/Workspace',workspace.id]" class="btn btn-primary">Consult</button>
       </div>
     </div>
   </div>
-
   <!-- Repeat this block for each additional card -->
-
 </div>

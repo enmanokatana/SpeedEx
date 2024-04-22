@@ -35,5 +35,35 @@ public class WorkspaceController {
             ){
         return workSpaceService.createWorkspace(workSpaceDto);
     }
+    @GetMapping("/users/{id}")
+    public ResponseDto GetUserFormWorkSpace(
+            @PathVariable Long id
+    )
+    {
+        return workSpaceService.getUsersFromWorkSpace(id);
+    }
+    @GetMapping("/admin/{id}")
+    public ResponseDto GetAdminFromWorkSpace(
+        @PathVariable Long id
+    ){
+        return workSpaceService.getWorkSpaceAdmin(id);
+    }
 
+    @PostMapping("/{id}/adduser/email/{email}")
+    public ResponseDto addUserToWorkSpaceByEmail(
+        @PathVariable String email,
+        @PathVariable Long id
+    ){
+        return workSpaceService.addUserToWorkspaceByEmail(email,id);
+
+    }
+
+    @PostMapping("/{id}/adduser/{userId}")
+    public ResponseDto addUserToWorkSpaceByEmail(
+            @PathVariable Integer userId,
+            @PathVariable Long id
+    ){
+        return workSpaceService.addUserToWorkSpaceById(userId,id);
+
+    }
 }

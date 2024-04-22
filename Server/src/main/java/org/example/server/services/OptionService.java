@@ -49,6 +49,8 @@ public class OptionService {
             return responseDto;
 
         }
+        responseDto.setWorked(false);
+        responseDto.setResult(null);
         responseDto.setMessage("Question doesn't exist ");
         return responseDto;
 
@@ -61,7 +63,8 @@ public class OptionService {
             responseDto.setMessage("deleted successfully");
             responseDto.setWorked(true);
             return responseDto;
-        }
+        } responseDto.setWorked(false);
+        responseDto.setResult(null);
         responseDto.setMessage("couldn't find the option with the id : " + id);
         return responseDto;
     }
@@ -73,7 +76,8 @@ public class OptionService {
             responseDto.setWorked(true);
             responseDto.setMessage("Changed Option Successfully");
             return responseDto;
-        }
+        } responseDto.setWorked(false);
+        responseDto.setResult(null);
         responseDto.setMessage("Couldn't find the wanted Option");
         return responseDto;
     }
@@ -92,11 +96,13 @@ public class OptionService {
                 responseDto.setMessage("Found Options of question number :" + id);
                 return responseDto;
 
-            }
+            } responseDto.setWorked(false);
+            responseDto.setResult(null);
             responseDto.setMessage("no options were found for this question ");
             return responseDto;
 
-        }
+        } responseDto.setWorked(false);
+        responseDto.setResult(null);
         responseDto.setMessage("no question with this Id was found ");
         return responseDto;
     }

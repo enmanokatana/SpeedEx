@@ -1,0 +1,158 @@
+<div class="drawer lg:drawer-open">
+  <input id="my-drawer-2" type="checkbox" class="drawer-toggle" />
+  <div class="drawer-content flex flex-col">
+    <!-- Page content here -->
+
+    <div class="navbar bg-base-100">
+      <div class="flex-1">
+        <!-- Page nav  here -->
+
+      </div>
+
+      <div class="flex-none">
+        <label
+          aria-disabled="true"
+          for="my-drawer-2"
+          class="btn btn-primary drawer-button lg:hidden"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            class="inline-block w-5 h-5 stroke-current"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"
+            ></path>
+          </svg>
+        </label>
+      </div>
+    </div>
+    <!--First Step -->
+
+    <div class="hero min-h-screen bg-base-200 flex items-center">
+      <div class="hero-content text-left flex-grow" [formGroup]="workspaceForm">
+        <div *ngIf="currentStep === 0" class="max-w-md mx-auto" data-aos="fade-right">
+          <h1 class="text-5xl font-bold">
+            What’s the name of your WorkSpace?
+          </h1>
+          <p class="py-6">
+            This will be the name of your WorkSpace — choose something
+            that makes sense
+          </p>
+
+          <textarea
+            placeholder="Workspace Name..."
+            formControlName="name"
+            class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
+          ></textarea>
+
+          <button
+            type="submit"
+            class="btn btn-primary rounded-xl"
+            [disabled]="!workspaceForm.controls['name'].valid"
+
+            (click)="onCreateWorkspace(currentStep)"
+          >
+            Next
+          </button>
+        </div>
+        <div *ngIf="currentStep === 1" class="max-w-md mx-auto" data-aos="fade-right">
+          <h1 class="text-5xl font-bold">
+            Quick Summury of your workspace
+          </h1>
+          <p class="py-6">
+            This will be a description of your WorkSpace
+          </p>
+
+          <textarea
+            placeholder="Workspace description..."
+            formControlName="description"
+            class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
+          ></textarea>
+
+          <button
+            type="submit"
+            class="btn btn-primary rounded-xl"
+            [disabled]="!workspaceForm.controls['description'].valid"
+
+            (click)="onCreateWorkspace(currentStep)"
+          >
+            Next
+          </button>
+        </div>
+        <div *ngIf="currentStep === 2" class="max-w-md mx-auto" data-aos="fade-right">
+          <h1 class="text-5xl font-bold">
+            Add Users to Your WorkSpace
+          </h1>
+          <p class="py-6">
+            enter email and find if user exist before adding them
+          </p>
+
+          <textarea
+            placeholder="User email..."
+            formControlName="email"
+            class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
+          ></textarea>
+
+          <button
+            type="submit"
+            class="btn btn-primary rounded-xl"
+            (click)="onCreateWorkspace(currentStep)"
+          >
+            Next
+          </button>
+          <button
+            type="submit"
+            class="btn btn-primary rounded-xl ml-5"
+            [disabled]="!workspaceForm.controls['email'].valid"
+            (click)="onFindUser()"
+            onclick="my_modal_1.showModal()"
+          >
+            Find
+          </button>
+          <!-- Open the modal using ID.showModal() method -->
+          <dialog id="my_modal_1" class="modal">
+            <div class="modal-box">
+              <span *ngIf="loading" class="loading loading-spinner loading-lg flex justify-center"></span>
+
+              <h3 *ngIf="!loading" class="font-bold text-lg">{{user.firstname}} {{user.lastname}}</h3>
+              <p *ngIf="!loading" class="py-4">{{ user.email }}</p>
+              <div *ngIf="!loading" class="modal-action">
+                <form method="dialog">
+                  <!-- if there is a button in form, it will close the modal -->
+                  <button class="btn">Cancel</button>
+                  <button class="btn ml-5" (click)="onAddUser()">Add User</button>
+                </form>
+              </div>
+            </div>
+          </dialog>
+        </div>
+
+        <!--Questions Here Step -->
+      </div>
+
+
+    </div>
+
+
+    <!-- add channel here -->
+  </div>
+  <div class="drawer-side">
+    <label
+      for="my-drawer-2"
+      aria-label="close sidebar"
+      class="drawer-overlay"
+    ></label>
+    <ul class="menu p-4 w-80 min-h-full bg-base-100 text-base-content">
+      <!-- Sidebar content here -->
+
+      <ul class="menu mt-10 bg-base-100 w-56 rounded-box">
+
+      </ul>
+    </ul>
+  </div>
+</div>

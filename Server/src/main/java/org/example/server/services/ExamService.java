@@ -6,10 +6,7 @@ import org.example.server.models.Exam;
 import org.example.server.models.Option;
 import org.example.server.models.Question;
 import org.example.server.models.ResponseDto;
-import org.example.server.repositories.ExamRepository;
-import org.example.server.repositories.OptionRepository;
-import org.example.server.repositories.QuestionRepository;
-import org.example.server.repositories.UserRepository;
+import org.example.server.repositories.*;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -22,61 +19,71 @@ public class ExamService {
     private final QuestionRepository questionRepository;
     private final OptionRepository optionRepository;
     private final UserRepository userRepository;
-
+    private final WorkspaceRepository workspaceRepository;
 
     private ResponseDto responseDto =new ResponseDto();
     public ResponseDto createExam(ExamDto examDto){
 
         var user = userRepository.findById(examDto.getUser());
+        var workspace = workspaceRepository.findById(examDto.getWorkspace());
 
 
 
-        if (user.isPresent()){
-            List<Question> questions = null;
-            if (
-                    examDto.getQuestions() != null
-            ) {
-                questions = examDto.getQuestions();
-            }
-            responseDto.setResult(repository.save(Exam.builder()
-                    .description(examDto.getDescription())
-                    .isPublic(examDto.isPublic())
-                    .randomizeQuestions(examDto.isRandomizeQuestions())
-                    .passingScore(examDto.getPassingScore())
-                    .createdOn(LocalDateTime.now())
-                    .timer(examDto.getTimer())
-                    .name(examDto.getName())
-                    .difficultyLevel(examDto.getDifficultyLevel())
-                    .id(0L)
-                    .questions(questions)
-                            .user(user.get())
-                    .build()));
+if (workspace.isPresent()){
+    if (user.isPresent()){
+        List<Question> questions = null;
+        if (
+                examDto.getQuestions() != null
+        ) {
+            questions = examDto.getQuestions();
+        }
+        responseDto.setResult(repository.save(Exam.builder()
+                .description(examDto.getDescription())
+                .isPublic(examDto.isPublic())
+                .randomizeQuestions(examDto.isRandomizeQuestions())
+                .passingScore(examDto.getPassingScore())
+                .createdOn(LocalDateTime.now())
+                .timer(examDto.getTimer())
+                .name(examDto.getName())
+                .difficultyLevel(examDto.getDifficultyLevel())
+                .id(0L)
+                .questions(questions)
+                .user(user.get())
+                .workspace(workspace.get())
+                .build()));
 
-            responseDto.setMessage("saved exam Successfully ");
-            responseDto.setWorked(true);
-            assert questions != null;
-            for (Question question : questions) {
-                question.setExam((Exam) responseDto.getResult());
+        responseDto.setMessage("saved exam Successfully ");
+        responseDto.setWorked(true);
+        assert questions != null;
+        for (Question question : questions) {
+            question.setExam((Exam) responseDto.getResult());
 
-            }
-            var res = questionRepository.saveAll(questions);
+        }
+        var res = questionRepository.saveAll(questions);
 
-            for (Question obj:res){
-                var ops = obj.getOptions();
-                if (ops!=null){
+        for (Question obj:res){
+            var ops = obj.getOptions();
+            if (ops!=null){
                 for (Option option:ops){
                     option.setQuestion(obj);
                 }
-                    optionRepository.saveAll(ops);
+                optionRepository.saveAll(ops);
 
-                }
             }
-
-            return responseDto;
-
         }
 
-        responseDto.setMessage("User doesn't Exist");
+        return responseDto;
+
+    }
+    responseDto.setWorked(false);
+    responseDto.setResult(null);
+    responseDto.setMessage("User doesn't Exist");
+    return responseDto;
+}
+
+        responseDto.setWorked(false);
+        responseDto.setResult(null);
+        responseDto.setMessage("WorkSpace doesn't Exist");
         return responseDto;
 
 
@@ -92,6 +99,8 @@ public class ExamService {
             responseDto.setWorked(true);
             return responseDto;
         }
+        responseDto.setWorked(false);
+        responseDto.setResult(null);
         responseDto.setMessage("Couldn't find the user with the id  : " + id);
         return responseDto;
 
@@ -105,7 +114,9 @@ public class ExamService {
             responseDto.setWorked(true);
             return  responseDto;
 
-        }
+        } responseDto.setWorked(false);
+        responseDto.setResult(null);
+
         responseDto.setMessage("exam doesn't exist with the id : " + id);
         return  responseDto;
 
@@ -123,12 +134,9 @@ public class ExamService {
             return  responseDto;
 
         }
+        responseDto.setWorked(false);
+        responseDto.setResult(null);
         responseDto.setMessage("exam doesn't exist with the id : " + id);
         return  responseDto;
     }
-
-
-
-
-
 }

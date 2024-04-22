@@ -7,6 +7,7 @@ import { VideoCallComponent } from './features/pages/video-call/video-call.compo
 import {ProfileComponent} from "./features/pages/profile/profile.component";
 import {CreateExamComponent} from "./features/pages/create-exam/create-exam.component";
 import {WorkspaceComponent} from "./features/pages/workspace/workspace.component";
+import {CreateWorkspaceComponent} from "./features/pages/create-workspace/create-workspace.component";
 
 export const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'Home' },
@@ -15,7 +16,8 @@ export const routes: Routes = [
   { path: 'Register', component: RegisterComponent, title: 'Register' },
   { path: 'Call', title: 'Call', component: VideoCallComponent },
   {path:'Profile',title:'Profile',component:ProfileComponent},
-  {path:'Create',title:'Create new exam', component:CreateExamComponent},
-  {path:'Workspace',title:'Workspace',component:WorkspaceComponent},
+  {path:'Create/:id',title:'Create new exam', component:CreateExamComponent},
+  {path:'Workspace/:id',title:'Workspace',component:WorkspaceComponent},
+  {path:'CWS/:id',title:'CreateWorkspace',component:CreateWorkspaceComponent},
   { path: '**', pathMatch: 'full', component: PageNotFoundComponent },
 ];

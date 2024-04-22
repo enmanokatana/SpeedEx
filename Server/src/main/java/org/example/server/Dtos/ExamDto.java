@@ -9,6 +9,7 @@ import jakarta.validation.constraints.Positive;
 import lombok.Data;
 import org.example.server.enums.DifficultyLevel;
 import org.example.server.models.Question;
+import org.example.server.models.Workspace;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -32,6 +33,7 @@ public class ExamDto {
 
     private List<Question> questions;
     private Integer user;
+    private Long workspace;
 
 
 

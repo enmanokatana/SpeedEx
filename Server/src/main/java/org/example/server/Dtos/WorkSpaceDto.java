@@ -13,4 +13,5 @@ public class WorkSpaceDto {
     private Integer admin;
 
     private List<Integer> users;
+    private List<Long> exams;
 }
