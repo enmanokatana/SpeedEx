@@ -29,6 +29,7 @@ export class CreateExamComponent implements OnInit{
     questions:[],
     user:localStorage.getItem('id'),
     workspace:0,
+    student:0
 
 }
 question : any={

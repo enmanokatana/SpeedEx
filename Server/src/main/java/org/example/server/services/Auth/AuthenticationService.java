@@ -38,6 +38,9 @@ public class AuthenticationService {
                 .password(passwordEncoder.encode(request.getPassword()))
                 .role(request.getRole())
                 .profileImg(null)
+                .exams(null)
+                .myWorkspaces(null)
+                .passingExams(null)
                 .build();
         var dbsaveduser = userRepository.save(user);
         revokeAllUserTokens(dbsaveduser);

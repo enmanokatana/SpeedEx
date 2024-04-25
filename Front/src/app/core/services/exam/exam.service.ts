@@ -20,6 +20,13 @@ export class ExamService {
     return this.http.post(this.url,exam,{headers});
 
   }
+  GetExamInfo(id:any):Observable<any>{
+    const requestUrl = `${this.url}/${id}`;
+
+    return this.http.get(requestUrl);
+
+
+  }
 
 
 

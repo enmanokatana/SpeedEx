@@ -1,11 +1,16 @@
 package org.example.server.services;
 
 import lombok.RequiredArgsConstructor;
+import org.example.server.Dtos.ExamDto;
 import org.example.server.Dtos.RequestDto;
 import org.example.server.Dtos.UserDto;
+import org.example.server.Dtos.WorkSpaceDto;
+import org.example.server.models.Exam;
 import org.example.server.models.ResponseDto;
 import org.example.server.models.User;
+import org.example.server.models.Workspace;
 import org.example.server.repositories.UserRepository;
+import org.example.server.repositories.WorkspaceRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -19,6 +24,7 @@ public class UserService
 {
     private final UserRepository userRepository;
     private final ImageService imageService;
+    private final WorkspaceRepository workspaceRepository;
     private RequestDto requestDto =new RequestDto();
     private ResponseDto responseDto = new ResponseDto();
 
@@ -43,6 +49,58 @@ public class UserService
         return responseDto;
     }
 
+    public List<WorkSpaceDto> ChangeWorkspaceToWorkSpaceDTO(List<Workspace> workspace){
+        List<WorkSpaceDto> workSpaceDtos = new ArrayList<>();
+        for (Workspace workspace1: workspace){
+           workSpaceDtos.add( WorkSpaceDto.builder()
+                   .id(workspace1.getId())
+                   .build());
+        }
+
+        return workSpaceDtos;
+    }
+
+    public ResponseDto GetUsersWorkSpaces(Integer id){
+        var user = userRepository.findById(id);
+        if (user.isPresent()){
+            var workspaces = ChangeWorkspaceToWorkSpaceDTO(user.get().getWorkspaces());
+            List<Long> workspacesids = new ArrayList<>();
+            for (WorkSpaceDto workspace:workspaces){
+                workspacesids.add(workspace.getId());
+            }
+            responseDto.setResult(workspacesids);
+            responseDto.setWorked(true);
+            responseDto.setMessage("got workspacesIds");
+            return responseDto;
+
+        }
+        responseDto.setWorked(false);
+        responseDto.setResult(null);
+        responseDto.setMessage("User Was not found ");
+        return responseDto;
+
+    }
+
+
+    public ResponseDto GetUserWorkSpacesDtos(List<Long> ids){
+        var workspaces = workspaceRepository.findAllById(ids);
+        List<WorkSpaceDto> workSpaceDtos = new ArrayList<>();
+        for (Workspace workspace:workspaces){
+            workSpaceDtos.add(WorkSpaceDto.builder()
+                            .name(workspace.getName())
+                            .description(workspace.getDescription())
+                            .id(workspace.getId())
+                    .build());
+
+        }
+        responseDto.setResult(workSpaceDtos);
+        responseDto.setWorked(true);
+        responseDto.setMessage("Found WorkSpaces Dtos");
+        return responseDto;
+
+
+    }
+
     public ResponseDto GetUserDtoById(Integer id){
         var user = userRepository.findById(id);
         if (user.isPresent()){
@@ -52,6 +110,7 @@ public class UserService
                     .firstname(user.get().getFirstname())
                     .lastname(user.get().getLastname())
                     .profileImg(user.get().getProfileImg())
+                    .id(user.get().getId())
                     .build();
             responseDto.setResult(us);
             responseDto.setMessage("Found User");
@@ -140,6 +199,20 @@ public class UserService
 
         responseDto.setMessage("Couldn't find USER or USER doesn't Exist ");
         return  responseDto;
+    }
+
+    public List<ExamDto> getPasssingExams(Integer id){
+        var user = userRepository.findById(id);
+        if (user.isPresent()){
+            List<ExamDto> exams = new ArrayList<>();
+            for (Exam exam :user.get().getExams()){
+                exams.add(ExamDto.builder()
+                        .id(exam.getId())
+                        .build());
+            }
+            return exams;
+        }
+        return null;
     }
 
     }

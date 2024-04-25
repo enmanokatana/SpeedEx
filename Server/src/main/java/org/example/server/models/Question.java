@@ -38,6 +38,10 @@ public class Question {
     @NotEmpty(message = "Answer cannot be empty")
     private String answer;
 
+
+
+    private String userAnswer;
+
     private Integer timer;
     //score needs to be added here
     @Positive(message = "Score cannot be negative")
@@ -48,7 +52,10 @@ public class Question {
     private Exam exam;
 
     @OneToMany(mappedBy = "question", cascade = CascadeType.ALL)
-    private List<Option> options;
+    private List<Option> options;//control it later
+
+    @Positive
+    private Integer userOption;
 
     private DifficultyLevel difficultyLevel;
 }

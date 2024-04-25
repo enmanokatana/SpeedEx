@@ -44,7 +44,7 @@ export class VideoCallComponent implements AfterViewInit {
   constructor(private store : StoreService){ }
   ngAfterViewInit() {
     const decoded = this.store.getUser();
-    console.log(decoded);
+    console.log("user",decoded);
 
     const roomID = getUrlParams().get('roomID') || randomID(5);
     const userID = decoded.name;

@@ -1,4 +1,5 @@
 package org.example.server.models;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.example.server.AuthConfigurations.AuthEntites.Token;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -32,20 +33,33 @@ public class User implements UserDetails{
     @Column(unique = true)
     private String email;
     private String password;
-
     private String profileImg;
+
     @Enumerated(EnumType.STRING)
     private Role role;
+
+
     @OneToMany(mappedBy = "user")
+    @JsonIgnore
     private List<Token> tokens;
+
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL , fetch = FetchType.LAZY)
-    private List<Exam> exams ;
+    @JsonIgnore
+    private List<Exam> exams ; //User can create a lot of exams
+
+    @OneToMany(mappedBy = "student" ,cascade =CascadeType.ALL,fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<Exam> passingExams;// a user can have a bunch of exams to pass
+
+
 
     @OneToMany(mappedBy = "admin", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<Workspace> myWorkspaces;
 
     @ManyToMany
-
+    @JsonIgnore
     private List<Workspace> workspaces;
 
 

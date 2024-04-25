@@ -50,7 +50,14 @@ public class Exam {
 
     @ManyToOne
     @JsonIgnore
-    private User user;
+    private User user; // Creator of the exam can create a lot of them
+
+    @ManyToOne
+    @JsonIgnore
+    private User student; //  The student who is passing in the exam
+
+
+    private Boolean passed = false;// if an exam have been passed or not yet
 
     @ManyToOne
     @JsonIgnore

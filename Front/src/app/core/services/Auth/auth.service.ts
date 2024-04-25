@@ -23,7 +23,7 @@ export class AuthService {
   }
   logout() {
     console.log(this.store.isLogged());
-    localStorage.removeItem('token');
+    localStorage.clear();
     console.log(this.store.isLogged());
   }
   register(userData: any): Observable<any> {
@@ -31,6 +31,7 @@ export class AuthService {
     const registerUrl = `${this.url}signup`;
     return this.http.post(registerUrl, userData);
   }
+
 
 
 }

@@ -6,7 +6,10 @@ import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.example.server.enums.DifficultyLevel;
 import org.example.server.models.Question;
 import org.example.server.models.Workspace;
@@ -14,9 +17,13 @@ import org.example.server.models.Workspace;
 import java.time.LocalDateTime;
 import java.util.List;
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class ExamDto {
 
 
+    private  Long id;
     private String name;
 
     private Integer timer;
@@ -34,6 +41,8 @@ public class ExamDto {
     private List<Question> questions;
     private Integer user;
     private Long workspace;
+    private Integer student;
+
 
 
 

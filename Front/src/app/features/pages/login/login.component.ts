@@ -5,13 +5,15 @@ import { Router, RouterLink } from '@angular/router';
 import { LoginRequestDto } from '../../../core/Models/login-request-dto';
 import { StoreService } from '../../../core/services/store/store.service';
 import {UserService} from "../../../core/services/User/user.service";
+import {NgIf} from "@angular/common";
 
 @Component({
   selector: 'app-login',
   standalone: true,
   imports: [
     ReactiveFormsModule,
-    RouterLink
+    RouterLink,
+    NgIf
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
@@ -19,6 +21,8 @@ import {UserService} from "../../../core/services/User/user.service";
 })
 export class LoginComponent implements OnInit {
   token: string = '';
+  worked:boolean=false;
+  error:boolean = false;
   loginrequest: any = {
     email: '',
     password: '',
@@ -47,6 +51,8 @@ export class LoginComponent implements OnInit {
       next: (response) => {
           console.log("First Response : ",response);
           localStorage.setItem('id',response.userID)
+        this.store.setUserRole(response.role);
+          this.store.setToken(response.ACCESS_TOKEN);
           this.userService.GetUser(response.userID).subscribe({
             next:(response)=>{
               console.log("second Response",response);
@@ -66,8 +72,20 @@ export class LoginComponent implements OnInit {
       },
       error: (error) => {
         console.error('Login error', error);
+        this.error = true;
+        setTimeout(() => {
+          // Code to execute after the specified delay
+          console.log('Delayed code executed after 2000 milliseconds');
+        },3000);
+        this.error =false;
       },
       complete: () => {
+        this.worked=true;
+        setTimeout(() => {
+          // Code to execute after the specified delay
+          console.log('Delayed code executed after 2000 milliseconds');
+        },3000);
+        this.worked =false;
       },
     });
   }

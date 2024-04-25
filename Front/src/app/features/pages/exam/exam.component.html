@@ -1,0 +1,120 @@
+<div *ngIf="!start && !cheating" class="hero min-h-screen bg-base-200">
+  <div class="hero-content text-center">
+    <div class="max-w-md">
+      <h1 class="text-5xl font-bold">Start Exam</h1>
+      <p class="py-6">Click Get Started To Start the exam</p>
+      <button (click)="start = !start" class="btn btn-primary">Get Started</button>
+      <button routerLink="Home" class="btn btn-primary ml-5">cancel</button>
+    </div>
+  </div>
+</div>
+
+
+<div *ngIf="start && !cheating" class="drawer lg:drawer-open">
+  <input id="my-drawer-2" type="checkbox" class="drawer-toggle" />
+  <div class="drawer-content flex flex-col">
+    <!-- Page content here -->
+
+    <div class="navbar bg-base-100">
+      <div class="flex-1">
+        <a class="btn btn-ghost text-xl">{{examName}}</a>
+      </div>
+
+      <div class="flex-none">
+        <span class="countdown font-mono text-2xl">
+          <span [style]="'--value:'+[hours]+';'"></span>:
+          <span style="--value:{{minutes}};"></span>:
+          <span style="--value:{{seconds}};"></span>
+        </span>
+        <label
+          aria-disabled="true"
+          for="my-drawer-2"
+          class="btn btn-primary drawer-button lg:hidden"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            class="inline-block w-5 h-5 stroke-current"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"
+            ></path>
+          </svg>
+        </label>
+      </div>
+    </div>
+    <!--First Step -->
+
+    <div class="hero min-h-screen bg-base-200 flex items-center">
+      <div class="hero-content text-left flex-grow" >
+        <div  class="max-w-md mx-auto" data-aos="fade-right">
+          <h1 class="text-5xl font-bold">
+            What’s the name of your Exam?
+          </h1>
+          <p class="py-6">
+            This will be the name of your Exam — choose something
+            that makes sense
+          </p>
+
+          <textarea
+            placeholder="Exam Name..."
+            formControlName="name"
+            class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
+          ></textarea>
+
+          <button
+            type="submit"
+            class="btn btn-primary rounded-xl"
+
+          >
+            Next
+          </button>
+        </div>
+
+        <!--Questions Here Step -->
+      </div>
+    </div>
+
+
+    <!-- add channel here -->
+  </div>
+  <div class="drawer-side">
+    <label
+      for="my-drawer-2"
+      aria-label="close sidebar"
+      class="drawer-overlay"
+    ></label>
+    <ul class="menu p-4 w-80 min-h-full bg-base-100 text-base-content">
+      <!-- Sidebar content here -->
+      <a class="btn btn-ghost text-xl">{{ examName }}</a>
+
+      <ul class="menu mt-10 bg-base-100 w-56 rounded-box">
+        <li>
+          <details open>
+            <summary class=" ">questions</summary>
+            <ul>
+              <li>
+                <a>#exam.questions name</a>
+              </li>
+            </ul>
+          </details>
+        </li>
+      </ul>
+      <div class="divider"></div>
+    </ul>
+  </div>
+</div>
+
+<div *ngIf="cheating" class="hero min-h-screen bg-base-200">
+  <div class="hero-content text-center">
+    <div class="max-w-md">
+      <h1 class="text-5xl font-bold">You were caught cheating</h1>
+      <p class="py-6">This is you first and last chance </p>
+      <button (click)="cheating = !cheating" class="btn btn-primary">Continue</button>
+    </div>
+  </div>
+</div>

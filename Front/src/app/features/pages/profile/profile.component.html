@@ -24,7 +24,7 @@
         <div class="px-6">
           <div class="flex flex-wrap justify-center">
 
-            <div type="button" class="w-full  lg:w-3/12 px-4 lg:order-2 flex justify-center">
+            <div type="button"  onclick="my_modal_1.showModal()"  class="w-full  lg:w-3/12 px-4 lg:order-2 flex justify-center">
               <div class="relative">
                 <img
                   alt="..."
@@ -33,6 +33,54 @@
                 />
               </div>
             </div>
+            <!-- Open the modal using ID.showModal() method -->
+            <dialog id="my_modal_1" class="modal  size-screen">
+              <div class="modal-box">
+                <div class="bg-white p7 rounded w-9/12 mx-auto">
+                  <div class="relative flex flex-col p-4 text-gray-400 border border-gray-200 rounded">
+                    <div class="relative flex flex-col text-gray-400 border border-gray-200 border-dashed rounded cursor-pointer"
+                         (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)" (drop)="onDrop($event)">
+                      <input type="file" multiple style="display: none;" (change)="onFileSelected($event)">
+                      <div class="flex flex-col items-center justify-center py-10 text-center">
+                        <svg class="w-6 h-6 mr-1 text-current-50" xmlns="http://www.w3.org/2000/svg" fill="none"
+                             viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
+                        <p class="m-0">Drag your files here or click in this area.</p>
+                      </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4 mt-4 md:grid-cols-6">
+                      <div *ngFor="let file of files" class="relative flex flex-col items-center overflow-hidden text-center bg-gray-100 border rounded cursor-move select-none"
+                           style="padding-top: 100%;">
+                        <button class="absolute top-0 right-0 z-50 p-1 bg-white rounded-bl focus:outline-none"
+                                type="button" (click)="removeFile(file)">
+                          <svg class="w-4 h-4 text-gray-700" xmlns="http://www.w3.org/2000/svg" fill="none"
+                               viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                          </svg>
+                        </button>
+                        <!-- Add file preview or name here -->
+                        <div class="absolute bottom-0 left-0 right-0 flex flex-col p-2 text-xs bg-white bg-opacity-50">
+
+                          <span class="w-full font-bold text-gray-900 truncate">{{ file.name }}</span>
+                          <span class="text-xs text-gray-900">{{ humanFileSize(file.size) }}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="modal-action">
+                  <form method="dialog">
+                    <!-- if there is a button in form, it will close the modal -->
+                    <button class="btn">Close</button>
+                  </form>
+                </div>
+              </div>
+            </dialog>
 
             <div
               class="w-full lg:w-4/12 px-4 lg:order-3 lg:text-right lg:self-center"

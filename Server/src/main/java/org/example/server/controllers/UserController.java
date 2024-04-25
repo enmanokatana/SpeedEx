@@ -63,6 +63,16 @@ public class UserController
 
     }
 
-
-
+    @GetMapping("/workspacesids/{id}")
+    public ResponseDto GetUserWorkSpaceIds(
+            @PathVariable Integer id
+    ){
+        return userService.GetUsersWorkSpaces(id);
+    }
+   /* @GetMapping("/workspacesdtos")
+    public ResponseDto GetWorkSpacesDtos(
+            @RequestBody List<Long> ids
+    ){
+        return userService.GetUserWorkSpacesDtos(ids);
+    }*/
 }

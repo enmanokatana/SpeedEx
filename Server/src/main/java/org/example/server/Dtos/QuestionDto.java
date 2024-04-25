@@ -14,6 +14,8 @@ public class QuestionDto {
     private String answer;
     private Integer timer ;
     private List<Option> options;
+    private Integer userOption;
+    private String userAnswer;
     private Integer score;
     private Long exam;
     private DifficultyLevel difficultyLevel;

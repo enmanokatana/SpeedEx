@@ -28,16 +28,16 @@ export class StoreService {
     return false;
   }
   getUser():any{
-
-    let CurrentToken  = this.getToken();
-    if(CurrentToken!=null){
-    const decoded = this.decoder.DecodeToken(CurrentToken);
-    console.log(decoded);
-    return decoded;
-}
-
-
+    return localStorage.getItem('token');
   }
+
+  setUserRole(role:any){
+    localStorage.setItem('role',role);
+  }
+  getUserRole():string|null{
+    return localStorage.getItem('role');
+  }
+
 
 
 

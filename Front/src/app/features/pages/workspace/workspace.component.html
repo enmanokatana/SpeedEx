@@ -31,24 +31,29 @@
                 <option value="HARD">Hard</option>
               </select>
             </div>
-            <button [routerLink]="['/Create',id]" class="btn btn-primary mt-10">
+            <button  *ngIf="localStorage.getItem('role')==='ADMIN'" [routerLink]="['/Create',id]" class="btn btn-primary mt-10">
               Create new Exam
             </button>
           </div>
 
-          <div class="flex justify-center">
-            <div class="card w-3/4 bg-base-100 shadow-xl">
+          <div *ngFor="let exam of exams" class="flex justify-center mt-5">
+            <div  class="card w-3/4 bg-base-100 shadow-xl">
               <div class="card-body">
-                <h2 class="card-title">Exam Title!</h2>    <!-- Exam Name-->
+                <h2 class="card-title">{{ exam.name }}</h2>    <!-- Exam Name-->
 
-                <p>If a dog chews shoes whose shoes does he choose?</p>    <!-- Exam description-->
+                <p>{{ exam.description }}</p>    <!-- Exam description-->
 
                 <div class="card-actions justify-end">
-                  <button class="btn ">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM12.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM18.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
-                  </svg>
-                  </button>
+
+                  <details class="dropdown">
+                    <summary class="m-1 btn">  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM12.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM18.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
+                    </svg></summary>
+                    <ul class="p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-52">
+                      <li><button [routerLink]="['/Exam',exam.id]">Pass Exam now </button></li>
+                      <li><a>Item 2</a></li>
+                    </ul>
+                  </details>
                 </div>
               </div>
             </div>
@@ -104,8 +109,57 @@
           </table>
         </div> <!-- Admin Table-->
 
-        <h1 class="mt-5 ml-30 text-2xl font-bold ">Students</h1>    <!-- Student Table-->
+        <h1 class="mt-5 ml-30 text-2xl font-bold ">Students</h1>
+        <button *ngIf="localStorage.getItem('role')==='ADMIN'"
+                class="btn btn-primary mt-10 flex right-2"
+                onclick="my_modal_2.showModal()"
 
+        >
+            Add Student
+        </button><!-- Student Table-->
+        <dialog id="my_modal_2" class="modal" [formGroup]="emailForm">
+          <div class="modal-box">
+            <p class="py-6">
+              enter email and find if user exist before adding them
+            </p>
+            <textarea
+              placeholder="User email..."
+              formControlName="email"
+              class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
+            ></textarea>
+
+            <div class="modal-action">
+              <form method="dialog">
+                <!-- if there is a button in form, it will close the modal -->
+                <button class="btn">Cancel</button>
+                <button
+                  type="submit"
+                  class="btn btn-primary rounded-xl ml-5"
+                  [disabled]="!emailForm.controls['email'].valid"
+                  (click)="onFindUser()"
+                  onclick="my_modal_1.showModal()"
+                >
+                  Find
+                </button>
+              </form>
+            </div>
+          </div>
+        </dialog>
+        <dialog id="my_modal_1" class="modal">
+          <div class="modal-box">
+            <span *ngIf="loading" class="loading loading-spinner loading-lg flex justify-center"></span>
+
+            <h3 *ngIf="!loading" class="font-bold text-lg">{{user.firstname}} {{user.lastname}}</h3>
+            <p *ngIf="!loading" class="py-4">{{ user.email }}</p>
+            <div *ngIf="!loading" class="modal-action">
+              <form method="dialog">
+                <!-- if there is a button in form, it will close the modal -->
+                <button class="btn">Cancel</button>
+                <button class="btn ml-5" (click)="onAddUser()">Add User</button>
+              </form>
+            </div>
+          </div>
+        </dialog>
         <div class="overflow-x-auto flex justify-center mt-5 ">
 
           <table class="table border-t">
@@ -136,12 +190,48 @@
                   </div>
                 </div>
               </td>
+              <td>
+                <button onclick="my_modal_3.showModal()"
+                        class="btn btn-ghost "
+                        (click)="onsetUser(user)"
+                >
+
+                  <svg xmlns="http://www.w3.org/2000/svg"   fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+
+
+                  <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                </svg>
+                </button>
+                <!-- Open the modal using ID.showModal() method -->
+
+              </td>
+
             </tr>
 
             <!-- row 2 -->
 
             </tbody>
           </table>
+          <dialog id="my_modal_3" class="modal">
+            <div class="modal-box">
+              <h3 class="font-bold text-lg">Are you sure You want to delete this user ?</h3>
+              <p  class="py-4">{{ user2.email }}</p>
+              <p  class="py-4">{{user2.lastname}} {{ user2.firstname }}</p>
+
+
+              <div class="modal-action">
+                <form method="dialog">
+
+                  <!-- if there is a button in form, it will close the modal -->
+                  <button class="btn">Close</button>
+                  <button class="btn btn-error ml-5"
+                  (click)="onRemoveUser(user2.id)"
+                  >Delete</button>
+                </form>
+              </div>
+            </div>
+          </dialog>
+
         </div>
       </div>
     </div>

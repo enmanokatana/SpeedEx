@@ -42,7 +42,8 @@
           </a>
         </li>
         <li><a>Settings</a></li>
-        <li><a routerLink="/Create" class="btn btn-primary"> Create new exam</a>
+        <li><a (click)="onLogout()">Logout</a></li>
+        <li *ngIf="localStorage.getItem('role') === 'ADMIN' && path!=='Workspace' "><a [routerLink]="['/CWS',localStorage.getItem('id')]" class="btn btn-primary">New WorkSpace</a>
         </li>
       </ul>
     </div>

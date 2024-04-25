@@ -19,6 +19,12 @@ export class UserService {
 
 
   }
+  getUserWorkSpacesIds(id:any):Observable<any>{
+    const requestUrl = `${this.url}/workspacesids/${id}`;
+    return this.http.get(requestUrl);
+
+  }
+
   getWorkSpaceUsers(ids: any): Observable<any> {
     const requestUrl = `${this.url}/usersdtos`;
     const headers = new HttpHeaders().set('Content-Type', 'application/json');

@@ -25,8 +25,6 @@ public class Option {
     @NotEmpty(message = "value of option cannot be empty")
     private String value ;
 
-
-
     private boolean isCorrect;
 
     @ManyToOne

@@ -49,11 +49,7 @@ public class QuestionService {
         return responseDto;
     }
 
-    /**
-     * add a question to an existing exam with it's options
-     * @param questionDto
-     * @return
-     */
+
     public ResponseDto CreateQuestion(QuestionDto questionDto){
         // check if the exam is already created before adding the questions
         Optional<Exam> exam =  examRepository.findById(questionDto.getExam());
@@ -81,6 +77,8 @@ public class QuestionService {
                             .id(0L)
                             .score(questionDto.getScore())
                             .name(questionDto.getName())
+                            .userOption(0)
+                            .userAnswer(null)
                             .options(options)
                     .build()));
             responseDto.setWorked(true);

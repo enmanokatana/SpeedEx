@@ -58,12 +58,34 @@ public class WorkspaceController {
 
     }
 
-    @PostMapping("/{id}/adduser/{userId}")
+    @PutMapping("/{id}/adduser/{userId}")
     public ResponseDto addUserToWorkSpaceByEmail(
             @PathVariable Integer userId,
             @PathVariable Long id
     ){
         return workSpaceService.addUserToWorkSpaceById(userId,id);
 
+    }
+
+    @DeleteMapping("/{id}/user/{userid}")
+    public ResponseDto removeUserFromWorkSpace(
+            @PathVariable Long id,
+            @PathVariable Integer userid
+    ){
+        return workSpaceService.RemoveUserFromWorkSpace(userid,id);
+    }
+
+
+    @GetMapping("/{id}/exams")
+    public ResponseDto getWorkSpaceExams(
+            @PathVariable Long id
+    ){
+        return workSpaceService.GetWorkSpaceExams(id);
+    }
+    @GetMapping("/dto/user/{id}")
+    public ResponseDto getUserWorkSpaceDto(
+            @PathVariable Long id
+    ){
+        return workSpaceService.getWorkSpaceDto(id);
     }
 }

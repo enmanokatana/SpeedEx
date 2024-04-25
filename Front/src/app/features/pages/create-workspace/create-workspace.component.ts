@@ -64,7 +64,6 @@ onCreateWorkspace(step:any){
         console.log(e);
       },
       complete:()=>{
-        this.router.navigate(['Home']);
       }
 
     })
