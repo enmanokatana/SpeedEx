@@ -28,6 +28,12 @@ export class ExamService {
 
   }
 
+  getQuestionIdsByExam(id:any):Observable<any>{
+    const requestUrl = `${this.url}/questionsIds/${id}`;
+    return this.http.get(requestUrl);
+
+  }
+
 
 
 }

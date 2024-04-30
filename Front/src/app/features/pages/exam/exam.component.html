@@ -1,3 +1,8 @@
+
+
+
+
+
 <div *ngIf="!start && !cheating" class="hero min-h-screen bg-base-200">
   <div class="hero-content text-center">
     <div class="max-w-md">
@@ -10,21 +15,21 @@
 </div>
 
 
-<div *ngIf="start && !cheating" class="drawer lg:drawer-open">
+<div *ngIf="start && !cheating && !loading" class="drawer lg:drawer-open">
   <input id="my-drawer-2" type="checkbox" class="drawer-toggle" />
   <div class="drawer-content flex flex-col">
     <!-- Page content here -->
 
     <div class="navbar bg-base-100">
       <div class="flex-1">
-        <a class="btn btn-ghost text-xl">{{examName}}</a>
+        <a class="btn btn-ghost text-xl">{{currentQusetion.difficultyLevel}}</a>
       </div>
 
       <div class="flex-none">
         <span class="countdown font-mono text-2xl">
           <span [style]="'--value:'+[hours]+';'"></span>:
-          <span style="--value:{{minutes}};"></span>:
-          <span style="--value:{{seconds}};"></span>
+          <span [style]="'--value:'+[minutes]+';'"></span>:
+          <span [style]="'--value:'+[seconds]+';'"></span>
         </span>
         <label
           aria-disabled="true"
@@ -49,35 +54,42 @@
     </div>
     <!--First Step -->
 
-    <div class="hero min-h-screen bg-base-200 flex items-center">
-      <div class="hero-content text-left flex-grow" >
-        <div  class="max-w-md mx-auto" data-aos="fade-right">
-          <h1 class="text-5xl font-bold">
-            What’s the name of your Exam?
-          </h1>
-          <p class="py-6">
-            This will be the name of your Exam — choose something
-            that makes sense
-          </p>
+    <div  class="max-w-md mr-auto ml-20 mt-20" data-aos="fade-right">
+      <h1 class="text-3xl font-bold">
+        {{currentQusetion.name}}      </h1>
+      <p class="py-6"> {{currentQusetion.description}}    </p>
 
-          <textarea
-            placeholder="Exam Name..."
-            formControlName="name"
-            class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
-          ></textarea>
-
-          <button
-            type="submit"
-            class="btn btn-primary rounded-xl"
-
-          >
-            Next
-          </button>
-        </div>
-
-        <!--Questions Here Step -->
+      <div *ngIf="currentQusetion.type ==='NORMAL'" [formGroup]="answerForm" class="py-4">
+        <label for="questionName" class="block text-xl font-semibold mb-2">Your Answer:</label>
+        <textarea id="questionName" placeholder="Enter question name..." formControlName="answer" class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500" required></textarea>
       </div>
+      <div *ngIf="currentQusetion.type ==='QCM'" [formGroup]="optionForm" class="py-4">
+        <div *ngFor="let option of currentQusetion.options" class="form-control">
+          <label class="label cursor-pointer">
+            <span class="label-text">{{ option.value }}</span>
+            <input type="radio" formControlName="userOption" value="{{option.id}}"  class="radio checked:bg-blue-500" checked />
+          </label>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary rounded-xl" (click)="onSaveQuestion()" >Next</button>
+      <button hidden="hidden" type="submit" class="btn btn-primary rounded-xl m-4" onclick="my_modal_1.showModal()"  >Finish</button>
+      <div class="divider"></div>
+
     </div>
+    <!-- Open the modal using ID.showModal() method -->
+    <dialog id="my_modal_1" class="modal">
+      <div class="modal-box">
+        <h3 class="font-bold text-lg">Are You sure You want to submit exam ??</h3>
+        <p class="py-4">Press Submit to confirm key or click the button below to close</p>
+        <div class="modal-action">
+          <form method="dialog">
+            <!-- if there is a button in form, it will close the modal -->
+            <button class="btn">Close</button>
+            <button class="btn ml-5"  (click)="onSaveExam()">Submit</button>
+          </form>
+        </div>
+      </div>
+    </dialog>
 
 
     <!-- add channel here -->
@@ -96,9 +108,9 @@
         <li>
           <details open>
             <summary class=" ">questions</summary>
-            <ul>
+            <ul *ngFor="let question of questions">
               <li>
-                <a>#exam.questions name</a>
+                <button (click)="currentQusetion = question">{{question.name}}</button>
               </li>
             </ul>
           </details>
@@ -109,12 +121,31 @@
   </div>
 </div>
 
-<div *ngIf="cheating" class="hero min-h-screen bg-base-200">
+<div *ngIf="cheating && !loading" class="hero min-h-screen bg-base-200">
   <div class="hero-content text-center">
     <div class="max-w-md">
       <h1 class="text-5xl font-bold">You were caught cheating</h1>
       <p class="py-6">This is you first and last chance </p>
       <button (click)="cheating = !cheating" class="btn btn-primary">Continue</button>
+    </div>
+  </div>
+</div>
+<div  *ngIf="loading" class="hero min-h-screen bg-base-200">
+  <div class="hero-content text-center">
+    <div class="max-w-md">
+      <span class=" loading loading-spinner loading-lg"></span>
+
+    </div>
+  </div>
+</div>
+
+
+<div *ngIf="errorBig" class="hero min-h-screen bg-base-200">
+  <div class="hero-content text-center">
+    <div class="max-w-md">
+      <h1 class="text-5xl font-bold">An error has Occured in the System </h1>
+      <p class="py-6">You Can Try passing the exam later</p>
+      <button routerLink="Home" class="btn btn-primary">Go Back Home</button>
     </div>
   </div>
 </div>

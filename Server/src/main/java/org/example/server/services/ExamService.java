@@ -4,6 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.example.server.Dtos.ExamDto;
 import org.example.server.models.*;
 import org.example.server.repositories.*;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -178,6 +181,36 @@ public class ExamService {
     }
 
     public ResponseDto getQuestionIdsByExamId(Long id){
+
+        var exam = repository.findById(id);
+        List<Long> ids = new ArrayList<>();
+        if (exam.isPresent()){
+            var questions = exam.get().getQuestions();
+            for (Question question:questions){
+                ids.add(question.getId());
+            }
+            responseDto.setResult(ids);
+            responseDto.setMessage("Got iDs");
+            responseDto.setWorked(true);
+            return responseDto;
+        }
+
+        responseDto.setWorked(false);
+        responseDto.setResult(null);
+        responseDto.setMessage("Exam doesn't exist");
+
+        return responseDto;
+    }
+
+    public ResponseDto getUserExamsForProfile(Integer id,Integer page){
+
+        int pageNumber = (page!=null && page> 0) ? page -1 :0;
+
+        int pageSize =20;
+        var user = userRepository.findById(id);
+        if (user.isPresent()) {
+            Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by("passed").descending());
+        }
 
         return responseDto;
     }

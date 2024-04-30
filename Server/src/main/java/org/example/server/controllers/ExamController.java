@@ -42,4 +42,15 @@ public class ExamController {
     {
         return examService.findExamsByUser(id);
     }
+    @GetMapping("/questionsIds/{id}")
+    public ResponseDto GetQuestionIdsByExam(
+            @PathVariable Long id
+
+    )
+    {
+        return examService.getQuestionIdsByExamId(id);
+    }
+
+
+
 }

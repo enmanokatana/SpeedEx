@@ -48,6 +48,30 @@ public class QuestionService {
 
         return responseDto;
     }
+    public ResponseDto getQuestionDtobyId(Long id ){
+        var question =repository.findById(id);
+        if (question.isPresent()){
+            responseDto.setResult(QuestionDto.builder()
+                            .answer(question.get().getAnswer())
+                            .difficultyLevel(question.get().getDifficultyLevel())
+                            .id(question.get().getId())
+                            .name(question.get().getName())
+                            .options(question.get().getOptions())
+                            .score(question.get().getScore())
+                            .timer(question.get().getTimer())
+                            .type(question.get().getType())
+                            .userAnswer(question.get().getUserAnswer())
+                            .userOption(question.get().getUserOption())
+                            .exam(question.get().getExam().getId())
+                    .build());
+            responseDto.setMessage("Question found  " );
+            responseDto.setWorked(true);
+            return  responseDto;
+        }
+        responseDto.setMessage("No Question with this id "+id+" was found ");
+
+        return responseDto;
+    }
 
 
     public ResponseDto CreateQuestion(QuestionDto questionDto){
@@ -105,6 +129,47 @@ public class QuestionService {
         return responseDto;
 
     }
+
+    public ResponseDto PassExamUpdateQuestion(List<QuestionDto> questions){
+
+
+        if (questions!= null){
+            var exam  = examRepository.findById(questions.get(0).getExam());
+
+            if (exam.isPresent()){
+                for (QuestionDto questionDto : questions){
+                    var question = repository.findById(questionDto.getId());
+                    if (question.isPresent()){
+                        question.get().setUserAnswer(questionDto.getUserAnswer());
+                        question.get().setUserOption(questionDto.getUserOption());
+                        repository.save(question.get());
+                    }
+                }
+
+                exam.get().setPassed(true);
+                examRepository.save(exam.get());
+
+                responseDto.setWorked(true);
+                responseDto.setMessage("updated the exam successfully");
+                responseDto.setResult(null);
+                return responseDto;
+            }
+            responseDto.setWorked(false);
+            responseDto.setResult(null);
+            responseDto.setMessage("$No exam was found ");
+
+            return responseDto;
+
+
+        }
+        responseDto.setWorked(false);
+        responseDto.setResult(null);
+        responseDto.setMessage("$No Question were found  ");
+
+        return responseDto;
+
+    }
+
 
 
 }

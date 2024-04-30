@@ -7,6 +7,8 @@ import org.example.server.models.ResponseDto;
 import org.example.server.services.QuestionService;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/v1/Question")
 @RequiredArgsConstructor
@@ -18,10 +20,10 @@ public class QuestionController {
         return questionService.getAllQuestions();
     }
     @GetMapping("/{id}")
-    public ResponseDto GetAllQuestions(
+    public ResponseDto GetQuestionDtoById(
             @PathVariable Long id
     ) {
-        return questionService.getQuestionById(id);
+        return questionService.getQuestionDtobyId(id);
     }    @PostMapping
     public ResponseDto AddQuestion(
             @RequestBody QuestionDto question
@@ -32,6 +34,14 @@ public class QuestionController {
     @DeleteMapping("/{id}")
     public ResponseDto DeleteQuestion(@PathVariable  Long id){
         return questionService.DeleteQuestion(id);
+    }
+
+
+    @PostMapping("/passExam")
+    public ResponseDto Pass(
+            @RequestBody List<QuestionDto> questions
+    ){
+        return questionService.PassExamUpdateQuestion(questions);
     }
 
 }
