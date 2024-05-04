@@ -3,8 +3,7 @@ import { RouterLink } from '@angular/router';
 import { StoreService } from '../../../core/services/store/store.service';
 import { AuthService } from '../../../core/services/Auth/auth.service';
 import {HeaderComponent} from "../../../core/componenets/header/header.component";
-import {BrnCommandComponent} from "@spartan-ng/ui-command-brain";
-import {HlmCommandInputWrapperComponent} from "@spartan-ng/ui-command-helm";
+
 import {WorkspaceService} from "../../../core/services/workspace/workspace.service";
 import {NgForOf, NgIf} from "@angular/common";
 import {UserService} from "../../../core/services/User/user.service";
@@ -12,7 +11,7 @@ import {UserService} from "../../../core/services/User/user.service";
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [RouterLink, HeaderComponent, BrnCommandComponent, HlmCommandInputWrapperComponent, NgForOf, NgIf],
+  imports: [RouterLink, HeaderComponent,NgForOf, NgIf],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })

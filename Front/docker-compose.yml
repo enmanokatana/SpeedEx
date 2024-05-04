@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  speedex:
+    container_name: speedexcontainer
+    build: .
+    image: speedex:latset
+    ports:
+      - 80:80
+    expose:
+      - 80
+    networks:
+      - internalnet
+networks:
+  internalnet:
+    driver: bridge

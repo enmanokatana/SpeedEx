@@ -3,7 +3,6 @@ import { LoginComponent } from './features/pages/login/login.component';
 import { HomeComponent } from './features/pages/home/home.component';
 import { RegisterComponent } from './features/pages/register/register.component';
 import { PageNotFoundComponent } from './features/pages/page-not-found/page-not-found.component';
-import { VideoCallComponent } from './features/pages/video-call/video-call.component';
 import {ProfileComponent} from "./features/pages/profile/profile.component";
 import {CreateExamComponent} from "./features/pages/create-exam/create-exam.component";
 import {WorkspaceComponent} from "./features/pages/workspace/workspace.component";
@@ -31,9 +30,7 @@ export const routes: Routes = [
     component: RegisterComponent,
     title: 'Register' },
 
-  { path: 'Call',
-    title: 'Call',
-    component: VideoCallComponent },
+
 
   {path:'Profile',
     title:'Profile',

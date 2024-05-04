@@ -1,11 +1,20 @@
-FROM node:alpine
+FROM node:alpine AS build
 
-WORKDIR /usr/src/app
+WORKDIR /app
 
-COPY . /usr/src/app
-
-RUN npm install -g @angular/cli
+COPY package*.json ./
 
 RUN npm install
 
-CMD ["ng", "serve", "--host", "0.0.0.0"]
+RUN npx ngcc --properties es2023 browser main --first-only --create-ivy-entry-points
+
+COPY . .
+
+RUN npm run build
+
+FROM nginx:stable
+
+COPY --from=build /app/dist/front /usr/share/ngnix/html
+
+EXPOSE 80
+
