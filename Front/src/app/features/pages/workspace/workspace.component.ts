@@ -5,6 +5,7 @@ import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} fr
 import {UserService} from "../../../core/services/User/user.service";
 import {WorkspaceService} from "../../../core/services/workspace/workspace.service";
 import {NgForOf, NgIf} from "@angular/common";
+import {RightClickDirective} from "../../../core/Directives/right-click.directive";
 
 @Component({
   selector: 'app-workspace',
@@ -15,7 +16,10 @@ import {NgForOf, NgIf} from "@angular/common";
     ReactiveFormsModule,
     NgForOf,
     NgIf,
-    FormsModule
+    FormsModule,
+    RightClickDirective,
+
+
   ],
   templateUrl: './workspace.component.html',
   styleUrl: './workspace.component.css'
@@ -58,7 +62,9 @@ export class WorkspaceComponent implements OnInit{
 
   }
 
-
+onTest( event : MouseEvent){
+  console.log("helo")
+}
 
   ongGetWorkSpaceUsers(id:any){
   this.workspaceService.getWorkSpaceUsersIds(id).subscribe({

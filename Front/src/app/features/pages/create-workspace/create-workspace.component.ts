@@ -59,6 +59,7 @@ onCreateWorkspace(step:any){
     this.workspaceService.createWorkspace(this.workspace).subscribe({
       next:(response)=>{
         console.log(response);
+        this.router.navigate(['/Home'])
       },
       error:(e)=>{
         console.log(e);

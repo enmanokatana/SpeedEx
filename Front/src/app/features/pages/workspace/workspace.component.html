@@ -6,13 +6,48 @@
     <!-- Page content here -->
     <label for="my-drawer-2" class="btn btn-primary drawer-button lg:hidden">Open drawer</label>
     <div role="tablist" class="tabs tabs-lifted">
-      <input type="radio" name="my_tabs_2" role="tab" class="tab" aria-label="Tab 1" />
-      <div role="tabpanel" class="tab-content bg-base-100 border-base-300 rounded-box p-6 ">
+      <input type="radio" name="my_tabs_2" role="tab" class="tab" aria-label="Docs" />
+      <div role="tabpanel" (rtclick)="onTest($event)" class="tab-content bg-base-100 rounded-box p-6 mx-20 size-auto">
         <div class="w-full h-48 rounded-box">
-          <div class="carousel-item">
-            <img class="w-full mx-40 rounded-3xl" src="https://daisyui.com/images/stock/photo-1601004890684-d8cbf643f5f2.jpg" alt="Burger" />
+          <div class="text-sm breadcrumbs">
+            <ul>
+              <li>
+                <a>
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="w-4 h-4 stroke-current"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path></svg>
+                  Home
+                </a>
+              </li>
+              <li>
+                <a>
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="w-4 h-4 stroke-current"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path></svg>
+                  Documents
+                </a>
+              </li>
+              <li>
+      <span class="inline-flex gap-2 items-center">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="w-4 h-4 stroke-current"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+        Add Document
+      </span>
+              </li>
+            </ul>
           </div>
-        </div>         </div>
+
+          <a *ngIf="localStorage.getItem('role') ==='ADMIN'" onclick="my_modal_23.showModal()" class="btn btn-primary fixed bottom-5 right-5">New Document</a>
+          <!-- Open the modal using ID.showModal() method -->
+          <dialog id="my_modal_23" class="modal">
+            <div class="modal-box">
+              <h3 class="font-bold text-lg">Upload document!</h3>
+              <p class="py-4">Press ESC key or click the button below to close</p>
+              <div class="modal-action">
+                <form method="dialog">
+                  <!-- if there is a button in form, it will close the modal -->
+                  <button class="btn">Close</button>
+                </form>
+              </div>
+            </div>
+          </dialog>
+        </div>
+      </div>
 
       <input type="radio" name="my_tabs_2" role="tab" class="tab" aria-label="Exams" checked />
       <div role="tabpanel" class="tab-content bg-base-100  rounded-box p-6 mx-20 size-auto">
