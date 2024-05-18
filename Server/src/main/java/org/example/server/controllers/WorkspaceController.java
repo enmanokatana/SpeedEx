@@ -50,6 +50,7 @@ public class WorkspaceController {
     }
 
     @PostMapping("/{id}/adduser/email/{email}")
+    @Deprecated
     public ResponseDto addUserToWorkSpaceByEmail(
         @PathVariable String email,
         @PathVariable Long id
@@ -88,4 +89,5 @@ public class WorkspaceController {
     ){
         return workSpaceService.getWorkSpaceDto(id);
     }
+
 }

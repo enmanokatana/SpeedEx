@@ -10,13 +10,18 @@ import {CreateWorkspaceComponent} from "./features/pages/create-workspace/create
 import {AuthGuard} from "./core/Guards/auth.guard";
 import {AdminGuard} from "./core/Guards/admin.guard";
 import {ExamComponent} from "./features/pages/exam/exam.component";
+import {CodeInputComponent} from "./shared/code-input/code-input.component";
 
 export const routes: Routes = [
 
   { path: '',
     pathMatch: 'full',
     redirectTo: 'Home' },
-
+  {
+    path: 'Code',
+    component: CodeInputComponent,
+    title: 'code'
+  },
   { path: 'Login',
     component: LoginComponent,
     title: 'Login' },

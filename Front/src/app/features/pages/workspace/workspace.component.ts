@@ -1,11 +1,12 @@
 import {Component, OnInit} from '@angular/core';
 import {HeaderComponent} from "../../../core/componenets/header/header.component";
-import {ActivatedRoute, Router, RouterLink} from "@angular/router";
+import {ActivatedRoute, NavigationEnd, Router, RouterLink} from "@angular/router";
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import {UserService} from "../../../core/services/User/user.service";
 import {WorkspaceService} from "../../../core/services/workspace/workspace.service";
 import {NgForOf, NgIf} from "@angular/common";
 import {RightClickDirective} from "../../../core/Directives/right-click.directive";
+import {filter} from "rxjs";
 
 @Component({
   selector: 'app-workspace',
@@ -48,7 +49,7 @@ export class WorkspaceComponent implements OnInit{
     lastname:''
   };
   loading:boolean = true;
-
+workspaces:any;
   emailForm!:FormGroup;
 
   ngOnInit() {
@@ -59,6 +60,12 @@ export class WorkspaceComponent implements OnInit{
     this.ongGetWorkSpaceUsers(this.id);
     this.onGetAdmin();
     this.onGetExams(this.id);
+    this.onGetMyWorkspaces();
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd)
+    ).subscribe(() => {
+      window.location.reload();
+    });
 
   }
 
@@ -79,6 +86,24 @@ onTest( event : MouseEvent){
     }
   });
   }
+  onGetMyWorkspaces() {
+    this.workspaceService.getWorkSpaces(localStorage.getItem('id')).subscribe({
+      next:(response)=>{
+        console.log(response);
+        console.log('wss',response);
+        this.workspaces=response.result;
+
+
+      },
+      error:(e)=>{
+        console.log(e);
+
+      },
+      complete:()=>{
+        console.log("Completed getting WSS")}
+    })
+  }
+
   onLoadUsers(ids:any){
     for (let id of ids) {
       this.userService.getUserDto(id).subscribe({
@@ -155,7 +180,7 @@ onTest( event : MouseEvent){
 
 
   onAddUser(){
-    this.workspaceService.addUserToWorkspace(this.user.id,this.id).subscribe({
+    this.workspaceService.inviteUser(this.user.id,this.id).subscribe({
       next:(response)=>{
         console.log(response);
       },
@@ -192,4 +217,9 @@ onTest( event : MouseEvent){
 
 
   protected readonly localStorage = localStorage;
+
+  onGotoWs(id:any) {
+    this.router.navigate(['/Workspace',id]);
+
+  }
 }

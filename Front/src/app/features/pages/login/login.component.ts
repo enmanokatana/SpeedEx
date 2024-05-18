@@ -57,13 +57,14 @@ export class LoginComponent implements OnInit {
             next:(response)=>{
               console.log("second Response",response);
               this.store.setProfilePic(response.result.profileImg);
+              this.router.navigate(['Home']);
+
 
             },
             error:(error) => {
               console.error('Login error', error);
             },
             complete:() => {
-              this.router.navigate(['Home']);
 
             }
 

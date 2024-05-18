@@ -16,7 +16,7 @@ public class PythonCodeExcutor {
             @RequestBody String code
     ){
         String uniqueId = UUID.randomUUID().toString();
-        String fileName = "/tmp/" + uniqueId + ".py";
+        String fileName = uniqueId + ".py";
         try {
             FileWriter writer = new FileWriter(fileName);
             writer.write(code);

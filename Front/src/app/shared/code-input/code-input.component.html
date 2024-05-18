@@ -1,0 +1,31 @@
+<div class="max-w-2xl mx-auto p-4 bg-white shadow-md rounded-md">
+  <details class="dropdown">
+    <summary class="m-1 btn">Language</summary>
+    <ul class="p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-52">
+      <li><button>cpp</button></li>
+      <li><button>java</button></li>
+    </ul>
+  </details>
+  <div class="relative">
+    <textarea
+      id="code-editor"
+      class="code-editor w-full h-64 p-4 font-mono text-sm bg-gray-900 text-white rounded-md border-none focus:outline-none focus:ring-2 focus:ring-blue-500"
+      spellcheck="false"
+      [(ngModel)]="code"
+      [highlight]="code"
+      language="JavaScript"
+      lineNumbers
+    >
+    </textarea>
+
+
+  </div>
+  <pre>
+      <code [highlight]="code"
+            language="ts"
+            lineNumbers></code>
+    </pre>
+  <button (click)="runCode()" class="mt-4 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">Run Code</button>
+  <pre id="output" class="mt-4 p-4 bg-gray-800 text-white rounded-md">{{ output }}</pre>
+</div>
+

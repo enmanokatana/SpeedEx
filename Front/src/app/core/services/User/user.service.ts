@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpHeaders, HttpParams} from "@angular/common/http";
 import {Observable} from "rxjs";
+import {environment} from "../../../../environmenets/environment";
 
 @Injectable({
   providedIn: 'root'
@@ -9,25 +10,37 @@ export class UserService {
 
   constructor(private http:HttpClient) { }
 
-  url :string = "http://localhost:8080/api/v1/User";
+  url :string = environment.API_BASE_URL+"api/v1/User";
+  token = localStorage.getItem('token');
 
 
   GetUser(id:any):Observable<any>{
 
     const RequestUrl =`${this.url}/${id}`
-    return this.http.get(RequestUrl);
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${this.token}`
+    });
+    return this.http.get(RequestUrl,{headers});
 
 
   }
   getUserWorkSpacesIds(id:any):Observable<any>{
     const requestUrl = `${this.url}/workspacesids/${id}`;
-    return this.http.get(requestUrl);
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${this.token}`
+    });
+    return this.http.get(requestUrl,{headers});
 
   }
 
   getWorkSpaceUsers(ids: any): Observable<any> {
     const requestUrl = `${this.url}/usersdtos`;
-    const headers = new HttpHeaders().set('Content-Type', 'application/json');
+
+    const headers = new HttpHeaders({
+      'Content-Type':'application/json',
+
+      'Authorization': `Bearer ${this.token}`
+    });
 
     // Constructing HTTP params
     let params = new HttpParams();
@@ -41,11 +54,17 @@ export class UserService {
   }
   getUserDto(id:any):Observable<any>{
     const requestUrl = `${this.url}/userdto/${id}`;
-    return this.http.get(requestUrl);
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${this.token}`
+    });
+    return this.http.get(requestUrl,{headers});
   }
   getUserDtoByEmail(email:string):Observable<any>{
     const requestUrl = `${this.url}/emaildto/${email}`;
-    return this.http.get(requestUrl);
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${this.token}`
+    });
+    return this.http.get(requestUrl,{headers});
   }
 
 }
