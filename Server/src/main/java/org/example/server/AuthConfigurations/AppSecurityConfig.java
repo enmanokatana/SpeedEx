@@ -47,6 +47,7 @@ public class AppSecurityConfig {
                                 ,"webjars/**"
                                 ,"swagger-ui.html"
                                 ,"/app"
+                                ,"/api/v1/Invitations/**"
                         )
 
                         .permitAll()
@@ -75,8 +76,8 @@ public class AppSecurityConfig {
                         .permitAll()
                         .requestMatchers("/error")
                         .permitAll()
-                        .requestMatchers("api/v1/Invitations/")
-                        .authenticated()
+                       // .requestMatchers("api/v1/Invitations/**")
+                        //.authenticated()
                         .anyRequest()
                         .authenticated()
 

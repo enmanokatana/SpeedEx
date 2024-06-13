@@ -19,6 +19,7 @@ import {WorkspaceService} from "../../services/workspace/workspace.service";
 export class HeaderComponent implements OnInit{
   profilepic : any = null;
   path:string="";
+  invNumber:any;
   constructor(private store:StoreService,
               private authService:AuthService,
               private router:Router,
@@ -33,15 +34,16 @@ export class HeaderComponent implements OnInit{
 
   }
   ngOnInit(): void {
-    this.profilepic = localStorage.getItem('image');
     this.path = this.route.snapshot.url[0].path;
     this.onGetInvites();
   }
 
   onGetInvites(){
     this.workspaceService.getAllInvites(localStorage.getItem('id')).subscribe({
-      next:(res)=>{
-        console.log(res);
+      next:(res:any)=>{
+        this.invNumber = res.result.length;
+
+
       }
     })
 

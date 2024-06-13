@@ -65,6 +65,15 @@ export class WorkspaceService {
 
 
   }
+  getWorkSpaceExamsForUser(id:any,userId:any):Observable<any>{
+    const requestUrl = `${this.url}/${id}/exams/user/${userId}`;
+      const headers = new HttpHeaders({
+        'Authorization': `Bearer ${this.token}`
+      });
+    return this.http.get(requestUrl, { headers });
+
+
+  }
   addUserToWorkspace(userId : any,id:any):Observable<any>{
     const requestUrl = `${this.url}/${id}/adduser/${userId}`;
     const headers = new HttpHeaders({
@@ -96,6 +105,28 @@ export class WorkspaceService {
     console.log(this.token);
     return this.http.post(requestUrl,{headers});
   }
+  AcceptInvite(invitation:any){
+    const requestUrl = `http://localhost:8080/api/v1/Invitations/accept`
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${this.token}`
+
+      // Add any other headers required by your API
+    });
+    console.log(this.token);
+    return this.http.post(requestUrl,invitation,{headers});
+  }
+  DeclineInvitation(invitation:any){
+    const requestUrl = `http://localhost:8080/api/v1/Invitations/decline`
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${this.token}`
+
+      // Add any other headers required by your API
+    });
+    console.log(this.token);
+    return this.http.post(requestUrl,invitation,{headers});
+  }
   getAllInvites(userId:any){
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${this.token}`
@@ -107,6 +138,24 @@ export class WorkspaceService {
 
   }
 
+  getImage(id:any){
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${this.token}`,
+
+      // Add any other headers required by your API
+    });
+
+    return this.http.get(`${this.url}/image/${id}`, { headers });
+  }
+  getName(id:any){
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${this.token}`,
+
+      // Add any other headers required by your API
+    });
+
+    return this.http.get(`${this.url}/name/${id}`, { headers });
+  }
 
 
 }

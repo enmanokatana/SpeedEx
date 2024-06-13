@@ -20,5 +20,6 @@ public class WorkSpaceDto {
     private Integer admin;
 
     private List<Integer> users;
+    private String image;
     private List<Long> exams;
 }

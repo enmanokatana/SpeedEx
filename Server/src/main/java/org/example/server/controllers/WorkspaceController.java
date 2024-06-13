@@ -1,5 +1,6 @@
 package org.example.server.controllers;
 
+import io.swagger.v3.oas.annotations.info.Info;
 import lombok.RequiredArgsConstructor;
 import org.example.server.Dtos.WorkSpaceDto;
 import org.example.server.models.ResponseDto;
@@ -77,17 +78,61 @@ public class WorkspaceController {
     }
 
 
+    /**
+     *retreived by the Admin
+     *
+     */
+
     @GetMapping("/{id}/exams")
     public ResponseDto getWorkSpaceExams(
             @PathVariable Long id
     ){
         return workSpaceService.GetWorkSpaceExams(id);
     }
+
+    /**
+     * For the User to get his own exams from a workspace
+     *
+     * @param id
+     * @return
+     */
+    @GetMapping("/{id}/exams/user/{userId}")
+    public ResponseDto getWorkSpaceExamsUser(
+            @PathVariable Long id,
+            @PathVariable Integer userId
+    ){
+        return workSpaceService.GetWorkSpaceExamsForAUser(id,userId);
+    }
+    /**
+     * For the Admin to get his own prototypes exams from a workspace
+     *
+     * @param id
+     * @return
+     */
+    @GetMapping("/{id}/exams/admin/{userId}")
+    public ResponseDto getWorkSpaceExamsAdmin(
+            @PathVariable Long id,
+            @PathVariable Integer userId
+    ){
+        return workSpaceService.GetWorkSpaceExamsForAnAdmin(id,userId);
+    }
     @GetMapping("/dto/user/{id}")
     public ResponseDto getUserWorkSpaceDto(
             @PathVariable Long id
     ){
         return workSpaceService.getWorkSpaceDto(id);
+    }
+    @GetMapping("/image/{id}")
+    public ResponseDto getImage(
+            @PathVariable Long id
+    ){
+        return workSpaceService.getWorkSpaceImage(id);
+    }
+    @GetMapping("/name/{id}")
+    public ResponseDto getName(
+            @PathVariable Long id
+    ){
+        return workSpaceService.getWorkSpaceName(id);
     }
 
 }

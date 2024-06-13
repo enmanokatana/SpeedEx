@@ -14,6 +14,7 @@ import org.example.server.repositories.WorkspaceRepository;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 
@@ -231,6 +232,7 @@ public class WorkSpaceService {
                             .id(0L)
                             .description(workSpaceDto.getDescription())
                             .exams(null)
+                            .image("https://firebasestorage.googleapis.com/v0/b/library-b3d3f.appspot.com/o/4d6eb84e-c837-467f-9d5e-803cb2c5562e.png?alt=media")
                             .users(users)
                     .build()));
 
@@ -280,6 +282,7 @@ public class WorkSpaceService {
                     .name(workspace.getName())
                     .description(workspace.getDescription())
                     .id(workspace.getId())
+                    .image(workspace.getImage())
                     .build();
 
             responseDto.setResult(result);
@@ -323,6 +326,7 @@ public class WorkSpaceService {
 
     }
 
+    //returns all the exams for any workspace
     public ResponseDto GetWorkSpaceExams(Long id){
         var workspace = repository.findById(id);
         List<ExamDto> exams = new ArrayList<>();
@@ -336,6 +340,7 @@ public class WorkSpaceService {
                                 .student(exam.getStudent()== null ? 0 : exam.getStudent().getId())
                                 .user(exam.getUser().getId())
                                 .id(exam.getId())
+                                .passed(exam.getPassed())
                                 .passingScore(0)
                         .build());
             }
@@ -349,7 +354,68 @@ public class WorkSpaceService {
         responseDto.setMessage("Workspace doesn't exist");
         return responseDto;
     }
+    //returns exams for a User inside a workspace
+    public ResponseDto GetWorkSpaceExamsForAUser(Long id,Integer userId){
+        var workspace = repository.findById(id);
+        List<ExamDto> exams = new ArrayList<>();
+        if (workspace.isPresent()){
+            for (Exam exam : workspace.get().getExams()){
+                exams.add(ExamDto.builder()
+                                .name(exam.getName())
+                                .timer(exam.getTimer())
+                                .difficultyLevel(exam.getDifficultyLevel())
+                                .description(exam.getDescription())
+                                .student(exam.getStudent()== null ? 0 : exam.getStudent().getId())
+                                .user(exam.getUser().getId())
+                                .id(exam.getId())
+                                .passed(exam.getPassed())
+                                .passingScore(0)
+                        .build());
+            }
+            exams = exams.stream().filter(examDto -> Objects.equals(examDto.getStudent(), userId)).toList();
+            responseDto.setResult(exams);;
+            responseDto.setMessage("exams found ");
+            responseDto.setWorked(true);
+            return responseDto;
+        }
+        responseDto.setWorked(false);
+        responseDto.setResult(null);
+        responseDto.setMessage("Workspace doesn't exist");
+        return responseDto;
+    }
 
+
+    // just basic infos about exams for the admin to acess all the other exams
+
+    // Make sure to check that it is the right admin just
+    public ResponseDto GetWorkSpaceExamsForAnAdmin(Long id,Integer userId){
+        var workspace = repository.findById(id);
+        List<ExamDto> exams = new ArrayList<>();
+        if (workspace.isPresent()){
+            for (Exam exam : workspace.get().getExams()){
+                if (exam.getStudent() == null){
+                    exams.add(ExamDto.builder()
+                                    .name(exam.getName())
+                                    .timer(exam.getTimer())
+                                    .difficultyLevel(exam.getDifficultyLevel())
+                                    .description(exam.getDescription())
+                                    .user(exam.getUser().getId())
+                                    .id(exam.getId())
+                                    .passed(exam.getPassed())
+                                    .passingScore(0)
+                            .build());
+                }
+            }
+            responseDto.setResult(exams);;
+            responseDto.setMessage("exams found ");
+            responseDto.setWorked(true);
+            return responseDto;
+        }
+        responseDto.setWorked(false);
+        responseDto.setResult(null);
+        responseDto.setMessage("Workspace doesn't exist");
+        return responseDto;
+    }
 
     public ResponseDto RemoveUserFromWorkSpace(Integer userId,Long Wid){
         try{
@@ -392,5 +458,34 @@ public class WorkSpaceService {
 
 
     }
+    public ResponseDto getWorkSpaceImage(Long id){
+        var ws = repository.findById(id);
+
+        if (ws.isPresent()){
+            responseDto.setResult(ws.get().getImage());
+            responseDto.setWorked(true);
+            responseDto.setMessage("GotImage");
+            return responseDto;
+        }
+        responseDto.setWorked(false);
+        responseDto.setResult(null);
+        return responseDto;
+    }
+
+    public ResponseDto getWorkSpaceName(Long id){
+        var ws = repository.findById(id);
+
+        if (ws.isPresent()){
+            responseDto.setResult(ws.get().getName());
+            responseDto.setWorked(true);
+            responseDto.setMessage("GotName");
+            return responseDto;
+        }
+        responseDto.setWorked(false);
+        responseDto.setResult(null);
+        return responseDto;
+    }
+
+
 
 }

@@ -36,12 +36,16 @@ public class ExamDto {
 
     private boolean isPublic;
 
+    private boolean passed;
     private DifficultyLevel difficultyLevel;
 
     private List<Question> questions;
     private Integer user;
     private Long workspace;
     private Integer student;
+
+    private Integer ExamGroup;
+
 
 
 

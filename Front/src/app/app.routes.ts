@@ -11,12 +11,14 @@ import {AuthGuard} from "./core/Guards/auth.guard";
 import {AdminGuard} from "./core/Guards/admin.guard";
 import {ExamComponent} from "./features/pages/exam/exam.component";
 import {CodeInputComponent} from "./shared/code-input/code-input.component";
+import {InvitationsComponent} from "./features/pages/invitations/invitations.component";
+import {WelcomeComponent} from "./features/pages/welcome/welcome.component";
 
 export const routes: Routes = [
 
   { path: '',
     pathMatch: 'full',
-    redirectTo: 'Home' },
+    redirectTo: 'Welcome' },
   {
     path: 'Code',
     component: CodeInputComponent,
@@ -58,6 +60,13 @@ export const routes: Routes = [
     title:'CreateWorkspace',
     canActivate:[AuthGuard],
     component:ExamComponent},
+  {path:'Invitations',
+    title:'Invites',
+    canActivate:[AuthGuard],
+    component:InvitationsComponent},
+  {path:'Welcome',
+    title:'Welcome',
+    component:WelcomeComponent},
 
   { path: '**',
     pathMatch: 'full',

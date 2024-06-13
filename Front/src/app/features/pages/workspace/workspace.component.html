@@ -4,7 +4,10 @@
   <input id="my-drawer-2" type="checkbox" class="drawer-toggle" />
   <div class="drawer-content ">
     <!-- Page content here -->
-    <label for="my-drawer-2" class="btn btn-primary drawer-button lg:hidden">Open drawer</label>
+    <label for="my-drawer-2" class="btn drawer-button lg:hidden"> <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+      <path stroke-linecap="round" stroke-linejoin="round" d="m5.25 4.5 7.5 7.5-7.5 7.5m6-15 7.5 7.5-7.5 7.5" />
+    </svg>
+    </label>
     <div role="tablist" class="tabs tabs-lifted">
       <input type="radio" name="my_tabs_2" role="tab" class="tab" aria-label="Docs" />
       <div role="tabpanel" (rtclick)="onTest($event)" class="tab-content bg-base-100 rounded-box p-6 mx-20 size-auto">
@@ -53,7 +56,7 @@
       <div role="tabpanel" class="tab-content bg-base-100  rounded-box p-6 mx-20 size-auto">
         <div class="w-full rounded-box">
           <div class="carousel-item">
-            <img class="w-full h-80 mx-40 rounded-3xl" src="https://daisyui.com/images/stock/photo-1601004890684-d8cbf643f5f2.jpg" alt="Burger" />
+            <img class="w-full h-80 mx-40 rounded-3xl" src="{{image}}" alt="Burger" />
           </div>
         </div>
         <div class="w-full rounded-box mt-4 ">
@@ -79,16 +82,10 @@
                 <p>{{ exam.description }}</p>    <!-- Exam description-->
 
                 <div class="card-actions justify-end">
+                  <button *ngIf="exam?.passed ===false && localStorage.getItem('role') !== 'ADMIN'" class="btn btn-primary" [routerLink]="['/Exam',exam.id]">Pass Exam now </button>
+                  <button *ngIf="exam?.passed ===true&& localStorage.getItem('role') !== 'ADMIN' "  class="btn btn-primary "  [routerLink]="['/Exam',exam.id]" disabled>Passed</button>
+                  <button *ngIf="localStorage.getItem('role') === 'ADMIN' "  class="btn btn-primary "  [routerLink]="['/',exam.id]" disabled>check Status </button>
 
-                  <details class="dropdown">
-                    <summary class="m-1 btn">  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM12.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM18.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
-                    </svg></summary>
-                    <ul class="p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-52">
-                      <li><button [routerLink]="['/Exam',exam.id]">Pass Exam now </button></li>
-                      <li><a>Item 2</a></li>
-                    </ul>
-                  </details>
                 </div>
               </div>
             </div>
@@ -102,7 +99,7 @@
       <div role="tabpanel" class="tab-content bg-base-100  rounded-box p-6 mx-20">
         <div class="w-full rounded-box">
           <div class="carousel-item">
-            <img class="w-full h-80  rounded-3xl" src="https://daisyui.com/images/stock/photo-1601004890684-d8cbf643f5f2.jpg" alt="Burger" />
+            <img class="w-full h-80  rounded-3xl" src="{{image}}" alt="Burger" />
           </div>
         </div>
         <h1 class="mt-5 ml-4 text-2xl font-bold ">Admin</h1>
@@ -122,18 +119,16 @@
                 <div class="flex items-center gap-3">
                   <div class="avatar">
                     <div class="mask mask-squircle w-12 h-12">
-                      <img *ngIf="WorkSpaceAdmin.profileImg!==null" [src]="WorkSpaceAdmin.profileImg" />
                       <div
-                        *ngIf="WorkSpaceAdmin.profileImg == null"
                         class="w-10 h-10 rounded-full mr-2 flex items-center justify-center bg-gray-300 text-gray-600"
                       >
-                        {{ WorkSpaceAdmin.lastname.charAt(0).toUpperCase() }}
+                        {{ WorkSpaceAdmin?.lastname.charAt(0).toUpperCase() }}
                       </div>
                     </div>
                   </div>
                   <div>
-                    <div class="font-bold">{{ WorkSpaceAdmin.lastname }} {{ WorkSpaceAdmin.firstname }}</div>
-                    <div class="text-sm opacity-50">{{ WorkSpaceAdmin.email }}</div>
+                    <div class="font-bold">{{ WorkSpaceAdmin?.lastname }} {{ WorkSpaceAdmin?.firstname }}</div>
+                    <div class="text-sm opacity-50">{{ WorkSpaceAdmin?.email }}</div>
                   </div>
                 </div>
               </td>
@@ -225,7 +220,7 @@
                   </div>
                 </div>
               </td>
-              <td>
+              <td *ngIf="localStorage.getItem('role') === 'ADMIN'">
                 <button onclick="my_modal_3.showModal()"
                         class="btn btn-ghost "
                         (click)="onsetUser(user)"

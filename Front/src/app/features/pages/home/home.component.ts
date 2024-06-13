@@ -31,7 +31,7 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
         this.loggeduser = this.store.isLogged();
-        console.log("Id here : ",localStorage.getItem('id'));
+        //console.log.log("Id here : ",localStorage.getItem('id'));
 
         if (localStorage.getItem('role')==="USER"){
           this.onGetWorkspacesUser();
@@ -40,7 +40,7 @@ export class HomeComponent implements OnInit {
         }
        setTimeout(() => {
       // Code to execute after the specified delay
-      console.log('Delayed code executed after 2000 milliseconds');
+      //console.log.log('Delayed code executed after 2000 milliseconds');
       this.loading = !this.loading;
        },2000);
 
@@ -51,29 +51,30 @@ export class HomeComponent implements OnInit {
   onGetMyWorkspaces() {
     this.workspaceService.getWorkSpaces(localStorage.getItem('id')).subscribe({
       next:(response)=>{
-        console.log(response);
+        //console.log.log(response);
         this.workspaces=response.result;
 
 
       },
       error:(e)=>{
-        console.log(e);
+        //console.log.log(e);
 
       },
       complete:()=>{
-        console.log("Completed getting WSS")}
+        //console.log.log("Completed getting WSS")
+        }
     })
   }
 
   onGetWorkspacesUser(){
     this.userService.getUserWorkSpacesIds(localStorage.getItem('id')).subscribe({
       next:(response)=>{
-        console.log(response.result);
+        //console.log.log(response.result);
         for (let i in response.result){
-          console.log(response.result[i]);
+          //console.log.log(response.result[i]);
           this.workspaceService.getWorkSpaceDto(response.result[i]).subscribe({
             next:(res)=>{
-              console.log("dto :",res);
+              //console.log.log("dto :",res);
               this.userWorkspaces.push(res.result);
 
             }
@@ -82,10 +83,10 @@ export class HomeComponent implements OnInit {
 
       },
       error:(error)=>{
-        console.log(error);
+        //console.log.log(error);
       },
       complete:()=>{
-        console.log("User WorkSPaces",this.userWorkspaces);
+        //console.log.log("User WorkSPaces",this.userWorkspaces);
 
       }
     })

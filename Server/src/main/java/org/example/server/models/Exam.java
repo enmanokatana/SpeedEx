@@ -48,6 +48,10 @@ public class Exam {
     private List<Question> questions;
     private LocalDateTime createdOn ;
 
+
+
+
+
     @ManyToOne
     @JsonIgnore
     private User user; // Creator of the exam can create a lot of them
@@ -62,5 +66,8 @@ public class Exam {
     @ManyToOne
     @JsonIgnore
     private Workspace workspace;
+
+    @ManyToOne
+    private ExamGroup examGroup;
 
 }

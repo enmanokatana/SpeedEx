@@ -56,15 +56,15 @@
 
     <div  class="max-w-md mr-auto ml-20 mt-20" data-aos="fade-right">
       <h1 class="text-3xl font-bold">
-        {{currentQusetion.name}}      </h1>
-      <p class="py-6"> {{currentQusetion.description}}    </p>
+        {{currentQusetion?.name}}      </h1>
+      <p class="py-6"> {{currentQusetion?.description}}    </p>
 
-      <div *ngIf="currentQusetion.type ==='NORMAL'" [formGroup]="answerForm" class="py-4">
+      <div *ngIf="currentQusetion?.type ==='NORMAL'" [formGroup]="answerForm" class="py-4">
         <label for="questionName" class="block text-xl font-semibold mb-2">Your Answer:</label>
         <textarea id="questionName" placeholder="Enter question name..." formControlName="answer" class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500" required></textarea>
       </div>
-      <div *ngIf="currentQusetion.type ==='QCM'" [formGroup]="optionForm" class="py-4">
-        <div *ngFor="let option of currentQusetion.options" class="form-control">
+      <div *ngIf="currentQusetion?.type ==='QCM'" [formGroup]="optionForm" class="py-4">
+        <div *ngFor="let option of currentQusetion?.options" class="form-control">
           <label class="label cursor-pointer">
             <span class="label-text">{{ option.value }}</span>
             <input type="radio" formControlName="userOption" value="{{option.id}}"  class="radio checked:bg-blue-500" checked />
@@ -114,6 +114,7 @@
               </li>
             </ul>
           </details>
+
         </li>
       </ul>
       <div class="divider"></div>

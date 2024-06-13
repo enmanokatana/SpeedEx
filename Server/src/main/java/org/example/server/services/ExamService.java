@@ -130,6 +130,11 @@ public class ExamService {
 
     }
 
+
+
+
+
+
     public ResponseDto findExamsByUser(Integer id){
         var user = userRepository.findById(id);
         if (user.isPresent()){
@@ -145,7 +150,6 @@ public class ExamService {
         return responseDto;
 
     }
-
     public ResponseDto findExamById(Long id){
         var exam =repository.findById(id);
         if (exam.isPresent()){
@@ -162,8 +166,6 @@ public class ExamService {
 
     }
 
-
-
     public ResponseDto deleteExam(Long id){
         var exam =repository.findById(id);
         if (exam.isPresent()){
@@ -179,7 +181,6 @@ public class ExamService {
         responseDto.setMessage("exam doesn't exist with the id : " + id);
         return  responseDto;
     }
-
     public ResponseDto getQuestionIdsByExamId(Long id){
 
         var exam = repository.findById(id);
@@ -201,7 +202,6 @@ public class ExamService {
 
         return responseDto;
     }
-
     public ResponseDto getUserExamsForProfile(Integer id,Integer page){
 
         int pageNumber = (page!=null && page> 0) ? page -1 :0;

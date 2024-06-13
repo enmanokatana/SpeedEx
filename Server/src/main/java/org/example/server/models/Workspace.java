@@ -38,6 +38,8 @@ public class Workspace {
     @JsonIgnore
     private  List<Exam> exams;
 
+    private String image;
+
 
 
 }

@@ -28,7 +28,7 @@ export class ExamComponent implements  OnInit{
   exam!:any ;
   id:any;
   questions:any[]=[];
-  currentQusetion:any={
+  currentQusetion:any|undefined={
     name:"",
     description : "",
     type:"NORMAL",
@@ -62,6 +62,7 @@ export class ExamComponent implements  OnInit{
   answerForm!:FormGroup;
 
   ngOnInit() {
+    this.id = this.route.snapshot.paramMap.get('id');
 
     this.answerForm = this.builder.group({
       answer:this.builder.control('',Validators.required),
@@ -70,16 +71,17 @@ export class ExamComponent implements  OnInit{
     this.optionForm = this.builder.group({
       userOption:this.builder.control(0,Validators.required),
     })
-    this.id = this.route.snapshot.paramMap.get('id');
-    this.startCountdown();
-    this.isVisible();
     this.onGetExamInfo();
     this.onGetQuestions();
+
     setTimeout(() => {
       // Code to execute after the specified delay
       this.loading = !this.loading;
       this.currentQusetion = this.questions[0];
     },2000);
+    this.startCountdown();
+    this.isVisible();
+
     this.setupEventListeners();
     this.startTimer()
   }
