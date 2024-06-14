@@ -40,9 +40,12 @@ public class ExamDto {
     private DifficultyLevel difficultyLevel;
 
     private List<Question> questions;
+
     private Integer user;
+
     private Long workspace;
-    private Integer student;
+
+    private Integer student;// nullable
 
     private Integer ExamGroup;
 

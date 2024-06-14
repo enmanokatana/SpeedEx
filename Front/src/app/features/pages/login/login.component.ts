@@ -53,22 +53,9 @@ export class LoginComponent implements OnInit {
           localStorage.setItem('id',response.userID)
         this.store.setUserRole(response.role);
           this.store.setToken(response.ACCESS_TOKEN);
-          this.userService.GetUser(response.userID).subscribe({
-            next:(response)=>{
-              console.log("second Response",response);
-              this.store.setProfilePic(response.result.profileImg);
-              this.router.navigate(['Home']);
+        this.router.navigate(['Home']);
 
 
-            },
-            error:(error) => {
-              console.error('Login error', error);
-            },
-            complete:() => {
-
-            }
-
-          })
 
       },
       error: (error) => {

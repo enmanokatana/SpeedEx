@@ -25,7 +25,7 @@ public class ExamController {
             @RequestBody ExamDto exam
 
             ){
-        return examService.createExam(exam);
+        return examService.createExamNew(exam);
     }
     @DeleteMapping("/{id}")
     public ResponseDto deleteExam(

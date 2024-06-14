@@ -12,6 +12,15 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+
+
+// A lot of stuff to fix
+//add the exam
+
+
+
+
 
 @Service
 @RequiredArgsConstructor
@@ -21,8 +30,9 @@ public class ExamService {
     private final OptionRepository optionRepository;
     private final UserRepository userRepository;
     private final WorkspaceRepository workspaceRepository;
+    private final ExamGroupRepository examGroupRepository;
 
-    private ResponseDto responseDto =new ResponseDto();
+    private final ResponseDto responseDto =new ResponseDto();
     public ResponseDto createExam(ExamDto examDto){
 
         var user = userRepository.findById(examDto.getUser());
@@ -48,11 +58,12 @@ public class ExamService {
 
             if (user.isPresent() ){
                 List<Question> questions = null;
-                if (
-                        examDto.getQuestions() != null
-                ) {
+
+
+                if (examDto.getQuestions() != null) {
                     questions = examDto.getQuestions();
                 }
+
                 responseDto.setResult(repository.save(Exam.builder()
                         .description(examDto.getDescription())
                         .isPublic(examDto.isPublic())
@@ -72,6 +83,7 @@ public class ExamService {
 
                 responseDto.setMessage("saved exam Successfully ");
                 responseDto.setWorked(true);
+
                 assert questions != null;
                 for (Question question : questions) {
                     question.setExam((Exam) responseDto.getResult());
@@ -91,25 +103,20 @@ public class ExamService {
                 }
 
 
-
-
-                if (workspaceUserId !=null){
-                    for (Integer id : workspaceUserId){
-                        createExam(ExamDto.builder()
-                                .user(examDto.getUser())
-                                .student(id)
-                                .description(examDto.getDescription())
-                                .timer(examDto.getTimer())
-                                .randomizeQuestions(examDto.isRandomizeQuestions())
-                                .name(examDto.getName())
-                                .workspace(examDto.getWorkspace())
-                                .questions(examDto.getQuestions())
-                                .passingScore(examDto.getPassingScore())
-                                .isPublic(examDto.isPublic())
-                                .difficultyLevel(examDto.getDifficultyLevel())
-                                .build());
-                    }
-
+                for (Integer id : workspaceUserId) {
+                    createExam(ExamDto.builder()
+                            .user(examDto.getUser())
+                            .student(id)
+                            .description(examDto.getDescription())
+                            .timer(examDto.getTimer())
+                            .randomizeQuestions(examDto.isRandomizeQuestions())
+                            .name(examDto.getName())
+                            .workspace(examDto.getWorkspace())
+                            .questions(examDto.getQuestions())
+                            .passingScore(examDto.getPassingScore())
+                            .isPublic(examDto.isPublic())
+                            .difficultyLevel(examDto.getDifficultyLevel())
+                            .build());
                 }
 
                 return responseDto;
@@ -133,6 +140,157 @@ public class ExamService {
 
 
 
+    public ResponseDto createExamNew(ExamDto examDto){
+
+        Optional<User> user = userRepository.findById(examDto.getUser());
+        if (user.isEmpty()){
+            responseDto.setWorked(false);
+            responseDto.setResult(null);
+            responseDto.setMessage("User doesn't Exist");
+            return responseDto;
+        }
+
+        Optional<Workspace> workspace = workspaceRepository.findById(examDto.getWorkspace());
+        if (workspace.isEmpty()){
+            responseDto.setWorked(false);
+            responseDto.setResult(null);
+            responseDto.setMessage("WorkSpace doesn't Exist");
+            return responseDto;
+        }
+
+        Optional<ExamGroup> examGroupOptional = examGroupRepository.findById(examDto.getExamGroup());
+        ExamGroup examGroup;
+        if (examGroupOptional.isPresent()){
+            examGroup = examGroupOptional.get();
+
+        }else {
+            examGroup = examGroupRepository.save(ExamGroup.builder()
+                    .exams(null)
+                    .id(0).build());
+        }
+
+
+        Optional<User> studentOp = userRepository.findById(examDto.getStudent());
+        User student = studentOp.orElse(null);
+
+        List<Question> questions = examDto.getQuestions();
+
+
+        Exam result  = repository.save(
+                Exam.builder()
+                        .description(examDto.getDescription())
+                        .isPublic(examDto.isPublic())
+                        .randomizeQuestions(examDto.isRandomizeQuestions())
+                        .passingScore(examDto.getPassingScore())
+                        .createdOn(LocalDateTime.now())
+                        .timer(examDto.getTimer())
+                        .name(examDto.getName())
+                        .difficultyLevel(examDto.getDifficultyLevel())
+                        .id(0L)
+                        .questions(questions)
+                        .user(user.get())
+                        .workspace(workspace.get())
+                        .passed(false)
+                        .student(student)
+                        .examGroup(examGroup)
+                        .build()
+        );
+        //add teh exam to the group
+
+
+
+
+        if (examGroup.getExams() ==  null){
+            var Exams = new ArrayList<Exam>();
+            Exams.add(result);
+            examGroup.setExams(Exams);
+        }else{
+
+            var Exams = examGroup.getExams();
+            Exams.add(result);
+            examGroup.setExams(Exams);
+        }
+
+
+
+        examGroupRepository.save(examGroup);
+
+        responseDto.setResult(result);
+        responseDto.setWorked(true);
+        responseDto.setMessage("saved exam Successfully ");
+        //##########################################################################
+        //we've Created the exam
+        // ##########################################################################
+
+        if (!questions.isEmpty()){
+            for(Question question:questions){
+                question.setExam((Exam) responseDto.getResult());
+            }
+            List<Question> questionResults = questionRepository.saveAll(questions);
+
+            for (Question question:questionResults){
+                List<Option> options= question.getOptions();
+                if (!options.isEmpty()){
+                    for (Option option:options){
+                        option.setQuestion(question);
+                    }
+                    optionRepository.saveAll(options);
+                }
+            }
+        }
+        //##########################################################################
+        //we've Saved the questions with their options
+        // ##########################################################################
+
+
+        List<Integer> Ids = new ArrayList<>();
+
+        if (student == null){
+            for (User userW:workspace.get().getUsers()){
+                Ids.add(userW.getId());
+            }
+        }
+
+        for (Integer id : Ids){
+            createExamNew(ExamDto.builder()
+                    .user(examDto.getUser())
+                    .student(id)
+                    .description(examDto.getDescription())
+                    .timer(examDto.getTimer())
+                    .randomizeQuestions(examDto.isRandomizeQuestions())
+                    .name(examDto.getName())
+                    .workspace(examDto.getWorkspace())
+                    .questions(examDto.getQuestions())
+                    .passingScore(examDto.getPassingScore())
+                    .isPublic(examDto.isPublic())
+                    .difficultyLevel(examDto.getDifficultyLevel())
+                    .ExamGroup(examGroup.getId())
+                    .build());
+        }
+
+
+
+
+        //##########################################################################
+        //we've Assigned this exam to every user in the
+        // workspace and Identified this particular one with exam group
+        // ##########################################################################
+
+        return responseDto;
+    }
+
+
+
+
+
+
+
+
+
+
+//    public ResponseDto CorrectExam (Exam exam){
+//
+//    }
 
 
     public ResponseDto findExamsByUser(Integer id){
