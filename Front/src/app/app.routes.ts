@@ -13,6 +13,7 @@ import {ExamComponent} from "./features/pages/exam/exam.component";
 import {CodeInputComponent} from "./shared/code-input/code-input.component";
 import {InvitationsComponent} from "./features/pages/invitations/invitations.component";
 import {WelcomeComponent} from "./features/pages/welcome/welcome.component";
+import {ConnectionlostComponent} from "./features/pages/connectionlost/connectionlost.component";
 
 export const routes: Routes = [
 
@@ -67,6 +68,9 @@ export const routes: Routes = [
   {path:'Welcome',
     title:'Welcome',
     component:WelcomeComponent},
+{path:'ConnectionLost',
+    title:'Connection Lost',
+    component:ConnectionlostComponent},
 
   { path: '**',
     pathMatch: 'full',

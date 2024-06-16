@@ -58,4 +58,16 @@ public class Question {
     private Integer userOption;
 
     private DifficultyLevel difficultyLevel;
+
+
+    public Integer getTrueOption(){
+
+        for (int i = 0; i < options.size(); i++) {
+            if (options.get(i).isCorrect()) return i+1;
+
+        }
+
+        return 0;
+
+    }
 }

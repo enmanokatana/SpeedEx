@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 
@@ -33,6 +34,8 @@ public class ExamService {
     private final ExamGroupRepository examGroupRepository;
 
     private final ResponseDto responseDto =new ResponseDto();
+
+    @Deprecated
     public ResponseDto createExam(ExamDto examDto){
 
         var user = userRepository.findById(examDto.getUser());
@@ -79,6 +82,8 @@ public class ExamService {
                         .workspace(workspace.get())
                         .passed(false)
                         .student(student)
+                        .result(false)
+                        .passingDate(LocalDateTime.now())
                         .build()));
 
                 responseDto.setMessage("saved exam Successfully ");
@@ -193,6 +198,8 @@ public class ExamService {
                         .passed(false)
                         .student(student)
                         .examGroup(examGroup)
+                        .result(false)
+                        .passingDate(LocalDateTime.of(2024,7,1,11,30,0))
                         .build()
         );
         //add teh exam to the group
@@ -222,7 +229,7 @@ public class ExamService {
         //we've Created the exam
         // ##########################################################################
 
-        if (!questions.isEmpty()){
+        if (questions!=null){
             for(Question question:questions){
                 question.setExam((Exam) responseDto.getResult());
             }
@@ -230,7 +237,7 @@ public class ExamService {
 
             for (Question question:questionResults){
                 List<Option> options= question.getOptions();
-                if (!options.isEmpty()){
+                if (options != null){
                     for (Option option:options){
                         option.setQuestion(question);
                     }
@@ -372,6 +379,46 @@ public class ExamService {
 
         return responseDto;
     }
+
+
+    public void correctExam(Long  examId){
+        Optional<Exam> exam = repository.findById(examId);
+        if (exam.isEmpty()){
+            return;
+        }
+
+        int Sum = 0;
+        for (Question question:exam.get().getQuestions()){
+            if (question.getAnswer() == null){
+                int correctOption = question.getTrueOption();
+                if (question.getUserOption() == correctOption) Sum += question.getScore();
+
+            }
+            else {
+                if (Objects.equals(question.getUserAnswer(), question.getAnswer())) Sum += question.getScore();
+            }
+        }
+        if (exam.get().getPassingScore() <=Sum) {
+            exam.get().setResult(true);
+            repository.save(exam.get());
+        }else {
+            exam.get().setResult(false);
+            repository.save(exam.get());
+        }
+    }
+
+    public Integer GetPassingScore(Exam exam){
+        int Sum = 0 ,i=0;
+        for(Question question: exam.getQuestions()){
+            Sum += question.getScore() ;i++;
+        }
+        Sum = (int )Sum/i;
+        return Sum;
+    }
+
+
+
+
 
 
 }

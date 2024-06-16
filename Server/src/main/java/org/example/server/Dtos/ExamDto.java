@@ -49,6 +49,10 @@ public class ExamDto {
 
     private Integer ExamGroup;
 
+    private LocalDateTime passingDate ;
+
+    private boolean result ;
+
 
 
 

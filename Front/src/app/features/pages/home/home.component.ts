@@ -7,7 +7,6 @@ import {HeaderComponent} from "../../../core/componenets/header/header.component
 import {WorkspaceService} from "../../../core/services/workspace/workspace.service";
 import {NgForOf, NgIf} from "@angular/common";
 import {UserService} from "../../../core/services/User/user.service";
-
 @Component({
   selector: 'app-home',
   standalone: true,
@@ -32,6 +31,7 @@ export class HomeComponent implements OnInit {
   ngOnInit(): void {
         this.loggeduser = this.store.isLogged();
         //console.log.log("Id here : ",localStorage.getItem('id'));
+        console.log("Date : ",Date.now());
 
         if (localStorage.getItem('role')==="USER"){
           this.onGetWorkspacesUser();
@@ -43,6 +43,7 @@ export class HomeComponent implements OnInit {
       //console.log.log('Delayed code executed after 2000 milliseconds');
       this.loading = !this.loading;
        },2000);
+
 
   }
   OnLogout(){
