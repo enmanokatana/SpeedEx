@@ -1,4 +1,4 @@
-<div class="hero min-h-screen bg-base-200">
+<div *ngIf="step ===1" class="hero min-h-screen bg-base-200">
   <div class="hero-content flex-col lg:flex-row-reverse">
     <div class="text-center lg:text-left">
       <h1 class="text-5xl font-bold">Register now!</h1>
@@ -9,45 +9,77 @@
       </p>
     </div>
     <div class="card shrink-0 w-full max-w-md shadow-2xl bg-base-100">
-      <form class="card-body" [formGroup]="registerForm" (ngSubmit)="onRegister()" >
+      <form class="card-body" [formGroup]="registerForm" (ngSubmit)="advance()" >
         <div class="form-control">
           <label class="label">
-            <span class="label-text">Full Name</span>
+            <span class="label-text">FirstName : </span>
           </label>
           <input formControlName="firstname" type="text" placeholder="firstname" class="input input-bordered"
                  required />
         </div>
         <div class="form-control">
           <label class="label">
-            <span class="label-text">Age</span>
+            <span class="label-text">LastName : </span>
           </label>
           <input formControlName="lastname" type="text" placeholder="lastname" class="input input-bordered" required />
         </div>
         <div class="form-control">
           <label class="label" for="email">
-            <span class="label-text">Email</span>
+            <span class="label-text">Email : </span>
           </label>
           <input id="email" formControlName="email" type="email" placeholder="Email" class="input input-bordered" required />
         </div>
         <div class="form-control">
           <label class="label">
-            <span class="label-text">Password</span>
+            <span class="label-text">Password : </span>
           </label>
           <input formControlName="password" type="password" placeholder="Password" class="input input-bordered"
                  required />
         </div>
         <div class="form-control">
           <label class="label">
-            <span class="label-text">Confirm Password</span>
+            <span class="label-text">Confirm Password : </span>
           </label>
           <input formControlName="confirm_password" type="password" placeholder="Confirm Password"
                  class="input input-bordered" required />
         </div>
 
         <div class="form-control mt-6">
-          <button type="submit" class="btn btn-primary">Register</button>
+          <button type="submit" class="btn btn-primary">Sign Up</button>
         </div>
       </form>
     </div>
   </div>
 </div>
+<div *ngIf="step === 2" class="hero min-h-screen bg-base-200">
+  <div class="hero-content text-center">
+    <div class="">
+      <h1 class="text-5xl font-bold">Chose your role</h1>
+      <p class="py-6"> !!! Be careful you will not be able to change it later !!!</p>
+
+      <!-- Flex container for the cards using Tailwind classes -->
+      <div class="flex space-x-20 justify-center">
+        <div class="card w-96 bg-primary text-primary-content">
+          <div class="card-body">
+            <h2 class="card-title">Teacher</h2>
+            <p class="my-5" >Create Workspace and  Exams  add students and post lecons</p>
+            <div class="card-actions justify-end">
+              <button (click)="onRegister('ADMIN')" class="btn">Sign up as Professor</button>
+            </div>
+          </div>
+        </div>
+        <div class="card w-96 bg-primary text-primary-content items-center">
+          <div class="card-body">
+            <h2 class="card-title ">Student</h2>
+            <p class="my-5" >Join Workspaces pass exams follow your achievements</p>
+            <div class="card-actions justify-end">
+              <button (click)="onRegister('USER')" class="btn">Sign Up as student</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <button (click)="GoBack()" class="btn btn-primary mt-4">Back</button>
+    </div>
+  </div>
+</div>
+

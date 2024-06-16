@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -17,12 +18,12 @@ public class ExamGroup {
     @Id
     @GeneratedValue
     private Integer id;
-
-    @OneToOne
-    private User Admin;
+//
+//    @ManyToOne
+//    private User Admin;
 
     @OneToMany
-    private List<Exam> exams;
+    private List<Exam> exams = new ArrayList<>();
 
 
 

@@ -46,7 +46,13 @@ public class Exam {
 
     @OneToMany(mappedBy = "exam", cascade = CascadeType.ALL , fetch = FetchType.LAZY)
     private List<Question> questions;
+
     private LocalDateTime createdOn ;
+
+    //The Date the exam will be passed in
+    private LocalDateTime passingDate ;
+
+    private boolean result ;
 
 
 

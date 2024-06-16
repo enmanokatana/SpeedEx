@@ -9,6 +9,7 @@ import {environment} from "../../../../environmenets/environment";
 export class ExamService {
 
   url = environment.API_BASE_URL+"api/v1/Exam";
+  urlg = environment.API_BASE_URL+"api/v1/ExamGroup";
   token = localStorage.getItem('token');
 
   constructor(private http:HttpClient) {
@@ -37,6 +38,14 @@ export class ExamService {
 
   getQuestionIdsByExam(id:any):Observable<any>{
     const requestUrl = `${this.url}/questionsIds/${id}`;
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${this.token}`
+    });
+    return this.http.get(requestUrl,{headers});
+
+  }
+  getExamsByGroupId(id:any):Observable<any>{
+    const requestUrl = `${this.urlg}/${id}`;
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${this.token}`
     });

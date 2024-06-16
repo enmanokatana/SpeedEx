@@ -105,7 +105,7 @@ public class WorkSpaceService {
                     for (Exam examDto:examsToAdd){
 
                         exams.add( (Exam)
-                                examService.createExam(ExamDto.builder()
+                                examService.createExamNew(ExamDto.builder()
                                         .isPublic(examDto.isPublic())
                                         .questions(examDto.getQuestions())
                                         .student(user.get().getId())
@@ -172,7 +172,7 @@ public class WorkSpaceService {
                 for (Exam examDto:workspace.get().getExams()){
 
                    exams.add( (Exam)
-                    examService.createExam(ExamDto.builder()
+                    examService.createExamNew(ExamDto.builder()
                                .isPublic(examDto.isPublic())
                                .questions(examDto.getQuestions())
                                .student(user.get().getId())

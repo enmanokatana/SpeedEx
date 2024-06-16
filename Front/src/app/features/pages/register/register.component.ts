@@ -8,15 +8,17 @@ import {
   Validators,
 } from '@angular/forms';
 import { AuthService } from '../../../core/services/Auth/auth.service';
+import {NgIf} from "@angular/common";
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, NgIf],
   templateUrl: './register.component.html',
   styleUrl: './register.component.css',
 })
 export class RegisterComponent implements OnInit {
   errorMessages: { [key: string]: string } = {};
+  step:number =  1;
   registerRequest: any = {
     firstname: '',
     lastname: '',
@@ -51,7 +53,7 @@ export class RegisterComponent implements OnInit {
     });
   }
 
-  onRegister() {
+  onRegister(role:string) {
     console.log(this.registerForm.value);
     if (
       this.registerForm.get('password')?.value?.trim() !==
@@ -68,7 +70,7 @@ export class RegisterComponent implements OnInit {
         lastname :this.registerForm.value.lastname,
         email : this.registerForm.value.email,
         password : this.registerForm.value.password,
-        role : 'USER'
+        role : role
       };
       this.service.register(this.registerRequest).subscribe({
         next: (response) => {
@@ -106,6 +108,14 @@ export class RegisterComponent implements OnInit {
   }
   get RoleName(): FormControl {
     return this.registerForm.get('rolename') as FormControl;
+  }
+  advance(){
+    if (this.registerForm.valid) {
+      this.step = 2;
+    }
+  }
+  GoBack(){
+    this.step= 1;
   }
 }
 

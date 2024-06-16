@@ -29,7 +29,9 @@ export class CreateExamComponent implements OnInit{
     questions:[],
     user:localStorage.getItem('id'),
     workspace:0,
-    student:0
+    examGroup:0,
+    student:0,
+    passingDate:null
 
 }
 question : any={
@@ -65,6 +67,7 @@ options : any[]=[]
       randomizeQuestions:this.builder.control(false,Validators.required),
       isPublic :this.builder.control(false,Validators.required),
       difficultyLevel :this.builder.control('EASY',Validators.required),
+      passingDate:this.builder.control(new Date(Date.now()),Validators.required)
 
     })
     this.questionForm = this.builder.group({
@@ -109,6 +112,11 @@ options : any[]=[]
       this.exam.difficultyLevel = this.examForm.value.difficultyLevel;
       this.currentStep++;
     }else if(step ==6){
+      console.log("Exam passingDate :",this.examForm.value.passingDate.toISOString());
+    //convert to ISO
+      this.exam.passingDate = this.examForm.value.passingDate.toISOString();
+      this.currentStep++;
+    }else if(step ==7){
       this.passingScore+=this.questionForm.value.score;
       this.question = this.questionForm.value;
 
@@ -159,9 +167,6 @@ options : any[]=[]
     })
 
   }
-
-
-
 
 
 }
