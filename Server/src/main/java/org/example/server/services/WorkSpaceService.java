@@ -80,7 +80,80 @@ public class WorkSpaceService {
 
     }
 
-    public ResponseDto addUserToWorkSpaceById(Integer id , Long Wid) {
+    public ResponseDto addUserToWorkSpaceById(Integer id , Long Wid){
+        var user = userRepository.findById(id);
+        if (user.isEmpty()){
+            responseDto.setWorked(false);
+            responseDto.setResult(null);
+            responseDto.setMessage("User doesn't exist");
+
+            return responseDto;
+        }
+        var workspace = repository.findById(Wid);
+        if (workspace.isEmpty()){
+            responseDto.setWorked(false);
+            responseDto.setResult(null);
+            responseDto.setMessage("WorkSpace Doesn't Exist");
+            return responseDto;
+        }
+        if (workspace.get().getUsers().contains(user.get())){
+            responseDto.setWorked(false);
+            responseDto.setResult(null);
+            responseDto.setMessage("User Already Exist in WorkSpace");
+            return responseDto;
+        }
+        //////////////////////////////////////////
+        List<Exam> exams = new ArrayList<>();
+        List<Exam> examsToAdd = new ArrayList<>();
+        for (Exam exam:workspace.get().getExams())
+        {
+            if (exam.getStudent() == null){
+                examsToAdd.add(exam);
+            }
+        }
+
+        for (Exam examDto:examsToAdd){
+
+            exams.add( (Exam)
+                    examService.createExamNew(ExamDto.builder()
+                                    .id(0L)
+                            .isPublic(examDto.isPublic())
+                            .questions(examDto.getQuestions())
+                            .student(user.get().getId())
+                            .workspace(examDto.getWorkspace().getId())
+                            .user(examDto.getUser().getId())
+                            .passingScore(examDto.getPassingScore())
+                            .timer(examDto.getTimer())
+                            .randomizeQuestions(examDto.isRandomizeQuestions())
+                            .name(examDto.getName())
+                            .description(examDto.getDescription())
+                            .difficultyLevel(examDto.getDifficultyLevel())
+                                    .passingDate(examDto.getPassingDate())
+                                    .passed(false)
+                                    .ExamGroup(examDto.getExamGroup().getId())
+                                    .result(false)
+
+
+                            .build()).getResult());
+
+        }
+
+
+
+        user.get().getExams().addAll(exams);
+        user.get().getWorkspaces().add(workspace.get());//assigning the user the exams before adding him there ;
+        userRepository.save(user.get());
+        //////////////////////////////////////
+        workspace.get().getUsers().add(user.get());
+        repository.save(workspace.get());
+        responseDto.setWorked(true);
+        responseDto.setMessage("Added User Successfully to WorkSpace");
+        responseDto.setResult(null);
+        return responseDto;
+
+    }
+    @Deprecated
+    public ResponseDto addUserToWorkSpace(Integer id , Long Wid) {
         try{
             var user = userRepository.findById(id);
             var workspace = repository.findById(Wid);
@@ -225,22 +298,39 @@ public class WorkSpaceService {
             if(users.isEmpty()){
                 users = null;
             }
-
-            responseDto.setResult(repository.save(Workspace.builder()
+            var result = repository.save(Workspace.builder()
                     .admin(admin.get())
-                            .name(workSpaceDto.getName())
-                            .id(0L)
-                            .description(workSpaceDto.getDescription())
-                            .exams(null)
-                            .image("https://firebasestorage.googleapis.com/v0/b/library-b3d3f.appspot.com/o/4d6eb84e-c837-467f-9d5e-803cb2c5562e.png?alt=media")
-                            .users(users)
-                    .build()));
+                    .name(workSpaceDto.getName())
+                    .id(0L)
+                    .description(workSpaceDto.getDescription())
+                    .exams(null)
+                    .image("https://firebasestorage.googleapis.com/v0/b/library-b3d3f.appspot.com/o/4d6eb84e-c837-467f-9d5e-803cb2c5562e.png?alt=media")
+                    .users(users)
+                    .build());
+            responseDto.setResult(result);
 
-            admin.get().getWorkspaces().add((Workspace) responseDto.getResult());
+            var adminsWorkspaces = admin.get().getMyWorkspaces();
+            if (adminsWorkspaces == null)
+            {
+                adminsWorkspaces = new ArrayList<>();
+                adminsWorkspaces.add(result);
+            }else
+            {
+                adminsWorkspaces.add(result);
+            }
+            admin.get().setMyWorkspaces(adminsWorkspaces);
+            userRepository.save(admin.get());
 
             if (users!=null){
                 for (User user:users){
-                    user.getWorkspaces().add((Workspace) responseDto.getResult());
+                    var usersWorkspaces = user.getWorkspaces();
+                    if (usersWorkspaces == null){
+                        usersWorkspaces = new ArrayList<>();
+                    }else {
+                        usersWorkspaces.add(result);
+                    }
+                    user.setWorkspaces(usersWorkspaces);
+                    userRepository.save(user);
                 }
 
 
@@ -417,12 +507,20 @@ public class WorkSpaceService {
         return responseDto;
     }
 
+    // Old
     public ResponseDto RemoveUserFromWorkSpace(Integer userId,Long Wid){
         try{
             var user =   userRepository.findById(userId);
             var workspace = repository.findById(Wid);
             if (workspace.isPresent()) {
                 if (user.isPresent()) {
+
+
+
+
+                    //////////////////////////////////////////////////////////
+                   // examService.DeleteAllUserWorkSpaceExams(userId,Wid);
+                    ///////////////////////////////////////////////
                     user.get().getWorkspaces().remove(workspace.get());
                     userRepository.save(user.get());//Remove Ws From user Entity
                     //////////////////////////////////////////////
@@ -458,6 +556,11 @@ public class WorkSpaceService {
 
 
     }
+
+
+
+
+
     public ResponseDto getWorkSpaceImage(Long id){
         var ws = repository.findById(id);
 

@@ -1,7 +1,10 @@
 package org.example.server.services;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.example.server.Dtos.ExamDto;
+import org.example.server.exceptions.UserDoesNotExistException;
+import org.example.server.exceptions.WorkSpaceDoesNotExistException;
 import org.example.server.models.*;
 import org.example.server.repositories.*;
 import org.springframework.data.domain.PageRequest;
@@ -14,8 +17,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 // A lot of stuff to fix
 //add the exam
 
@@ -199,7 +204,7 @@ public class ExamService {
                         .student(student)
                         .examGroup(examGroup)
                         .result(false)
-                        .passingDate(LocalDateTime.of(2024,7,1,11,30,0))
+                        .passingDate(examDto.getPassingDate())
                         .build()
         );
         //add teh exam to the group
@@ -272,6 +277,7 @@ public class ExamService {
                     .isPublic(examDto.isPublic())
                     .difficultyLevel(examDto.getDifficultyLevel())
                     .ExamGroup(examGroup.getId())
+                    .passingDate(examDto.getPassingDate())
                     .build());
         }
 
@@ -418,6 +424,45 @@ public class ExamService {
 
 
 
+
+    @Transactional
+    public void DeleteAllUserWorkSpaceExams(Integer userId, Long workspaceId) throws Exception {
+        var logger = LoggerFactory.getLogger(ExamService.class);
+
+        var userOptional = userRepository.findById(userId);
+        if (userOptional.isEmpty()) {
+            throw new UserDoesNotExistException("User doesn't exist");
+        }
+
+        var workspaceOptional = workspaceRepository.findById(workspaceId);
+        if (workspaceOptional.isEmpty()) {
+            throw new WorkSpaceDoesNotExistException("Workspace doesn't exist");
+        }
+
+        var user = userOptional.get();
+        var workspace = workspaceOptional.get();
+
+        // Process each exam in the workspace
+        for (Exam exam : workspace.getExams()) {
+            if (user.equals(exam.getStudent())) {
+                var examGroup = exam.getExamGroup();
+                var exams = examGroup.getExams().stream()
+                        .filter(exam1 -> !exam.equals(exam1))
+                        .collect(Collectors.toList());
+                examGroup.setExams(exams);
+                examGroupRepository.save(examGroup);  // Save after modifying exams
+            }
+        }
+
+        // Fetch user exams related to the specific workspace and delete them
+        var userExams = repository.findAllByStudentId(userId).stream()
+                .filter(exam -> workspace.equals(exam.getWorkspace()))
+                .collect(Collectors.toList());
+
+        logger.info("User exams to be deleted: {}", userExams);
+
+        repository.deleteAll(userExams);
+    }
 
 
 

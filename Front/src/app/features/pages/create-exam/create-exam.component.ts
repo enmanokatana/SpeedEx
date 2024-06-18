@@ -113,7 +113,7 @@ options : any[]=[]
       this.currentStep++;
     }else if(step ==6){
       console.log("Exam passingDate :",this.examForm.value.passingDate.toISOString());
-    //convert to ISO
+      //convert to ISO
       this.exam.passingDate = this.examForm.value.passingDate.toISOString();
       this.currentStep++;
     }else if(step ==7){

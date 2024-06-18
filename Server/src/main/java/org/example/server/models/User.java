@@ -56,11 +56,11 @@ public class User implements UserDetails{
 
     @OneToMany(mappedBy = "admin", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     @JsonIgnore
-    private List<Workspace> myWorkspaces;
+    private List<Workspace> myWorkspaces;//owned
 
     @ManyToMany
     @JsonIgnore
-    private List<Workspace> workspaces;
+    private List<Workspace> workspaces;//joined
 
 
 
@@ -88,6 +88,17 @@ public class User implements UserDetails{
     @Override
     public boolean isAccountNonLocked() {
         return true;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", firstname='" + firstname + '\'' +
+                ", lastname='" + lastname + '\'' +
+                ", email='" + email + '\'' +
+                ", role=" + role +
+                '}';
     }
 
     @Override

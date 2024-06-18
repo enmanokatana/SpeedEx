@@ -41,5 +41,13 @@ public class Workspace {
     private String image;
 
 
-
+    @Override
+    public String toString() {
+        return "Workspace{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", admin=" + admin +
+                '}';
+    }
 }
