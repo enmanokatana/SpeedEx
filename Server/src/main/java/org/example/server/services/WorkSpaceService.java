@@ -11,6 +11,7 @@ import org.example.server.models.Workspace;
 import org.example.server.repositories.ExamRepository;
 import org.example.server.repositories.UserRepository;
 import org.example.server.repositories.WorkspaceRepository;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +43,7 @@ public class WorkSpaceService {
     private final ResponseDto responseDto = new ResponseDto();
     private final UserService userService;
 
-
+    @Cacheable(cacheNames = "workspaces",key = "#id")
     public ResponseDto getWorkSpaceAdmin(Long id){
         var ws = repository.findById(id);
         if (ws.isPresent()){
@@ -64,7 +65,7 @@ public class WorkSpaceService {
         responseDto.setMessage("Couldn't find this workspace");
         return responseDto;
     }
-
+    @Cacheable(cacheNames = "workspaces",key = "#id")
     public ResponseDto getWorkSpaceById(Long id){
         var ws = repository.findById(id);
         if (ws.isPresent()){
@@ -348,6 +349,8 @@ public class WorkSpaceService {
 
     }
 
+    @Cacheable(cacheNames = "workspaces",key = "#id")
+
     public ResponseDto getWorkspaceByAdminId(Integer id){
         var admin = userRepository.findById(id);
         if (admin.isPresent()){
@@ -364,6 +367,8 @@ public class WorkSpaceService {
         return responseDto;
 
     }
+
+    @Cacheable(cacheNames = "workspaces",key = "#id")
     public ResponseDto getWorkSpaceDto(Long id){
         var workspaceO = repository.findById(id);
         if (workspaceO.isPresent()){
@@ -390,6 +395,7 @@ public class WorkSpaceService {
 
     }
 
+    @Cacheable(cacheNames = "workspaces",key = "#id")
 
     public ResponseDto getUsersFromWorkSpace(Long id){
 
@@ -417,6 +423,7 @@ public class WorkSpaceService {
     }
 
     //returns all the exams for any workspace
+    @Cacheable(cacheNames = "workspaces",key = "#id")
     public ResponseDto GetWorkSpaceExams(Long id){
         var workspace = repository.findById(id);
         List<ExamDto> exams = new ArrayList<>();
@@ -575,6 +582,7 @@ public class WorkSpaceService {
         return responseDto;
     }
 
+    @Cacheable(cacheNames = "workspaces",key = "#id")
     public ResponseDto getWorkSpaceName(Long id){
         var ws = repository.findById(id);
 

@@ -28,6 +28,7 @@ public class ExamController {
         return examService.createExamNew(exam);
     }
     @DeleteMapping("/{id}")
+    @Deprecated
     public ResponseDto deleteExam(
             @PathVariable Long id
     ){

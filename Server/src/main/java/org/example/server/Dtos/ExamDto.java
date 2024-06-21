@@ -25,32 +25,19 @@ public class ExamDto {
 
     private  Long id;
     private String name;
-
     private Integer timer;
-
     private Integer passingScore;
-
     private String description;
-
     private boolean randomizeQuestions;
-
     private boolean isPublic;
-
     private boolean passed;
     private DifficultyLevel difficultyLevel;
-
     private List<Question> questions;
-
     private Integer user;
-
     private Long workspace;
-
     private Integer student;// nullable
-
     private Integer ExamGroup;
-
     private LocalDateTime passingDate ;
-
     private boolean result ;
 
 
