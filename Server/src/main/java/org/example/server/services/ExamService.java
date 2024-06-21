@@ -7,6 +7,7 @@ import org.example.server.exceptions.UserDoesNotExistException;
 import org.example.server.exceptions.WorkSpaceDoesNotExistException;
 import org.example.server.models.*;
 import org.example.server.repositories.*;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -114,6 +115,7 @@ public class ExamService {
 
 
                 for (Integer id : workspaceUserId) {
+
                     createExam(ExamDto.builder()
                             .user(examDto.getUser())
                             .student(id)
@@ -146,10 +148,6 @@ public class ExamService {
 
 
     }
-
-
-
-
     public ResponseDto createExamNew(ExamDto examDto){
 
         Optional<User> user = userRepository.findById(examDto.getUser());
@@ -292,20 +290,11 @@ public class ExamService {
         return responseDto;
     }
 
-
-
-
-
-
-
-
-
-
 //    public ResponseDto CorrectExam (Exam exam){
 //
 //    }
 
-
+    @Cacheable(cacheNames = "exams",key = "#id")
     public ResponseDto findExamsByUser(Integer id){
         var user = userRepository.findById(id);
         if (user.isPresent()){
@@ -321,6 +310,8 @@ public class ExamService {
         return responseDto;
 
     }
+    @Cacheable(cacheNames = "exams",key = "#id")
+
     public ResponseDto findExamById(Long id){
         var exam =repository.findById(id);
         if (exam.isPresent()){
@@ -337,6 +328,7 @@ public class ExamService {
 
     }
 
+    @Deprecated
     public ResponseDto deleteExam(Long id){
         var exam =repository.findById(id);
         if (exam.isPresent()){
@@ -352,6 +344,15 @@ public class ExamService {
         responseDto.setMessage("exam doesn't exist with the id : " + id);
         return  responseDto;
     }
+
+
+    public ResponseDto deleteAllExamsInExamGroup(){
+
+        //TODO implement it
+        return null;
+    }
+
+    @Cacheable(cacheNames = "exams",key = "#id")
     public ResponseDto getQuestionIdsByExamId(Long id){
 
         var exam = repository.findById(id);
