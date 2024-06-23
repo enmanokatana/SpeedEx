@@ -14,6 +14,7 @@ import {CodeInputComponent} from "./shared/code-input/code-input.component";
 import {InvitationsComponent} from "./features/pages/invitations/invitations.component";
 import {WelcomeComponent} from "./features/pages/welcome/welcome.component";
 import {ConnectionlostComponent} from "./features/pages/connectionlost/connectionlost.component";
+import {UserGuard} from "./core/Guards/user.guard";
 
 export const routes: Routes = [
 
@@ -63,7 +64,7 @@ export const routes: Routes = [
     component:ExamComponent},
   {path:'Invitations',
     title:'Invites',
-    canActivate:[AuthGuard],
+    canActivate:[AuthGuard,UserGuard],
     component:InvitationsComponent},
   {path:'Welcome',
     title:'Welcome',

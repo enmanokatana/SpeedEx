@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Entity
@@ -14,7 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 @Data
 @Builder
-public class Workspace {
+public class Workspace implements Serializable {
     @Id
     @GeneratedValue
     private Long id;

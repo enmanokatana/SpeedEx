@@ -11,6 +11,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.example.server.enums.DifficultyLevel;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -20,7 +21,7 @@ import java.util.List;
 @Data
 
 @Builder
-public class Exam {
+public class Exam implements Serializable {
     @Id
     @GeneratedValue
     private Long id;

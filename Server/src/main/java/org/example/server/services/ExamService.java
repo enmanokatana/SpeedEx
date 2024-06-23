@@ -294,7 +294,6 @@ public class ExamService {
 //
 //    }
 
-    @Cacheable(cacheNames = "exams",key = "#id")
     public ResponseDto findExamsByUser(Integer id){
         var user = userRepository.findById(id);
         if (user.isPresent()){
@@ -310,7 +309,6 @@ public class ExamService {
         return responseDto;
 
     }
-    @Cacheable(cacheNames = "exams",key = "#id")
 
     public ResponseDto findExamById(Long id){
         var exam =repository.findById(id);
@@ -352,7 +350,6 @@ public class ExamService {
         return null;
     }
 
-    @Cacheable(cacheNames = "exams",key = "#id")
     public ResponseDto getQuestionIdsByExamId(Long id){
 
         var exam = repository.findById(id);

@@ -43,7 +43,6 @@ public class WorkSpaceService {
     private final ResponseDto responseDto = new ResponseDto();
     private final UserService userService;
 
-    @Cacheable(cacheNames = "workspaces",key = "#id")
     public ResponseDto getWorkSpaceAdmin(Long id){
         var ws = repository.findById(id);
         if (ws.isPresent()){
@@ -65,7 +64,6 @@ public class WorkSpaceService {
         responseDto.setMessage("Couldn't find this workspace");
         return responseDto;
     }
-    @Cacheable(cacheNames = "workspaces",key = "#id")
     public ResponseDto getWorkSpaceById(Long id){
         var ws = repository.findById(id);
         if (ws.isPresent()){
@@ -349,7 +347,7 @@ public class WorkSpaceService {
 
     }
 
-    @Cacheable(cacheNames = "workspaces",key = "#id")
+
 
     public ResponseDto getWorkspaceByAdminId(Integer id){
         var admin = userRepository.findById(id);
@@ -368,7 +366,6 @@ public class WorkSpaceService {
 
     }
 
-    @Cacheable(cacheNames = "workspaces",key = "#id")
     public ResponseDto getWorkSpaceDto(Long id){
         var workspaceO = repository.findById(id);
         if (workspaceO.isPresent()){
@@ -395,7 +392,6 @@ public class WorkSpaceService {
 
     }
 
-    @Cacheable(cacheNames = "workspaces",key = "#id")
 
     public ResponseDto getUsersFromWorkSpace(Long id){
 
@@ -423,7 +419,6 @@ public class WorkSpaceService {
     }
 
     //returns all the exams for any workspace
-    @Cacheable(cacheNames = "workspaces",key = "#id")
     public ResponseDto GetWorkSpaceExams(Long id){
         var workspace = repository.findById(id);
         List<ExamDto> exams = new ArrayList<>();
@@ -582,7 +577,6 @@ public class WorkSpaceService {
         return responseDto;
     }
 
-    @Cacheable(cacheNames = "workspaces",key = "#id")
     public ResponseDto getWorkSpaceName(Long id){
         var ws = repository.findById(id);
 
