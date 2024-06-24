@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {NgForOf, NgIf, NgOptimizedImage} from "@angular/common";
-import {FormBuilder, ReactiveFormsModule} from "@angular/forms";
+import {FormBuilder, FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {UserService} from "../../../core/services/User/user.service";
 import {WorkspaceService} from "../../../core/services/workspace/workspace.service";
 import {ActivatedRoute, Router, RouterLink} from "@angular/router";
@@ -13,7 +13,8 @@ import {ActivatedRoute, Router, RouterLink} from "@angular/router";
     NgIf,
     ReactiveFormsModule,
     RouterLink,
-    NgOptimizedImage
+    NgOptimizedImage,
+    FormsModule
   ],
   templateUrl: './my-exams.component.html',
   styleUrl: './my-exams.component.css'
@@ -21,13 +22,17 @@ import {ActivatedRoute, Router, RouterLink} from "@angular/router";
 export class MyExamsComponent implements OnInit{
   id:any;
   exams:any[]=[];
+  filteredExams: any[] = [];
+
   image:string = '';
+  sortOption: string = 'date'; // Default sort option
+  searchQuery: string = '';
+
 
   ngOnInit() {
     this.id = this.route.parent?.snapshot.params['id']  ;
     this.onGetWsImage();
     this.onGetExams(this.id);
-
   }
 
   constructor(private userService:UserService,
@@ -76,6 +81,7 @@ export class MyExamsComponent implements OnInit{
           //console.log(e);
         },
         complete:()=>{
+          this.filteredExams = this.exams;
 
         }
       });
@@ -110,6 +116,45 @@ export class MyExamsComponent implements OnInit{
   }
 
 
+  filterExams(): void {
+    // Filter exams based on user role and id
+    const userId = localStorage.getItem('id');
+    if (localStorage.getItem('role') === 'ADMIN') {
+      this.filteredExams = this.exams.filter(exam => exam.student === 0);
+    } else {
+      this.filteredExams = this.exams.filter(exam => exam.student === userId);
+    }
+
+
+    // Sort filtered exams based on sortOption
+    switch (this.sortOption) {
+      case 'date':
+        this.filteredExams.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+        break;
+      case 'id':
+        this.filteredExams.sort((a, b) => a.id - b.id);
+        break;
+      case 'name':
+        this.filteredExams.sort((a, b) => a.name.localeCompare(b.name));
+        break;
+      default:
+        break;
+    }
+
+    if (this.searchQuery) {
+      this.filteredExams = this.filteredExams.filter(exam =>
+        exam.name.toLowerCase().includes(this.searchQuery.toLowerCase())
+      );
+    }
+  }
+
+  onSearch(): void {
+    this.filterExams();
+  }
+  onChangeSortOption(event: any): void {
+    this.sortOption = event.target.value;
+    this.filterExams();
+  }
 
 
   protected readonly localStorage = localStorage;

@@ -5,6 +5,7 @@ import {StoreService} from "../../services/store/store.service";
 import {AuthService} from "../../services/Auth/auth.service";
 import {routes} from "../../../app.routes";
 import {WorkspaceService} from "../../services/workspace/workspace.service";
+import {UserService} from "../../services/User/user.service";
 
 @Component({
   selector: 'app-header',
@@ -19,9 +20,11 @@ import {WorkspaceService} from "../../services/workspace/workspace.service";
 export class HeaderComponent implements OnInit{
   profilepic : any = null;
   path:string="";
+  user:any;
   invNumber:any;
   constructor(private store:StoreService,
               private authService:AuthService,
+              private userService:UserService,
               private router:Router,
               private route:ActivatedRoute,
               private workspaceService:WorkspaceService) {
@@ -34,16 +37,24 @@ export class HeaderComponent implements OnInit{
 
   }
   ngOnInit(): void {
+    this.onLoadCurrentUser()
     this.path = this.route.snapshot.url[0].path;
     this.onGetInvites();
+
   }
 
+  onLoadCurrentUser(){
+    this.userService.getUserDto(localStorage.getItem('id')).subscribe({
+      next:(res:any)=>{
+        this.user =res.result;
+        console.log(this.user);
+      }
+    })
+  }
   onGetInvites(){
     this.workspaceService.getAllInvites(localStorage.getItem('id')).subscribe({
       next:(res:any)=>{
         this.invNumber = res.result.length;
-
-
       }
     })
 
