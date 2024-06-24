@@ -1,0 +1,73 @@
+<div>
+
+  <h1 class="p-32 text-5xl font-bold ">Results of {{exams.at(0)?.name}} exam</h1>
+
+
+  <div class="overflow-x-auto mt-10 mb-20 mx-20">
+    <table class="table">
+      <!-- head -->
+      <thead>
+      <tr>
+        <th>
+          <label>
+            <input type="checkbox" class="checkbox" />
+          </label>
+        </th>
+        <th>Name</th>
+        <th>result</th>
+        <th>score</th>
+        <th></th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let exam of examswithpersons">
+        <th>
+          <label>
+            <input type="checkbox" class="checkbox" />
+          </label>
+        </th>
+        <td>
+          <div class="flex items-center gap-3">
+            <div class="avatar">
+              <div class="mask mask-squircle h-12 w-12">
+                <img
+                  src="{{exam.profileImg}}"
+                  alt="Avatar Tailwind CSS Component" />
+              </div>
+            </div>
+            <div>
+              <div class="font-bold">{{exam.lastname}} {{exam.firstname}}</div>
+              <div class="text-sm opacity-50">Morocco</div>
+            </div>
+          </div>
+        </td>
+        <td *ngIf="!exam.passed && exam.result === 'EMPTY'">
+          Exam has not been passed yet
+          <br />
+          <span class="badge badge-ghost badge-sm">final date hasn't been reached yet</span>
+        </td>
+        <td *ngIf="!exam.passed && exam.result === 'MISSED'">
+          User has missed the date for the exam
+          <br />
+          <span class="badge badge-ghost badge-sm">admin will have the right to decide his faith</span>
+        </td>
+        <td *ngIf="exam.passed && exam.result === 'CHEATED'">
+          user was disqualified
+          <br />
+          <span class="badge badge-ghost badge-sm">User has been caught cheating</span>
+        </td>
+        <td *ngIf="exam.passed && exam.result === 'VALIDATED'">
+          VALIDATED
+        </td>
+        <td>{{ exam.passingScore }}</td>
+        <th>
+          <button [routerLink]="['/Consult/{{examId}}/detail',exam.id]" class="btn btn-ghost btn-xs">details</button>
+        </th>
+      </tr>
+
+      </tbody>
+      <!-- foot -->
+    </table>
+  </div>
+
+</div>

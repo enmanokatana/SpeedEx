@@ -25,7 +25,7 @@ export class ExamComponent implements  OnInit{
   minutes: number = 30; // Initial countdown time (30 minutes)
   seconds: number = 0;
   cheating : boolean=false;
-  exam!:any ;
+  exam:any ;
   id:any;
   questions:any[]=[];
   currentQusetion:any|undefined={
@@ -38,7 +38,7 @@ export class ExamComponent implements  OnInit{
   };
   cheatingTimer:any;
   userAnswers:any[]=[];
-
+  timesCaughtCheating:number= 0;
 
   examName:string = "";
   timer:number = 0;
@@ -63,7 +63,6 @@ export class ExamComponent implements  OnInit{
 
   ngOnInit() {
     this.id = this.route.snapshot.paramMap.get('id');
-
     this.answerForm = this.builder.group({
       answer:this.builder.control('',Validators.required),
     })
@@ -72,6 +71,7 @@ export class ExamComponent implements  OnInit{
       userOption:this.builder.control(0,Validators.required),
     })
     this.onGetExamInfo();
+
     this.onGetQuestions();
 
     setTimeout(() => {
@@ -100,9 +100,15 @@ export class ExamComponent implements  OnInit{
     // Implement your timer logic here
   }
   handleUserAFK() {
+    if (this.timesCaughtCheating === 10){
+      this.onSaveExamInfo('CHEATED');
+    }
     this.isUserActive = false;
     this.cheating=!this.cheating;
-    console.log("user is cheating")
+    this.timesCaughtCheating+=1;
+    console.log("cheated times :",this.timesCaughtCheating);
+
+
     // Implement logic to handle AFK state
   }
   @HostListener('document:idle', ['$event'])
@@ -120,6 +126,11 @@ export class ExamComponent implements  OnInit{
           console.log("User switched to another tab or minimized the browser window");
           // You can perform actions here such as pausing the exam timer or displaying a warning message
           // For example, set a flag indicating cheating
+          if (this.timesCaughtCheating === 10){
+            this.onSaveExamInfo('CHEATED');
+          }
+          this.timesCaughtCheating+=1;
+
           this.cheating = true;
           console.log(this.cheating);
         } else {
@@ -166,6 +177,8 @@ export class ExamComponent implements  OnInit{
   onGetExamInfo(){
     this.examService.GetExamInfo(this.id).subscribe({
       next:(response)=>{
+        console.log(response);
+        this.exam = response.result;
         this.examName = response.result.name;
         this.timer = response.result.timer;
         if (60 > this.timer % 60) {
@@ -262,13 +275,26 @@ export class ExamComponent implements  OnInit{
         console.log(err);
       },
       complete:()=>{
-        this.router.navigate(['/Home']);
+        this.onSaveExamInfo("EMPTY")
       }
     })
 
 
   }
+  onSaveExamInfo(type:string):any{
+        this.examService.updateExamResult(this.id,type).subscribe({
+      next:(response)=>{
+        console.log(response);
+      },
+      error:(err)=>{
+        console.log(err);
+      },
+      complete:()=>{
+        this.router.navigate(['/Home']);
+      }
+    })
 
+  }
 
 
 

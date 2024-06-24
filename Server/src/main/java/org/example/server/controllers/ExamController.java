@@ -2,9 +2,12 @@ package org.example.server.controllers;
 
 import lombok.RequiredArgsConstructor;
 import org.example.server.Dtos.ExamDto;
+import org.example.server.enums.Result;
+import org.example.server.exceptions.ExamNotFoundException;
 import org.example.server.models.Exam;
 import org.example.server.models.ResponseDto;
 import org.example.server.services.ExamService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -50,6 +53,15 @@ public class ExamController {
     )
     {
         return examService.getQuestionIdsByExamId(id);
+    }
+
+    @PatchMapping("{id}/result")
+    public ResponseEntity<Exam> updateExamResult(
+        @PathVariable Long id,
+        @RequestParam Result result
+    ) throws ExamNotFoundException {
+        Exam exam = examService.UpdateExam(id,result);
+        return ResponseEntity.ok(exam);
     }
 
 

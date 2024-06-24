@@ -1,6 +1,7 @@
 package org.example.server.services;
 
 import lombok.RequiredArgsConstructor;
+import org.example.server.Dtos.ExamDto;
 import org.example.server.Dtos.ExamGroupDto;
 import org.example.server.models.Exam;
 import org.example.server.models.ExamGroup;
@@ -63,8 +64,32 @@ public class ExamGroupService {
             responseDto.setResult(null);
             return responseDto;
         }
-        responseDto.setResult(examGroup.get().getExams());
-        responseDto.setMessage("Successfully Added the ExamGroup");
+        List<ExamDto> examDtoList = new ArrayList<>();
+        if (examGroup.get().getExams() == null){
+            responseDto.setMessage("Error no exams has been found ");
+            responseDto.setWorked(false);
+            responseDto.setResult(null);
+            return responseDto;
+        }
+
+
+        for (Exam exam : examGroup.get().getExams()){
+            if (exam.getStudent() !=null){
+            examDtoList.add(ExamDto.builder()
+                            .id(exam.getId())
+                            .name(exam.getName())
+                            .description(exam.getDescription())
+                            .timer(exam.getTimer())
+                            .difficultyLevel(exam.getDifficultyLevel())
+                            .student(exam.getStudent().getId())
+                            .passed(exam.getPassed())
+                            .result(exam.getResult())
+                            .passingScore(exam.getPassingScore())
+                    .build());
+            }
+        }
+        responseDto.setResult(examDtoList);
+        responseDto.setMessage("got ExamGroup exams");
         responseDto.setWorked(true);
         return responseDto;
 

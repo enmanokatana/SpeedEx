@@ -56,7 +56,8 @@ export class WorkspaceService {
     });
     return this.http.post(this.url,workspace,{headers});
   }
-    getWorkSpaceExams(id:any):Observable<any>{
+
+  getWorkSpaceExams(id:any):Observable<any>{
     const requestUrl = `${this.url}/${id}/exams`;
       const headers = new HttpHeaders({
         'Authorization': `Bearer ${this.token}`

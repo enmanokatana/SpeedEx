@@ -1,0 +1,43 @@
+<div class="m-20">
+
+<div class="w-full rounded-box">
+    <div class="carousel-item">
+      <img class="w-full h-80 mx-40 rounded-3xl" [src]="image" alt="Burger" />
+    </div>
+  </div>
+  <div class="w-full rounded-box mt-4 ">
+    <div class="flex justify-between">
+      <div class="py-4">
+        <label for="questionDifficulty" class="block text-xl font-semibold mb-2">Filter By:</label>
+        <select id="questionDifficulty"  class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500">
+          <option value="EASY">QCM</option>
+          <option value="MEDIUM">Normal</option>
+          <option value="HARD">Hard</option>
+        </select>
+      </div>
+      <button  *ngIf="localStorage.getItem('role')==='ADMIN'" [routerLink]="['/Create',id]" class="btn btn-primary mt-10">
+        Create new Exam
+      </button>
+    </div>
+
+    <div *ngFor="let exam of exams" class="flex justify-center mt-5">
+      <div  class="card w-3/4 bg-base-100 shadow-xl">
+        <div class="card-body">
+          <h2 class="card-title">{{ exam.name }}</h2>    <!-- Exam Name-->
+
+          <p class="text-red-700" *ngIf="exam.result === 'CHEATED'"> Note : (You have been caught cheating on this exam)</p>    <!-- Exam description-->
+          <p>{{ exam.description }}</p>    <!-- Exam description-->
+
+          <div class="card-actions justify-end">
+            <button *ngIf="exam?.passed ===false && localStorage.getItem('role') !== 'ADMIN'" class="btn btn-primary" [routerLink]="['/Exam',exam.id]">Pass Exam now </button>
+            <button *ngIf="exam?.passed ===true&& localStorage.getItem('role') !== 'ADMIN' "  class="btn btn-primary "  [routerLink]="['/Exam',exam.id]" disabled>Passed</button>
+            <button *ngIf="localStorage.getItem('role') === 'ADMIN' "  class="btn btn-primary "  [routerLink]="['/Consult',exam.examGroup]" >check Status </button>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+  </div>
+  </div>

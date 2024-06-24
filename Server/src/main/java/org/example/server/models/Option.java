@@ -1,5 +1,6 @@
 package org.example.server.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -12,12 +13,19 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serial;
+import java.io.Serializable;
+
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @Builder
-public class Option {
+public class Option implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 41331228378L;
+
+
     @Id
     @GeneratedValue
     private Long id;
@@ -28,7 +36,7 @@ public class Option {
     private boolean isCorrect;
 
     @ManyToOne
-    @JsonIgnore
+    @JsonBackReference
     private Question question;
 
 

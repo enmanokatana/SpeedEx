@@ -1,11 +1,14 @@
 package org.example.server.models;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,7 +17,10 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ExamGroup {
+public class ExamGroup implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID =21091911L;
     @Id
     @GeneratedValue
     private Integer id;
@@ -23,6 +29,7 @@ public class ExamGroup {
 //    private User Admin;
 
     @OneToMany
+    @JsonManagedReference
     private List<Exam> exams = new ArrayList<>();
 
 
