@@ -18,12 +18,12 @@
     <div class="dropdown dropdown-end">
       <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
         <div class="mask mask-squircle w-12 h-12">
-          <img *ngIf="profilepic!==null" [src]="profilepic" />
+          <img *ngIf="user?.profileImg!==null" [src]="user?.profileImg" />
           <div
-            *ngIf="profilepic === null"
+            *ngIf="user?.profileImg === null"
             class="w-10 h-10 rounded-full mr-2 flex items-center justify-center bg-gray-300 text-gray-600"
           >
-            {{ "Mouad".charAt(0).toUpperCase() }}
+            {{ user?.lastname.charAt(0).toUpperCase() }}
           </div>
         </div>
       </div>
