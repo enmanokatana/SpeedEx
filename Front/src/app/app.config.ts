@@ -3,7 +3,6 @@ import { provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
 import {HTTP_INTERCEPTORS, provideHttpClient} from '@angular/common/http';
-import {provideHighlightOptions} from "ngx-highlightjs";
 import {HttpErrorInterceptor} from "./core/interceptors/http-error-interceptor.interceptor";
 
 

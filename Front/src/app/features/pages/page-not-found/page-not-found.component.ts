@@ -9,5 +9,8 @@ import { RouterLink } from '@angular/router';
   styleUrl: './page-not-found.component.css'
 })
 export class PageNotFoundComponent {
+  constructor() {
+    console.log("page not found");
+  }
 
 }

@@ -1,0 +1,69 @@
+<div class="m-10">
+  <div class="card lg:card-side bg-base-100 shadow-xl">
+    <div class="card-body p-6">
+      <h2 class="card-title text-2xl font-bold">Exam name: {{exam?.name}}</h2>
+      <p class="text-gray-700 mt-2">Exam description: {{exam?.description}}</p>
+      <div class="join join-vertical w-full mt-4">
+        <div class="collapse collapse-arrow join-item border border-base-300 rounded-lg">
+          <input type="radio" name="my-accordion-4" />
+          <div class="collapse-title text-xl font-medium bg-gray-100 p-4 rounded-t-lg">Click for more information about the exam</div>
+          <div class="collapse-content p-4">
+            <p class="text-gray-600">Exam was created on: {{exam?.createdOn}}</p>
+            <p class="text-gray-600">Passing date: {{exam?.passingDate}}</p>
+            <p class="text-gray-600">Passing Score: {{exam?.passingScore}}</p>
+            <p class="text-gray-600">Exam Timer: {{exam?.timer}} mins</p>
+          </div>
+        </div>
+        <div class="collapse collapse-arrow join-item border border-base-300 rounded-lg mt-2">
+          <input type="radio" name="my-accordion-4" />
+          <div class="collapse-title text-xl font-medium bg-gray-100 p-4 rounded-t-lg">Click for more information about the user</div>
+          <div class="collapse-content p-4">
+            <p class="text-gray-600">hello</p>
+          </div>
+        </div>
+      </div>
+      <div class="card-actions justify-end mt-4">
+        <!-- Add any actions or buttons here if needed -->
+      </div>
+    </div>
+  </div>
+</div>
+<div class="m-10">
+  <div class="card lg:card-side bg-base-100 shadow-xl">
+    <div class="card-body p-6">
+      <h2 class="card-title text-2xl font-bold">User's Answers</h2>
+      <div class="p-4 bg-white rounded shadow-md">
+
+        <div *ngFor="let question of questions" class="p-4 bg-white rounded shadow-md">
+      <div *ngIf="question.type === 'NORMAL'">
+        <h2 class="text-xl font-semibold">{{ question.name }}</h2>
+        <p class="text-gray-700">{{ question.description }}</p>
+        <div class="mt-4">
+          <p class="text-green-500 font-semibold">Correct Answer: {{ question.answer }}</p>
+          <p *ngIf="question.userAnswer" class="text-blue-500 font-semibold">Student Answer: {{ question.userAnswer }}</p>
+          <p *ngIf="!question.userAnswer" class="text-blue-500 font-semibold">Student Answer: "empty"</p>
+        </div>
+      </div>
+
+          <div *ngIf="question.type === 'QCM'">
+            <h2 class="text-xl font-semibold">{{ question.name }}</h2>
+            <p class="text-gray-700">{{ question.description }}</p>
+            <div class="mt-4">
+              <h3 class="text-lg font-semibold">Options:</h3>
+              <ul class="list-disc ml-6">
+                <li *ngFor="let option of question.options" class="text-gray-700">{{ option.value }}</li>
+              </ul>
+              <div class="mt-4">
+                <p class="text-green-500 font-semibold">Correct Answer: {{ question.options[question.trueOption]?.value }}</p>
+
+                <p *ngIf="question.userOption !== null" class="text-blue-500 font-semibold">Your Option: {{ question.options[question.userOption]?.value }}</p>
+              </div>
+            </div>
+          </div>
+      </div>
+      <div class="card-actions justify-end mt-4">
+        <!-- Add any actions or buttons here if needed -->
+      </div>
+    </div>
+  </div>
+</div>

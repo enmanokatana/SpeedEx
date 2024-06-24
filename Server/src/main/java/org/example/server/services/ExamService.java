@@ -3,6 +3,8 @@ package org.example.server.services;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.example.server.Dtos.ExamDto;
+import org.example.server.enums.Result;
+import org.example.server.exceptions.ExamNotFoundException;
 import org.example.server.exceptions.UserDoesNotExistException;
 import org.example.server.exceptions.WorkSpaceDoesNotExistException;
 import org.example.server.models.*;
@@ -88,7 +90,7 @@ public class ExamService {
                         .workspace(workspace.get())
                         .passed(false)
                         .student(student)
-                        .result(false)
+                        .result(Result.EMPTY)
                         .passingDate(LocalDateTime.now())
                         .build()));
 
@@ -201,7 +203,7 @@ public class ExamService {
                         .passed(false)
                         .student(student)
                         .examGroup(examGroup)
-                        .result(false)
+                        .result(Result.EMPTY)
                         .passingDate(examDto.getPassingDate())
                         .build()
         );
@@ -403,12 +405,22 @@ public class ExamService {
             }
         }
         if (exam.get().getPassingScore() <=Sum) {
-            exam.get().setResult(true);
+            exam.get().setResult(Result.VALIDATED);
             repository.save(exam.get());
         }else {
-            exam.get().setResult(false);
+            exam.get().setResult(Result.ELIMINATED);
             repository.save(exam.get());
         }
+    }
+
+    public Exam UpdateExam(Long id , Result result) throws ExamNotFoundException {
+        var exam = repository.findById(id).orElseThrow(()->
+                new ExamNotFoundException("Exam Was Not Found"));
+        exam.setPassed(true);
+        exam.setResult(result);
+        return repository.save(exam) ;
+
+
     }
 
     public Integer GetPassingScore(Exam exam){

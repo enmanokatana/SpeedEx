@@ -1,5 +1,6 @@
 package org.example.server.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
@@ -10,7 +11,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.example.server.enums.DifficultyLevel;
+import org.example.server.enums.Result;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -22,6 +25,10 @@ import java.util.List;
 
 @Builder
 public class Exam implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 123456091L;
+
     @Id
     @GeneratedValue
     private Long id;
@@ -53,7 +60,8 @@ public class Exam implements Serializable {
     //The Date the exam will be passed in
     private LocalDateTime passingDate ;
 
-    private boolean result ;
+    //@Enumerated(EnumType.STRING)
+    private Result result ;
 
 
 
@@ -75,6 +83,7 @@ public class Exam implements Serializable {
     private Workspace workspace;
 
     @ManyToOne
+    @JsonBackReference
     private ExamGroup examGroup;
 
 }

@@ -11,6 +11,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.example.server.enums.DifficultyLevel;
+import org.example.server.enums.Result;
 import org.example.server.models.Question;
 import org.example.server.models.Workspace;
 
@@ -38,7 +39,7 @@ public class ExamDto {
     private Integer student;// nullable
     private Integer ExamGroup;
     private LocalDateTime passingDate ;
-    private boolean result ;
+    private Result result ;
 
 
 

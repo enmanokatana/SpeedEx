@@ -53,6 +53,16 @@ export class ExamService {
 
   }
 
+  updateExamResult(id:any,result:any){
+    const requestUrl = `${this.url}/${id}/result`;
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${this.token}`
+    });
+    return this.http.patch(requestUrl,null,{
+      headers:headers,
+      params:{result:result}
+    })
+  }
 
 
 }

@@ -1,29 +1,27 @@
 import {Component, OnInit} from '@angular/core';
 import {ExamService} from "../../../core/services/exam/exam.service";
-import {ActivatedRoute, Router, RouterOutlet} from "@angular/router";
-import {routes} from "../../../app.routes";
-import {HeaderComponent} from "../../../core/componenets/header/header.component";
-import {NgForOf, NgIf} from "@angular/common";
+import {ActivatedRoute, Router, RouterLink} from "@angular/router";
 import {UserService} from "../../../core/services/User/user.service";
+import {NgForOf, NgIf} from "@angular/common";
 
 @Component({
-  selector: 'app-consult',
+  selector: 'app-users-results',
   standalone: true,
   imports: [
-    HeaderComponent,
     NgForOf,
     NgIf,
-    RouterOutlet
+    RouterLink
   ],
-  templateUrl: './consult.component.html',
-  styleUrl: './consult.component.css'
+  templateUrl: './users-results.component.html',
+  styleUrl: './users-results.component.css'
 })
-export class ConsultComponent implements  OnInit{
+export class UsersResultsComponent implements OnInit{
   examId:any;
   exams:any[] = [];
   examswithpersons:any[]=[];
   user:any;
   type:any={
+    id:0,
     firstname:'',
     lastname:'',
     email:'',
@@ -33,7 +31,8 @@ export class ConsultComponent implements  OnInit{
     result:'',
   }
   ngOnInit() {
-
+    this.examId = this.route.parent?.snapshot.params['id']
+    this.onGetExams();
   }
 
   constructor(private examService:ExamService,
@@ -66,6 +65,7 @@ export class ConsultComponent implements  OnInit{
       this.userService.getUserDto(exam.student).subscribe({
         next:(response)=>{
           console.log("User Response",response);
+          this.type.id = exam.id;
           this.type.firstname = response.result.firstname;
           this.type.lastname = response.result.lastname;
           this.type.passed = exam.passed;
@@ -85,6 +85,5 @@ export class ConsultComponent implements  OnInit{
 
 
   }
-
 
 }

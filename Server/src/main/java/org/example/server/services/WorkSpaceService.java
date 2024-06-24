@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.server.Dtos.ExamDto;
 import org.example.server.Dtos.UserDto;
 import org.example.server.Dtos.WorkSpaceDto;
+import org.example.server.enums.Result;
 import org.example.server.models.Exam;
 import org.example.server.models.ResponseDto;
 import org.example.server.models.User;
@@ -130,7 +131,7 @@ public class WorkSpaceService {
                                     .passingDate(examDto.getPassingDate())
                                     .passed(false)
                                     .ExamGroup(examDto.getExamGroup().getId())
-                                    .result(false)
+                                    .result(Result.EMPTY)
 
 
                             .build()).getResult());
@@ -303,7 +304,7 @@ public class WorkSpaceService {
                     .id(0L)
                     .description(workSpaceDto.getDescription())
                     .exams(null)
-                    .image("https://firebasestorage.googleapis.com/v0/b/library-b3d3f.appspot.com/o/4d6eb84e-c837-467f-9d5e-803cb2c5562e.png?alt=media")
+                    .image("https://firebasestorage.googleapis.com/v0/b/library-b3d3f.appspot.com/o/d76d08b9-afe5-44d5-84f2-518a3b9c60ed.jpeg?alt=media")
                     .users(users)
                     .build());
             responseDto.setResult(result);
@@ -434,6 +435,7 @@ public class WorkSpaceService {
                                 .id(exam.getId())
                                 .passed(exam.getPassed())
                                 .passingScore(0)
+                                .ExamGroup(exam.getExamGroup().getId())
                         .build());
             }
             responseDto.setResult(exams);;
@@ -461,6 +463,7 @@ public class WorkSpaceService {
                                 .user(exam.getUser().getId())
                                 .id(exam.getId())
                                 .passed(exam.getPassed())
+                                .result(exam.getResult())
                                 .passingScore(0)
                         .build());
             }

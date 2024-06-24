@@ -23,7 +23,7 @@ public class ExamDtoMapper implements Function<Exam, ExamDto> {
                 .student(exam.getStudent().getId())
                 .ExamGroup(exam.getExamGroup().getId())
                 .passingDate(exam.getPassingDate())
-                .result(exam.isResult())
+                .result(exam.getResult())
                 .build();
     }
 }

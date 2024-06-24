@@ -1,6 +1,7 @@
 package org.example.server.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -12,6 +13,8 @@ import lombok.NoArgsConstructor;
 import org.example.server.enums.DifficultyLevel;
 import org.example.server.enums.Type;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.List;
 
 @Entity
@@ -19,7 +22,12 @@ import java.util.List;
 @AllArgsConstructor
 @Data
 @Builder
-public class Question {
+public class Question implements Serializable {
+
+
+    @Serial
+    private static final long serialVersionUID = 5736176371L;
+
 
     @Id
     @GeneratedValue
@@ -52,6 +60,7 @@ public class Question {
     private Exam exam;
 
     @OneToMany(mappedBy = "question", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<Option> options;//control it later
 
     @Positive

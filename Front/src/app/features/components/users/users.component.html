@@ -1,0 +1,168 @@
+<div class="m-20">
+<div class="w-full rounded-box">
+    <div class="carousel-item">
+      <img class="w-full h-80  rounded-3xl" src="{{image}}" alt="Burger" />
+    </div>
+  </div>
+  <h1 class="mt-5 ml-4 text-2xl font-bold ">Admin</h1>
+
+  <div class="overflow-x-auto flex justify-center mt-5 ">
+
+    <table class="table border-t">
+      <!-- head -->
+      <thead>
+      <tr>
+      </tr>
+      </thead>
+      <tbody>
+      <!-- row 1 -->
+      <tr>
+        <td>
+          <div class="flex items-center gap-3">
+            <div class="avatar">
+              <div class="mask mask-squircle w-12 h-12">
+                <div
+                  class="w-10 h-10 rounded-full mr-2 flex items-center justify-center bg-gray-300 text-gray-600"
+                >
+                  {{ WorkSpaceAdmin?.lastname.charAt(0).toUpperCase() }}
+                </div>
+              </div>
+            </div>
+            <div>
+              <div class="font-bold">{{ WorkSpaceAdmin?.lastname }} {{ WorkSpaceAdmin?.firstname }}</div>
+              <div class="text-sm opacity-50">{{ WorkSpaceAdmin?.email }}</div>
+            </div>
+          </div>
+        </td>
+      </tr>
+      <!-- row 2 -->
+
+      </tbody>
+    </table>
+  </div> <!-- Admin Table-->
+
+  <h1 class="mt-5 ml-30 text-2xl font-bold ">Students</h1>
+  <button *ngIf="localStorage.getItem('role')==='ADMIN'"
+          class="btn btn-primary mt-10 flex right-2"
+          onclick="my_modal_2.showModal()"
+
+  >
+    Add Student
+  </button><!-- Student Table-->
+  <dialog id="my_modal_2" class="modal" [formGroup]="emailForm">
+    <div class="modal-box">
+      <p class="py-6">
+        enter email and find if user exist before adding them
+      </p>
+      <textarea
+        placeholder="User email..."
+        formControlName="email"
+        class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
+      ></textarea>
+
+      <div class="modal-action">
+        <form method="dialog">
+          <!-- if there is a button in form, it will close the modal -->
+          <button class="btn">Cancel</button>
+          <button
+            type="submit"
+            class="btn btn-primary rounded-xl ml-5"
+            [disabled]="!emailForm.controls['email'].valid"
+            (click)="onFindUser()"
+            onclick="my_modal_1.showModal()"
+          >
+            Find
+          </button>
+        </form>
+      </div>
+    </div>
+  </dialog>
+  <dialog id="my_modal_1" class="modal">
+    <div class="modal-box">
+      <span *ngIf="loading" class="loading loading-spinner loading-lg flex justify-center"></span>
+
+      <h3 *ngIf="!loading" class="font-bold text-lg">{{user.firstname}} {{user.lastname}}</h3>
+      <p *ngIf="!loading" class="py-4">{{ user.email }}</p>
+      <div *ngIf="!loading" class="modal-action">
+        <form method="dialog">
+          <!-- if there is a button in form, it will close the modal -->
+          <button class="btn">Cancel</button>
+          <button class="btn ml-5" (click)="onAddUser()">Add User</button>
+        </form>
+      </div>
+    </div>
+  </dialog>
+  <div class="overflow-x-auto flex justify-center mt-5 ">
+
+    <table class="table border-t">
+      <!-- head -->
+      <thead>
+      <tr>
+      </tr>
+      </thead>
+      <tbody>
+      <!-- row 1 -->
+      <tr *ngFor="let user of WorkSpaceUsers">
+        <td>
+          <div class="flex items-center gap-3">
+            <div class="avatar">
+              <div class="mask mask-squircle w-12 h-12">
+                <img *ngIf="user.profileImg!==null" [src]="user.profileImg" />
+                <div
+                  *ngIf="user.profileImg == null"
+                  class="w-10 h-10 rounded-full mr-2 flex items-center justify-center bg-gray-300 text-gray-600"
+                >
+                  {{ user.lastname.charAt(0).toUpperCase() }}
+                </div>
+              </div>
+            </div>
+            <div>
+              <div class="font-bold">{{ user.lastname }} {{ user.firstname }}</div>
+              <div class="text-sm opacity-50">{{ user.email }}</div>
+            </div>
+          </div>
+        </td>
+        <td *ngIf="localStorage.getItem('role') === 'ADMIN'">
+          <button onclick="my_modal_3.showModal()"
+                  class="btn btn-ghost "
+                  (click)="onsetUser(user)"
+          >
+
+            <svg xmlns="http://www.w3.org/2000/svg"   fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+
+
+              <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+            </svg>
+          </button>
+          <!-- Open the modal using ID.showModal() method -->
+
+        </td>
+
+      </tr>
+
+      <!-- row 2 -->
+
+      </tbody>
+    </table>
+    <dialog id="my_modal_3" class="modal">
+      <div class="modal-box">
+        <h3 class="font-bold text-lg">Are you sure You want to delete this user ?</h3>
+        <p  class="py-4">{{ user2.email }}</p>
+        <p  class="py-4">{{user2.lastname}} {{ user2.firstname }}</p>
+
+
+        <div class="modal-action">
+          <form method="dialog">
+
+            <!-- if there is a button in form, it will close the modal -->
+            <button class="btn">Close</button>
+            <button class="btn btn-error ml-5"
+                    (click)="onRemoveUser(user2.id)"
+            >Delete</button>
+          </form>
+        </div>
+      </div>
+    </dialog>
+
+  </div>
+  </div>

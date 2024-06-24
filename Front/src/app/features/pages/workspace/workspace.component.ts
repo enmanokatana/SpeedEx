@@ -1,10 +1,10 @@
 import {Component, OnInit} from '@angular/core';
 import {HeaderComponent} from "../../../core/componenets/header/header.component";
-import {ActivatedRoute, NavigationEnd, Router, RouterLink} from "@angular/router";
+import {ActivatedRoute, NavigationEnd, Router, RouterLink, RouterOutlet} from "@angular/router";
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import {UserService} from "../../../core/services/User/user.service";
 import {WorkspaceService} from "../../../core/services/workspace/workspace.service";
-import {NgForOf, NgIf} from "@angular/common";
+import {NgClass, NgForOf, NgIf} from "@angular/common";
 import {RightClickDirective} from "../../../core/Directives/right-click.directive";
 import {filter} from "rxjs";
 
@@ -19,6 +19,8 @@ import {filter} from "rxjs";
     NgIf,
     FormsModule,
     RightClickDirective,
+    RouterOutlet,
+    NgClass,
 
 
   ],
@@ -49,31 +51,30 @@ export class WorkspaceComponent implements OnInit{
     lastname:''
   };
   loading:boolean = true;
-workspaces:any;
+  workspaces:any;
   emailForm!:FormGroup;
   image:string = '';
-
+ currentChild:string = 'exams';
   ngOnInit() {
     this.id = this.route.snapshot.paramMap.get('id')
-    this.emailForm = this.builder.group({
-      email:this.builder.control('',Validators.email),
+    this.router.events.subscribe(event=> {
+      if (event instanceof NavigationEnd){
+        const  url = this.router.url;
+        if (url.includes('exams')){
+          this.currentChild = 'exams'
+        }else if (url.includes('users')){
+          this.currentChild = 'users'
+        }else if (url.includes('docs')){
+          this.currentChild = 'docs'
+        }
+      }
     })
-    this.onGetAdmin();
-    this.ongGetWorkSpaceUsers(this.id);
-    this.onGetExams(this.id);
-    this.onGetMyWorkspaces();
-    this.onGetWsImage();
-    this.router.events.pipe(
-      filter(event => event instanceof NavigationEnd)
-    ).subscribe(() => {
-      window.location.reload();
-    });
+
+
 
   }
 
-onTest( event : MouseEvent){
-  //console.log("helo")
-}
+
 
 
   onGetWsImage(){
