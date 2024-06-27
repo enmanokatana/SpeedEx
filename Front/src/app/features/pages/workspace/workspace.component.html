@@ -1,13 +1,10 @@
-<app-header></app-header>
+<app-header [drawerCheckboxId]="drawerCheckboxId" [hidden]="hidden" ></app-header>
 
 <div class="drawer lg:drawer-open">
   <input id="my-drawer-2" type="checkbox" class="drawer-toggle" />
   <div class="drawer-content ">
     <!-- Page content here -->
-    <label for="my-drawer-2" class="btn drawer-button lg:hidden"> <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-      <path stroke-linecap="round" stroke-linejoin="round" d="m5.25 4.5 7.5 7.5-7.5 7.5m6-15 7.5 7.5-7.5 7.5" />
-    </svg>
-    </label>
+
     <div role="tablist" class="tabs tabs-lifted tabs-lg flex space-x-4 border-b">
       <a role="tab" routerLink="docs"  class="tab py-2 px-4 " [ngClass]="{ 'border-indigo-500 text-indigo-600': currentChild === 'docs', ' text-gray-600': currentChild !== 'docs'}">docs</a>
       <a role="tab" routerLink="exams" class="tab py-2 px-4 " [ngClass]="{ 'border-indigo-500 text-indigo-600': currentChild === 'exams', ' text-gray-600': currentChild !== 'exams'}">exams</a>

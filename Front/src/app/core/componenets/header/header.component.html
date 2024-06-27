@@ -1,4 +1,21 @@
 <div class="navbar bg-base-100 border-b">
+  <div class="flex-none">
+    <label *ngIf="!hidden"
+           [for]="drawerCheckboxId"
+           class="drawer-button btn btn-primary  btn-ghost ">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        class="inline-block h-5 w-5 stroke-current">
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M4 6h16M4 12h16M4 18h16"></path>
+      </svg>
+    </label>
+  </div>
   <div class="flex-1">
     <a routerLink="/Home" class="btn btn-ghost text-xl">SpeedEx</a>
   </div>
@@ -13,10 +30,76 @@
           <span class="badge badge-sm indicator-item">{{invNumber}}</span>
         </div>
       </div>
+      <button *ngIf="localStorage.getItem('role')==='USER'" class="btn btn-primary  btn-ghost btn-rounded" onclick="my_modal_1.showModal()">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+        </svg>
+
+      </button>
+      <button *ngIf="localStorage.getItem('role')==='ADMIN'" class="btn btn-primary  btn-ghost btn-rounded" title="create workspace" [routerLink]="['/CWS',localStorage.getItem('id')]" >
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+        </svg>
+
+      </button>
+      <dialog *ngIf="localStorage.getItem('role')==='USER'" id="my_modal_1" class="modal" [formGroup]="codeForm">
+        <div class="modal-box max-w-2xl p-6">
+          <h3 class="card-title mb-5">Join a workspace : </h3>
+          <!-- Display user account information -->
+          <!-- Replace 'currentUser' with actual variable or use Angular binding -->
+          <div class="card  w-full bordered shadow">
+            <div class="card-body">
+              <h2 class="card-title"> You are currently signed in with :</h2>
+              <p>hayaouimoaud#gmail.com</p>
+              <div class="card-actions justify-end">
+                <button class="btn btn-primary"
+                (click)="onLogout()">Change accounts</button>
+              </div>
+            </div>
+          </div>
+          <div class="divider"></div>
+
+          <div class="card  w-full bordered shadow">
+            <div class="card-body">
+              <h2 class="card-title">Workspace Code:</h2>
+              <label class="block mt-4">
+                <input
+                      type="text"
+                      onkeydown="if (event.key === 'Enter') {event.preventDefault(); }"
+                      formControlName="code"
+                      id="code"
+                      class="input"
+                      minlength="5"
+                      maxlength="8"
+                       placeholder="Enter workspace code...">
+                <div *ngIf="code.invalid && (code.dirty || code.touched)">
+                  <div  *ngIf="code.errors?.['forbiddenChars']||code.errors?.['noSpaces']" class="text-red-500 m-5 text-sm">
+                    Course codes are 5-7 characters long, including letters and numbers, but do not contain spaces or symbols.                  </div>
+                  <div *ngIf="code.errors?.['minLength']">
+                    Forbidden characters are not allowed.
+                  </div>
+                </div>
+
+              </label>
+            </div>
+          </div>
+          <div class="modal-action mt-6 flex justify-end">
+            <form method="dialog" >
+              <button
+                class="btn btn-primary"
+                [disabled]="!codeForm.controls['code'].valid"
+                (click)="onJoinWorkSpace()"
+                type="submit"
+              >Join</button>
+              <button class="btn ml-5" type="submit">Cancel</button>
+
+            </form>
+          </div>
+        </div>    </dialog>
+
 
     </div>
-    <div class="dropdown dropdown-end">
-      <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
+      <div routerLink="/Profile" title="profile" tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
         <div class="mask mask-squircle w-12 h-12">
           <img *ngIf="user?.profileImg!==null" [src]="user?.profileImg" />
           <div
@@ -25,20 +108,8 @@
           >
             {{ user?.lastname.charAt(0).toUpperCase() }}
           </div>
-        </div>
       </div>
-      <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
-        <li>
-          <a routerLink="/Profile" class="justify-between">
-            Profile
-            <span class="badge">New</span>
-          </a>
-        </li>
-        <li><a>Settings</a></li>
-        <li><a (click)="onLogout()">Logout</a></li>
-        <li *ngIf="localStorage.getItem('role') === 'ADMIN' && path!=='Workspace' "><a [routerLink]="['/CWS',localStorage.getItem('id')]" class="btn btn-primary">New WorkSpace</a>
-        </li>
-      </ul>
+
 
     </div>
   </div>

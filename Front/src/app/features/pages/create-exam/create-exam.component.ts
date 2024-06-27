@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {ExamService} from "../../../core/services/exam/exam.service";
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
-import {NgIf} from "@angular/common";
+import {NgForOf, NgIf} from "@angular/common";
 import {ActivatedRoute, Router} from "@angular/router";
 
 @Component({
@@ -9,7 +9,8 @@ import {ActivatedRoute, Router} from "@angular/router";
   standalone: true,
   imports: [
     ReactiveFormsModule,
-    NgIf
+    NgIf,
+    NgForOf
   ],
   templateUrl: './create-exam.component.html',
   styleUrl: './create-exam.component.css'
@@ -57,6 +58,7 @@ options : any[]=[]
   questionForm!:FormGroup;
   optionForm!:FormGroup;
 
+  displayedQuestion:any;
   ngOnInit() {
     this.id= this.route.snapshot.paramMap.get('id');
     this.examForm = this.builder.group({
@@ -138,6 +140,7 @@ options : any[]=[]
       this.question = null;
 
       this.questionForm.reset();
+      this.options = [];
 
 
     }
@@ -168,5 +171,27 @@ options : any[]=[]
 
   }
 
+  onBack(){
+    this.currentStep--;
+  }
 
+  onDeleteQuestion() {
+    this.exam.questions = this.exam.questions.filter((question:any)=>question !==this.displayedQuestion);
+    console.log(this.exam.questions);
+
+  }
+
+  onModifyQuestion() {
+    this.onDeleteQuestion();
+    this.questionForm.patchValue(this.displayedQuestion);
+    if (this.displayedQuestion.options){
+      this.optionForm.reset();
+        let tempOptions:any[] = [] ;
+        this.displayedQuestion.options.forEach((opt:any)=>{
+        tempOptions.push(opt);
+      })
+      this.options = tempOptions;
+    }
+
+  }
 }

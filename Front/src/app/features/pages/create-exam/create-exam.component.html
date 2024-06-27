@@ -5,7 +5,7 @@
 
     <div class="navbar bg-base-100">
       <div class="flex-1">
-        <a class="btn btn-ghost text-xl"># {{ exam.name }} </a>
+        <a class="btn btn-ghost text-xl">Q: {{ questionForm.controls['name'].value}} </a>
       </div>
 
       <div class="flex-none">
@@ -43,15 +43,15 @@
             that makes sense
           </p>
 
-          <textarea
+          <input
             placeholder="Exam Name..."
             formControlName="name"
+            onkeydown="if (event.key === 'Enter') {event.preventDefault(); }"
             class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
-          ></textarea>
-
+          />
           <button
             type="submit"
-            class="btn btn-primary rounded-xl"
+            class="btn btn-primary rounded-xl mt-5"
             [disabled]="!examForm.controls['name'].valid"
 
             (click)="onCreateExam(currentStep)"
@@ -72,8 +72,11 @@
             placeholder="Ex: Budget,autumn,campaign ..."
             formControlName="description"
             class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
+            maxlength="100"
           ></textarea>
-
+          <div class="text-right text-sm text-gray-500">
+            {{ examForm.controls['description'].value?.length || 0 }}/100
+          </div>
           <button
             type="submit"
             class="btn btn-primary rounded-xl"
@@ -82,6 +85,13 @@
             (click)="onCreateExam(currentStep)"
           >
             Next
+          </button>
+          <button
+            type="button"
+            class="btn btn-primary rounded-xl ml-5"
+           (click)="onBack()"
+          >
+            Back
           </button>
 
         </div>
@@ -93,23 +103,32 @@
               It's in minutes
             </p>
 
-          <textarea
+          <input
             placeholder="Ex: 60,120,180 ..."
             formControlName="timer"
             type="number"
-            class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
-          ></textarea>
-
+            min="1"
+            max="600"
+            class="w-full  my-5 p-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
+          />
+          <div *ngIf="examForm.controls['timer'].hasError('min') || examForm.controls['timer'].hasError('max')" class="text-red-500 m-5 text-sm">
+            Timer must be between 1 and 600 minutes.
+          </div>
           <button
             type="submit"
             class="btn btn-primary rounded-xl"
             [disabled]="!examForm.controls['timer'].valid"
-
             (click)="onCreateExam(currentStep)"
           >
             Next
           </button>
-
+          <button
+            type="button"
+            class="btn btn-primary rounded-xl ml-5"
+            (click)="onBack()"
+          >
+            Back
+          </button>
         </div>
         <div *ngIf="currentStep==3" class="max-w-md mx-auto" data-aos="fade-right">
           <h1 class="text-5xl font-bold">
@@ -122,9 +141,18 @@
             </select>
           </div>
 
-          <button type="submit" class="btn btn-primary rounded-xl"
-
-                  (click)="onCreateExam(currentStep)">Next</button>
+          <button
+            type="submit" class="btn btn-primary rounded-xl"
+            (click)="onCreateExam(currentStep)">
+            Next
+          </button>
+          <button
+            type="button"
+            class="btn btn-primary rounded-xl ml-5"
+            (click)="onBack()"
+          >
+            Back
+          </button>
         </div>
 
         <div *ngIf="currentStep==4" class="max-w-md mx-auto" data-aos="fade-right">
@@ -139,6 +167,13 @@
           </div>
 
           <button type="submit" class="btn btn-primary rounded-xl" (click)="onCreateExam(currentStep)">Next</button>
+          <button
+            type="button"
+            class="btn btn-primary rounded-xl ml-5"
+            (click)="onBack()"
+          >
+            Back
+          </button>
         </div>
         <div *ngIf="currentStep==5" class="max-w-md mx-auto" data-aos="fade-right">
           <h1 class="text-5xl font-bold">
@@ -154,6 +189,13 @@
           </div>
 
           <button type="submit" class="btn btn-primary rounded-xl" (click)="onCreateExam(currentStep)">Next</button>
+          <button
+            type="button"
+            class="btn btn-primary rounded-xl ml-5"
+            (click)="onBack()"
+          >
+            Back
+          </button>
         </div>
         <div *ngIf="currentStep==6" class="max-w-md mx-auto" data-aos="fade-right">
           <h1 class="text-5xl mb-10 font-bold">
@@ -171,6 +213,13 @@
 
 
           <button type="submit" class="btn btn-primary rounded-xl" (click)="onCreateExam(currentStep)">Next</button>
+          <button
+            type="button"
+            class="btn btn-primary rounded-xl ml-5"
+            (click)="onBack()"
+          >
+            Back
+          </button>
         </div>
         <!--Questions Here Step -->
       </div>
@@ -186,14 +235,26 @@
 
           <div class="py-4">
             <label for="questionName" class="block text-xl font-semibold mb-2">Question Name:</label>
-            <textarea id="questionName" placeholder="Enter question name..." formControlName="name" class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500" required></textarea>
+            <textarea id="questionName"
+                      placeholder="Enter question name..."
+                      formControlName="name" class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
+                      rows="1"
+                      onkeydown="if(event.key === 'Enter') { event.preventDefault(); }"
+                      required
+            ></textarea>
           </div>
 
           <div class="py-4">
             <label for="questionDescription" class="block text-xl font-semibold mb-2">Question Description:</label>
-            <textarea id="questionDescription" placeholder="Enter question description..." formControlName="description" class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"></textarea>
+            <textarea id="questionDescription"
+                      placeholder="Enter question description..."
+                      formControlName="description"
+                      maxlength="1000"
+                      class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"></textarea>
           </div>
-
+          <div class="text-right text-sm text-gray-500">
+            {{ questionForm.controls['description'].value?.length || 0 }}/1000
+          </div>
           <div class="py-4">
             <label for="questionType" class="block text-xl font-semibold mb-2">Question Type:</label>
             <select id="questionType" formControlName="type" class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500">
@@ -203,7 +264,14 @@
           </div>
           <div *ngIf="questionForm.controls['type'].value !=='QCM'" class="py-4">
             <label for="answer" class="block text-xl font-semibold mb-2">Answer:</label>
-            <textarea id="answer" placeholder="Enter question's Answer ..." formControlName="answer" class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"></textarea>
+            <textarea id="answer"
+                      placeholder="Enter question's Answer ..."
+                      formControlName="answer"
+                      maxlength="100"
+                      class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"></textarea>
+          </div>
+          <div  *ngIf="questionForm.controls['type'].value !=='QCM'" class="text-right text-sm text-gray-500">
+            {{ questionForm.controls['answer'].value?.length || 0 }}/100
           </div>
           <div *ngIf="questionForm.controls['type'].value ==='QCM'" class="" [formGroup]="optionForm">
             <div class="py-4">
@@ -217,6 +285,18 @@
                 <option value="false">false</option>
               </select>
             </div>
+            <div  *ngIf="options !== null "  class="mb-4">
+              <div   class="mb-4">
+                <p class="font-semibold text-lg">Question Options:</p>
+              </div>
+
+              <div *ngFor="let opt of options; let i = index" class="mb-4 pl-4 border-l-4 border-gray-300">
+                <p class="font-semibold text-lg">Option {{i + 1}}:</p>
+                <p class="py-2 text-gray-700">Value: {{opt?.value}}</p>
+                <p class="py-2 text-gray-700">Correct: {{opt?.isCorrect.toString()}}</p>
+              </div>
+
+            </div>
             <button type="submit" class="btn btn-primary rounded-xl" (click)="onAddOption()">Add Option</button>
 
 
@@ -224,11 +304,29 @@
 
           <div class="py-4">
             <label for="questionTimer" class="block text-xl font-semibold mb-2">Question Timer:</label>
-            <textarea id="questionTimer" placeholder="Enter question timer in seconds..." formControlName="timer" type="number" class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"></textarea>
+            <input id="questionTimer"
+                      placeholder="Enter question timer in seconds..."
+                      formControlName="timer"
+                      type="number"
+                      min="1"
+                      max="10"
+                      class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
+            />
           </div>
           <div class="py-4">
             <label for="questionscore" class="block text-xl font-semibold mb-2">Question Score:</label>
-            <textarea id="questionscore" datatype="number" placeholder="Enter question timer in seconds..." formControlName="score" type="number" class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"></textarea>
+            <input id="questionscore"
+                      datatype="number"
+                      placeholder="Enter question Score"
+                      formControlName="score"
+                      type="number"
+                      min="1"
+                      max="100"
+                      class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
+            />
+            <div *ngIf="questionForm.controls['score'].hasError('min') || examForm.controls['timer'].hasError('max')" class="text-red-500 text-sm">
+              Timer must be between 1 and 600 minutes.
+            </div>
           </div>
 
           <div class="py-4">
@@ -249,6 +347,60 @@
 
     </div>
 
+    <dialog id="my_modal_1" class="modal">
+      <div class="modal-box max-w-2xl p-6">
+        <h3 class="text-2xl font-bold mb-6">Question Name: {{displayedQuestion?.name}}</h3>
+
+        <div class="mb-4">
+          <p class="font-semibold text-lg">Question Description:</p>
+          <p class="py-2 text-gray-700">{{displayedQuestion?.description}}</p>
+        </div>
+
+        <div class="mb-4">
+          <p class="font-semibold text-lg">Question Type:</p>
+          <p class="py-2 text-gray-700">{{displayedQuestion?.type}}</p>
+        </div>
+
+        <div *ngIf="displayedQuestion?.type !== 'QCM'" class="mb-4">
+          <p class="font-semibold text-lg">Question Answer :</p>
+          <p class="py-2 text-gray-700">{{displayedQuestion?.answer}}</p>
+        </div>
+
+        <div  *ngIf="displayedQuestion?.type === 'QCM'"  class="mb-4">
+          <div   class="mb-4">
+            <p class="font-semibold text-lg">Question Options :</p>
+          </div>
+
+          <div *ngFor="let opt of displayedQuestion?.options; let i = index" class="mb-4 pl-4 border-l-4 border-gray-300">
+            <p class="font-semibold text-lg">Option {{i + 1}}:</p>
+            <p class="py-2 text-gray-700">Value: {{opt?.value}}</p>
+            <p class="py-2 text-gray-700">Correct: {{opt?.isCorrect.toString()}}</p>
+          </div>
+
+        </div>
+        <div class="mb-4">
+          <p class="font-semibold text-lg">Question Score:</p>
+          <p class="py-2 text-gray-700">{{displayedQuestion?.score}}</p>
+        </div>
+        <div class="mb-4">
+          <p class="font-semibold text-lg">Question Timer:</p>
+          <p class="py-2 text-gray-700">{{displayedQuestion?.timer}}</p>
+        </div>
+
+        <div class="mb-4">
+          <p class="font-semibold text-lg">Question Difficulty:</p>
+          <p class="py-2 text-gray-700">{{displayedQuestion?.difficultyLevel}}</p>
+        </div>
+
+        <div class="modal-action mt-6 flex justify-end">
+          <form method="dialog" class="space-x-2">
+            <button type="submit" class="btn btn-error" (click)="onDeleteQuestion()">Delete</button>
+            <button type="submit" class="btn btn-info" (click)="onModifyQuestion()">Modify</button>
+            <button class="btn">Close</button>
+          </form>
+        </div>
+      </div>
+    </dialog>
 
     <!-- add channel here -->
   </div>
@@ -260,15 +412,15 @@
     ></label>
     <ul class="menu p-4 w-80 min-h-full bg-base-100 text-base-content">
       <!-- Sidebar content here -->
-      <a class="btn btn-ghost text-xl">{{ exam.name}}</a>
+      <button (click)="currentStep = 0" class="btn btn-ghost text-xl">{{ exam.name}}</button>
 
       <ul class="menu mt-10 bg-base-100 w-56 rounded-box">
         <li>
           <details open>
             <summary class=" ">questions</summary>
             <ul>
-              <li>
-                <a>#{{ exam.questions.name}}</a>
+              <li *ngFor="let question of exam.questions">
+                <button (click)="displayedQuestion = question" onclick="my_modal_1.showModal()">{{question.name}}</button>
               </li>
             </ul>
           </details>

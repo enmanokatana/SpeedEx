@@ -20,6 +20,8 @@ import {DocumentationComponent} from "./features/components/documentation/docume
 import {ConsultComponent} from "./features/pages/consult/consult.component";
 import {UsersResultsComponent} from "./features/components/users-results/users-results.component";
 import {ExamDetailsComponent} from "./features/components/exam-details/exam-details.component";
+import {MainComponent} from "./features/components/main/main.component";
+import {SettingsComponent} from "./features/components/settings/settings.component";
 
 export const routes: Routes = [
 
@@ -34,7 +36,14 @@ export const routes: Routes = [
   { path: 'Home',
     component: HomeComponent,
     canActivate:[AuthGuard],
-    title: 'Home' },
+    title: 'Home',
+    children:[
+      {path: 'main',component:MainComponent ,title:'main'},
+      {path: 'settings',component: SettingsComponent,title:'Settings'},
+      {path: '',redirectTo: 'main',pathMatch: "full"}
+    ]
+
+  },
 
   { path: 'Register',
     component: RegisterComponent,

@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, HostListener, OnInit} from '@angular/core';
 import {HeaderComponent} from "../../../core/componenets/header/header.component";
 import {ActivatedRoute, NavigationEnd, Router, RouterLink, RouterOutlet} from "@angular/router";
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
@@ -266,6 +266,20 @@ export class WorkspaceComponent implements OnInit{
 
 
   protected readonly localStorage = localStorage;
+  drawerCheckboxId: string = 'my-drawer-2';
+  hidden: boolean = true;
+
+  @HostListener('window:resize',['$event'])
+  onResize(event:Event){
+    this.adjustFieldValue(window.innerWidth);
+  }
+  private adjustFieldValue(windowWidth : number){
+    if (windowWidth< 1400){
+      this.hidden = false;
+    }else {
+      this.hidden = true;
+    }
+  }
 
   onGotoWs(id:any) {
     this.router.navigate(['/Workspace',id]);
