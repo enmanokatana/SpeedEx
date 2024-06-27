@@ -91,6 +91,12 @@ export class HeaderComponent implements OnInit{
   protected readonly localStorage = localStorage;
 
   onJoinWorkSpace() {
-    console.log(this.code.value);
+    this.workspaceService.joinWorkSpace(localStorage.getItem('id'),this.code.value).subscribe({
+      next:(response)=>{
+          console.log(response)
+        },
+      error:(e)=>{
+console.log(e)      }
+    })
   }
 }

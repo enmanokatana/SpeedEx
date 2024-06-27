@@ -157,6 +157,19 @@ export class WorkspaceService {
 
     return this.http.get(`${this.url}/name/${id}`, { headers });
   }
+  joinWorkSpace(id:any,code:string){
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${this.token}`
+
+      // Add any other headers required by your API
+    });
+    return this.http.post(`${this.url}/join/${id}`,null,{
+      headers:headers,
+      params: {code}
+    });
+
+  }
 
 
 }

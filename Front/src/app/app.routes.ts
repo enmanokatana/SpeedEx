@@ -42,7 +42,6 @@ export const routes: Routes = [
       {path: 'settings',component: SettingsComponent,title:'Settings'},
       {path: '',redirectTo: 'main',pathMatch: "full"}
     ]
-
   },
 
   { path: 'Register',

@@ -12,12 +12,9 @@ import org.example.server.models.Workspace;
 import org.example.server.repositories.ExamRepository;
 import org.example.server.repositories.UserRepository;
 import org.example.server.repositories.WorkspaceRepository;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+
+import java.util.*;
 
 
 /* Note to self in the future If by any chance the database get to filled with
@@ -306,6 +303,7 @@ public class WorkSpaceService {
                     .exams(null)
                     .image("https://firebasestorage.googleapis.com/v0/b/library-b3d3f.appspot.com/o/d76d08b9-afe5-44d5-84f2-518a3b9c60ed.jpeg?alt=media")
                     .users(users)
+                    .code(generateUniqueWorkspaceCode())
                     .build());
             responseDto.setResult(result);
 
@@ -376,6 +374,7 @@ public class WorkSpaceService {
                     .description(workspace.getDescription())
                     .id(workspace.getId())
                     .image(workspace.getImage())
+                    .code(workspace.getCode())
                     .build();
 
             responseDto.setResult(result);
@@ -595,5 +594,35 @@ public class WorkSpaceService {
     }
 
 
+    public ResponseDto joinUserToWorkSpaceByCode(Integer id, String code){
+        var workspaceOptional = repository.findByCode(code);
+        if (workspaceOptional.isEmpty()){
+            responseDto.setWorked(false);
+            responseDto.setResult(null);
+            responseDto.setMessage("Wrong Code");
+            return responseDto;
+        }
+        var userOptional =userRepository.findById(id);
+        if (userOptional.isEmpty()){
+            responseDto.setWorked(false);
+            responseDto.setResult(null);
+            responseDto.setMessage("User doesn't exist");
+            return responseDto;
+        }
+
+        return addUserToWorkSpaceById(id,workspaceOptional.get().getId());
+
+    }
+
+    public String generateUniqueWorkspaceCode(){
+        String code;
+        do {
+            code = generateWorkSpaceCode();
+        }while (repository.existsByCode(code));
+        return code;
+    }
+    private String generateWorkSpaceCode(){
+        return UUID.randomUUID().toString().substring(0,8).toUpperCase();
+    }
 
 }

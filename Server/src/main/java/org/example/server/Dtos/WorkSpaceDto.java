@@ -22,4 +22,5 @@ public class WorkSpaceDto {
     private List<Integer> users;
     private String image;
     private List<Long> exams;
+    private String code;
 }

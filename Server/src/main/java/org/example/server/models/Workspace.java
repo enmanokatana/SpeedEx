@@ -31,6 +31,8 @@ public class Workspace implements Serializable {
 
 
 
+    private String code;
+
     @ManyToOne
     @JsonIgnore
     private User admin;

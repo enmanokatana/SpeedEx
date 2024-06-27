@@ -57,7 +57,7 @@ public class AppSecurityConfig {
                                 "api/v1/Option")
 
 
-                        .hasAnyAuthority("ADMIN")
+                        .hasAnyAuthority("ADMIN","USER")
                         .requestMatchers(HttpMethod.PUT,"/api/v1/Workspace/**",
                                 "/api/v1/Exam",
                                 "api/v1/Question",

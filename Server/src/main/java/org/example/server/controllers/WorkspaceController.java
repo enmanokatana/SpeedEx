@@ -135,4 +135,12 @@ public class WorkspaceController {
         return workSpaceService.getWorkSpaceName(id);
     }
 
+    @PostMapping("join/{id}")
+    public ResponseDto joinByCode(
+            @PathVariable Integer id ,
+            @RequestParam String code
+    ){
+        return workSpaceService.joinUserToWorkSpaceByCode(id,code);
+    }
+
 }
