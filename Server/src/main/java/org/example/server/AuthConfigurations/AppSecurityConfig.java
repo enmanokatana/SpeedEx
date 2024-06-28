@@ -48,8 +48,11 @@ public class AppSecurityConfig {
                                 ,"swagger-ui.html"
                                 ,"/app"
                                 ,"/api/v1/Invitations/**"
+                                ,"/"
+                                ,"ws/**"
+                                ,"/ws/**"
+                                ,"/tuto"
                         )
-
                         .permitAll()
                         .requestMatchers(HttpMethod.POST,"/api/v1/Workspace/**",
                                 "/api/v1/Exam",
