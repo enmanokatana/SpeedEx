@@ -9,6 +9,7 @@ import org.example.server.models.Exam;
 import org.example.server.models.ResponseDto;
 import org.example.server.models.User;
 import org.example.server.models.Workspace;
+import org.example.server.notifications.NotificationController;
 import org.example.server.repositories.ExamRepository;
 import org.example.server.repositories.UserRepository;
 import org.example.server.repositories.WorkspaceRepository;
@@ -16,15 +17,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 
-
-/* Note to self in the future If by any chance the database get to filled with
-
- with duplicated Exams you should create a Result type that stores the original
-
- eXAM WITH admin with the student and his result then delete automatically the
-
- duplicated exam from DB after a certain period
- */
 
 
 
@@ -34,6 +26,7 @@ import java.util.*;
 @RequiredArgsConstructor
 public class WorkSpaceService {
 
+    private final NotificationController notificationController;
     private final WorkspaceRepository repository;
     private final UserRepository userRepository;
     private final ExamService examService;
@@ -463,6 +456,7 @@ public class WorkSpaceService {
                                 .id(exam.getId())
                                 .passed(exam.getPassed())
                                 .result(exam.getResult())
+                                .createdOn(exam.getCreatedOn())
                                 .passingScore(0)
                         .build());
             }
@@ -495,8 +489,10 @@ public class WorkSpaceService {
                                     .description(exam.getDescription())
                                     .user(exam.getUser().getId())
                                     .id(exam.getId())
+                                    .createdOn(exam.getCreatedOn())
                                     .passed(exam.getPassed())
                                     .passingScore(0)
+                                    .ExamGroup(exam.getExamGroup().getId())
                             .build());
                 }
             }
@@ -518,10 +514,6 @@ public class WorkSpaceService {
             var workspace = repository.findById(Wid);
             if (workspace.isPresent()) {
                 if (user.isPresent()) {
-
-
-
-
                     //////////////////////////////////////////////////////////
                    // examService.DeleteAllUserWorkSpaceExams(userId,Wid);
                     ///////////////////////////////////////////////
@@ -540,11 +532,13 @@ public class WorkSpaceService {
                     responseDto.setResult(null);
                     return responseDto;
                 }
+
                 responseDto.setMessage("User doesn't Exist ");
                 responseDto.setWorked(false);
                 responseDto.setResult(null);
                 return responseDto;
             }
+
             responseDto.setMessage("WorkSpace doesn't Exist ");
             responseDto.setWorked(false);
             responseDto.setResult(null);
@@ -556,9 +550,6 @@ public class WorkSpaceService {
             responseDto.setMessage(e.getMessage());
             return responseDto;
         }
-
-
-
     }
 
 
@@ -611,7 +602,6 @@ public class WorkSpaceService {
         }
 
         return addUserToWorkSpaceById(id,workspaceOptional.get().getId());
-
     }
 
     public String generateUniqueWorkspaceCode(){

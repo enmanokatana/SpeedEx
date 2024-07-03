@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import * as Stomp from 'stompjs'
 import SockJS from 'sockjs-client';
 import {environment} from "../../../../environmenets/environment";
+import {Observable, Subject} from "rxjs";
 @Injectable({
   providedIn: 'root'
 })
@@ -11,32 +12,35 @@ export class NotificationsService {
 
   private stompClient: any;
   private connected: boolean = false;
+  private notificationSubject: Subject<any> = new Subject<any>();
 
   constructor() { }
 
   connect() {
     const socket = new SockJS('http://localhost:8080/ws');
     this.stompClient = Stomp.over(socket);
+    this.stompClient.debug = () => {};// to stop logging
 
     this.stompClient.connect({}, (frame: any) => {
-      console.log('Connected: ' + frame);
+     // console.log('Connected: ' + frame);
       this.connected = true;
       this.stompClient.subscribe('/topic/notifications', (notification: any) => {
-        var message = JSON.parse(notification.body);
-        console.log(message);
+        this.notificationSubject.next(notification.body);
       });
+      if (localStorage.getItem('role') !== 'ADMIN'){
+        this.stompClient.subscribe(`/user/${localStorage.getItem('id')}/topic/notifications`, (notification: any) => {
+        this.notificationSubject.next(notification.body);
+      });}
+
+
     }, (error: any) => {
       console.error('Connection error: ' + error);
       this.connected = false;
     });
   }
 
-  sendMessage(message: string) {
-    if (this.connected) {
-      console.log('Sending message: ' + message);
-      this.stompClient.send('/app/sendNotification', {}, message);
-    } else {
-      console.error('Unable to send message. Not connected.');
-    }
+
+  subscribeToNotifications():Observable<any>{
+    return this.notificationSubject.asObservable();
   }
 }

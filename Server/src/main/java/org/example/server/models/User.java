@@ -68,6 +68,10 @@ public class User implements UserDetails, Serializable {
     private List<Workspace> workspaces;//joined
 
 
+    private Boolean online;
+
+
+
 
 
 

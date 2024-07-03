@@ -1,10 +1,8 @@
 package org.example.server.controllers;
 
-import io.swagger.v3.oas.annotations.info.Info;
 import lombok.RequiredArgsConstructor;
 import org.example.server.Dtos.WorkSpaceDto;
 import org.example.server.models.ResponseDto;
-import org.example.server.models.Workspace;
 import org.example.server.services.WorkSpaceService;
 import org.springframework.web.bind.annotation.*;
 

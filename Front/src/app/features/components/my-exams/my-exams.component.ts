@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {NgForOf, NgIf, NgOptimizedImage} from "@angular/common";
+import {DatePipe, NgForOf, NgIf, NgOptimizedImage} from "@angular/common";
 import {FormBuilder, FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {UserService} from "../../../core/services/User/user.service";
 import {WorkspaceService} from "../../../core/services/workspace/workspace.service";
@@ -14,7 +14,8 @@ import {ActivatedRoute, Router, RouterLink} from "@angular/router";
     ReactiveFormsModule,
     RouterLink,
     NgOptimizedImage,
-    FormsModule
+    FormsModule,
+    DatePipe
   ],
   templateUrl: './my-exams.component.html',
   styleUrl: './my-exams.component.css'
@@ -59,62 +60,31 @@ export class MyExamsComponent implements OnInit{
 
   onGetExams(id:any){
     if (localStorage.getItem('role') === 'ADMIN'){
-      this.workspaceService.getWorkSpaceExams(id).subscribe({
+      this.workspaceService.getWorkSpaceExamsForAdmin(id).subscribe({
         next:(response)=>{
-          console.log("Exams : ",response.result);
+          console.log("Exams For Admin : ",response.result);
           this.exams = response.result;
-          if (localStorage.getItem('role') === 'ADMIN'){
-            for (let exam in this.exams){
-              this.exams = this.exams.filter(i=>i.student ==0);
-            }
-            //console.log(this.exams);
-          }else {
-            for (let exam in this.exams){
-              this.exams = this.exams.filter(i=>i.student ==localStorage.getItem('id'));
-            }
-            //console.log(this.exams);
-          }
-
-
-        },
-        error:(e)=>{
-          //console.log(e);
-        },
-        complete:()=>{
-          this.filteredExams = this.exams;
-
-        }
-      });
-    }else {
-      this.workspaceService.getWorkSpaceExamsForUser(id,localStorage.getItem('id')).subscribe({
-        next:(response)=>{
-          console.log("Exams : ",response.result);
-          this.exams = response.result;
-          if (localStorage.getItem('role') === 'ADMIN'){
-            for (let exam in this.exams){
-              this.exams = this.exams.filter(i=>i.student ==0);
-            }
-            //console.log(this.exams);
-          }else {
-            for (let exam in this.exams){
-              this.exams = this.exams.filter(i=>i.student ==localStorage.getItem('id'));
-            }
-            //console.log(this.exams);
-          }
-
-
-        },
-        error:(e)=>{
-          //console.log(e);
-        },
-        complete:()=>{
-
-        }
+          },
+        error:(e)=>{console.log(e);},
+        complete:()=>{this.filteredExams = this.exams;}
       });
     }
+    else
+    {
+      this.workspaceService.getWorkSpaceExamsForUser(id,localStorage.getItem('id')).subscribe({
+        next:(response)=>{
+          console.log("Exams fOR User : ",response.result);
+          this.exams = response.result;
 
+            for (let exam in this.exams){
+              this.exams = this.exams.filter(i=>i.student ==localStorage.getItem('id'));
+            }
+            console.log(this.exams);
+            },
+        error:(e)=>{console.log(e);},
+        complete:()=>{this.filteredExams = this.exams;}});
+    }
   }
-
 
   filterExams(): void {
     // Filter exams based on user role and id
@@ -129,17 +99,25 @@ export class MyExamsComponent implements OnInit{
     // Sort filtered exams based on sortOption
     switch (this.sortOption) {
       case 'date':
-        this.filteredExams.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
-        break;
-      case 'id':
-        this.filteredExams.sort((a, b) => a.id - b.id);
+        this.filteredExams.sort((a, b) => {
+          // Ensure both a and b have a valid createdOn date
+          if (!a.createdOn || !b.createdOn) return 0;
+
+          return new Date(b.createdOn).getTime() - new Date(a.createdOn).getTime();
+        });
         break;
       case 'name':
-        this.filteredExams.sort((a, b) => a.name.localeCompare(b.name));
+        this.filteredExams.sort((a, b) => {
+          // Ensure both a and b have a valid name
+          if (!a.name || !b.name) return 0;
+
+          return a.name.localeCompare(b.name);
+        });
         break;
       default:
         break;
     }
+
 
     if (this.searchQuery) {
       this.filteredExams = this.filteredExams.filter(exam =>
@@ -155,7 +133,6 @@ export class MyExamsComponent implements OnInit{
     this.sortOption = event.target.value;
     this.filterExams();
   }
-
 
   protected readonly localStorage = localStorage;
 }

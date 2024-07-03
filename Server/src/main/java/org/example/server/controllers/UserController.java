@@ -18,6 +18,11 @@ public class UserController
     private final UserService userService;
 
 
+    @GetMapping("/onlineUsers")
+    public List<String> getOnlineUsers() {
+        return userService.getOnlineUsers();
+    }
+
     @GetMapping("/{id}")
     public ResponseDto GetUserById(
             @PathVariable Integer id

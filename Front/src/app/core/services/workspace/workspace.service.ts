@@ -66,6 +66,15 @@ export class WorkspaceService {
 
 
   }
+  getWorkSpaceExamsForAdmin(id:any):Observable<any>{
+    const requestUrl = `${this.url}/${id}/exams/admin/${localStorage.getItem('id')}`;
+      const headers = new HttpHeaders({
+        'Authorization': `Bearer ${this.token}`
+      });
+    return this.http.get(requestUrl, { headers });
+
+
+  }
   getWorkSpaceExamsForUser(id:any,userId:any):Observable<any>{
     const requestUrl = `${this.url}/${id}/exams/user/${userId}`;
       const headers = new HttpHeaders({

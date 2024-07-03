@@ -52,10 +52,10 @@ public class NotificationController {
         memberStore.RemoveUser(user.getId());
     }
     @MessageMapping("/sendNotification") // Endpoint to receive messages
-    @SendTo("/topic/notifications") // Broadcasts the message to clients subscribed to "/topic/notifications"
-    public Notification sendNotification(String notification) {
-        System.out.println();
-        return new Notification("test", UserDto.builder().build(), Action.Update, Instant.now());
+    public void sendNotification(NotificationDto notification) {
+        template.convertAndSendToUser(String.valueOf(notification.to()),"/topic/notifications",notification.message());
     }
+
+
 }
 

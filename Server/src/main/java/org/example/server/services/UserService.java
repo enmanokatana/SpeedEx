@@ -5,18 +5,21 @@ import org.example.server.Dtos.ExamDto;
 import org.example.server.Dtos.RequestDto;
 import org.example.server.Dtos.UserDto;
 import org.example.server.Dtos.WorkSpaceDto;
+import org.example.server.exceptions.UserDoesNotExistException;
 import org.example.server.models.Exam;
 import org.example.server.models.ResponseDto;
 import org.example.server.models.User;
 import org.example.server.models.Workspace;
 import org.example.server.repositories.UserRepository;
 import org.example.server.repositories.WorkspaceRepository;
+import org.example.server.utils.TokenRegistry;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -25,9 +28,20 @@ public class UserService
     private final UserRepository userRepository;
     private final ImageService imageService;
     private final WorkspaceRepository workspaceRepository;
-    private RequestDto requestDto =new RequestDto();
-    private ResponseDto responseDto = new ResponseDto();
+    private final ResponseDto responseDto = new ResponseDto();
 
+    private final TokenRegistry tokenRegistry;
+
+
+
+    public Boolean IsUserOnline(Integer id) throws UserDoesNotExistException {
+        var user = userRepository.findById(id).orElseThrow(()->new UserDoesNotExistException("user Doesn't Exist") );
+        return getOnlineUsers().contains(user.getEmail());
+    }
+
+    public List<String> getOnlineUsers(){
+        return tokenRegistry.getActiveTokens().values().stream().distinct().collect(Collectors.toList());
+    }
 
     public ResponseDto GetListOfUsersByIds(List<Integer> ids){
         var users =  userRepository.findAllById(ids);

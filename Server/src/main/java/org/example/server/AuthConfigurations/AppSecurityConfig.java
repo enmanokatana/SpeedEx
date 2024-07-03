@@ -51,7 +51,7 @@ public class AppSecurityConfig {
                                 ,"/"
                                 ,"ws/**"
                                 ,"/ws/**"
-                                ,"/tuto"
+                                ,"/api/v1/chatAi/**"
                         )
                         .permitAll()
                         .requestMatchers(HttpMethod.POST,"/api/v1/Workspace/**",
@@ -103,6 +103,5 @@ public class AppSecurityConfig {
 
     }
 
-
-
 }
+

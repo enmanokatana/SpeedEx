@@ -8,22 +8,22 @@ import org.example.server.exceptions.ExamNotFoundException;
 import org.example.server.exceptions.UserDoesNotExistException;
 import org.example.server.exceptions.WorkSpaceDoesNotExistException;
 import org.example.server.models.*;
+import org.example.server.notifications.NotificationController;
+import org.example.server.notifications.NotificationDto;
 import org.example.server.repositories.*;
-import org.springframework.cache.annotation.Cacheable;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 // A lot of stuff to fix
 //add the exam
 
@@ -40,6 +40,8 @@ public class ExamService {
     private final UserRepository userRepository;
     private final WorkspaceRepository workspaceRepository;
     private final ExamGroupRepository examGroupRepository;
+    private final NotificationController notificationController;
+    private final NotificationService notificationService;
 
     private final ResponseDto responseDto =new ResponseDto();
 
@@ -288,6 +290,19 @@ public class ExamService {
         //we've Assigned this exam to every user in the
         // workspace and Identified this particular one with exam group
         // ##########################################################################
+
+        if (result.getStudent() != null){
+            notificationController.sendNotification(
+                    new NotificationDto("a new exam has been added name :"+result.getName()+" at workspace:"+result.getWorkspace().getName()+".",
+                            result.getStudent().getId(),
+                            Instant.now()));
+            notificationService.CreateNotification(Notification.builder()
+                            .createdAt(LocalDateTime.now()).dest(result.getStudent().getId())
+                            .message("a new exam has been added name :"+result.getName()+" at workspace:"+result.getWorkspace().getName()+".")
+                            .id(0)
+                    .build());
+        }
+
 
         return responseDto;
     }

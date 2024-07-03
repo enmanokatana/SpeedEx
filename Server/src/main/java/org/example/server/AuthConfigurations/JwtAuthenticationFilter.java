@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.example.server.utils.TokenRegistry;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -27,6 +28,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService; // a Bean in AppConfig
     private final TokenRepository tokenRepository;
+    private final TokenRegistry tokenRegistry;
     @Override
     protected void doFilterInternal(
             @NonNull HttpServletRequest request,
@@ -82,6 +84,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 /* Adding the Authentication Object to SecurityContextHolder
                 to marque user as authenticated  */
                 SecurityContextHolder.getContext().setAuthentication(authToken);
+
+                tokenRegistry.addToken(jwt,userEmail);
             }else {
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             }

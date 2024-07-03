@@ -34,7 +34,8 @@
           <h2 class="card-title">{{ exam.name }}</h2>    <!-- Exam Name-->
 
           <p class="text-red-700" *ngIf="exam.result === 'CHEATED'"> Note : (You have been caught cheating on this exam)</p>    <!-- Exam description-->
-          <p>{{ exam.description }}</p>    <!-- Exam description-->
+          <span class="badge badge-ghost badge-sm">created on : {{exam?.createdOn | date :'MMMM d, y, h:mm a'}}</span>
+          <!-- Exam description-->
 
           <div class="card-actions justify-end">
             <button *ngIf="exam?.passed ===false && localStorage.getItem('role') !== 'ADMIN'" class="btn btn-primary" [routerLink]="['/Exam',exam.id]">Pass Exam now </button>
