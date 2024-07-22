@@ -1,16 +1,33 @@
 <div class="m-20">
 
-<div class="w-full rounded-box">
-    <div class="carousel-item">
-      <img class="w-full h-80  rounded-3xl shadow" [src]="image" alt="Burger" />
+  <div class="w-full rounded-box relative">
+    <div class="carousel-item relative">
+      <img class="w-full h-80 rounded-3xl shadow" [src]="image" alt="Burger"
+           (mouseenter)="showButton = true" (mouseleave)="showButton = false" />
+      <div (mouseenter)="showButton = true" class="absolute top-2 right-2">
+        <button *ngIf="showButton" class="btn" (click)="triggerFileInput()">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
+          </svg>
+
+          change Picture
+        </button>
+      </div>
+      <div class="absolute bottom-2 left-2 text-white text-lg font-bold px-3 py-1 rounded">
+        {{ workSpaceName }}
+      </div>
     </div>
   </div>
+
+
+
+  <input type="file" #fileInput style="display: none;" (change)="onFileSelected($event)">
   <div class="w-full rounded-box mt-4 ">
     <div class="flex justify-between">
       <div class="py-4">
         <label for="sort" class="block text-xl font-semibold mb-2">Filter By:</label>
-        <select id="sort"  class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
-        (change)="onChangeSortOption($event)">
+
+        <select id="sort" (change)="onChangeSortOption($event)" class="select select-bordered w-full max-w-xs">
           <option value="date">Date</option>
           <option value="id">Id</option>
           <option value="name">name</option>
@@ -34,7 +51,8 @@
           <h2 class="card-title">{{ exam.name }}</h2>    <!-- Exam Name-->
 
           <p class="text-red-700" *ngIf="exam.result === 'CHEATED'"> Note : (You have been caught cheating on this exam)</p>    <!-- Exam description-->
-          <p>{{ exam.description }}</p>    <!-- Exam description-->
+          <span class="badge badge-ghost badge-sm">created on : {{exam?.createdOn | date :'MMMM d, y, h:mm a'}}</span>
+          <!-- Exam description-->
 
           <div class="card-actions justify-end">
             <button *ngIf="exam?.passed ===false && localStorage.getItem('role') !== 'ADMIN'" class="btn btn-primary" [routerLink]="['/Exam',exam.id]">Pass Exam now </button>

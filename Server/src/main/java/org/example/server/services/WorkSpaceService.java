@@ -5,26 +5,21 @@ import org.example.server.Dtos.ExamDto;
 import org.example.server.Dtos.UserDto;
 import org.example.server.Dtos.WorkSpaceDto;
 import org.example.server.enums.Result;
+import org.example.server.exceptions.WorkSpaceDoesNotExistException;
 import org.example.server.models.Exam;
 import org.example.server.models.ResponseDto;
 import org.example.server.models.User;
 import org.example.server.models.Workspace;
+import org.example.server.notifications.NotificationController;
 import org.example.server.repositories.ExamRepository;
 import org.example.server.repositories.UserRepository;
 import org.example.server.repositories.WorkspaceRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.util.*;
 
-
-/* Note to self in the future If by any chance the database get to filled with
-
- with duplicated Exams you should create a Result type that stores the original
-
- eXAM WITH admin with the student and his result then delete automatically the
-
- duplicated exam from DB after a certain period
- */
 
 
 
@@ -39,7 +34,7 @@ public class WorkSpaceService {
     private final ExamService examService;
     private final ExamRepository examRepository;
     private final ResponseDto responseDto = new ResponseDto();
-    private final UserService userService;
+    private final ImageService imageService;
 
     public ResponseDto getWorkSpaceAdmin(Long id){
         var ws = repository.findById(id);
@@ -463,6 +458,7 @@ public class WorkSpaceService {
                                 .id(exam.getId())
                                 .passed(exam.getPassed())
                                 .result(exam.getResult())
+                                .createdOn(exam.getCreatedOn())
                                 .passingScore(0)
                         .build());
             }
@@ -495,8 +491,10 @@ public class WorkSpaceService {
                                     .description(exam.getDescription())
                                     .user(exam.getUser().getId())
                                     .id(exam.getId())
+                                    .createdOn(exam.getCreatedOn())
                                     .passed(exam.getPassed())
                                     .passingScore(0)
+                                    .ExamGroup(exam.getExamGroup().getId())
                             .build());
                 }
             }
@@ -518,10 +516,6 @@ public class WorkSpaceService {
             var workspace = repository.findById(Wid);
             if (workspace.isPresent()) {
                 if (user.isPresent()) {
-
-
-
-
                     //////////////////////////////////////////////////////////
                    // examService.DeleteAllUserWorkSpaceExams(userId,Wid);
                     ///////////////////////////////////////////////
@@ -540,11 +534,13 @@ public class WorkSpaceService {
                     responseDto.setResult(null);
                     return responseDto;
                 }
+
                 responseDto.setMessage("User doesn't Exist ");
                 responseDto.setWorked(false);
                 responseDto.setResult(null);
                 return responseDto;
             }
+
             responseDto.setMessage("WorkSpace doesn't Exist ");
             responseDto.setWorked(false);
             responseDto.setResult(null);
@@ -556,9 +552,6 @@ public class WorkSpaceService {
             responseDto.setMessage(e.getMessage());
             return responseDto;
         }
-
-
-
     }
 
 
@@ -611,7 +604,6 @@ public class WorkSpaceService {
         }
 
         return addUserToWorkSpaceById(id,workspaceOptional.get().getId());
-
     }
 
     public String generateUniqueWorkspaceCode(){
@@ -623,6 +615,21 @@ public class WorkSpaceService {
     }
     private String generateWorkSpaceCode(){
         return UUID.randomUUID().toString().substring(0,8).toUpperCase();
+    }
+
+
+    public String changeWorkSpaceImage(Long id, MultipartFile file) throws WorkSpaceDoesNotExistException {
+        var workspace = repository.findById(id);
+        if (workspace.isEmpty()){
+            throw new WorkSpaceDoesNotExistException("workspace doesn't exist");
+        }
+        String image = imageService.upload(file);
+        if (image != null){
+            image = image.replace("<bucket-name>" ,"library-b3d3f.appspot.com" );
+        }
+        workspace.get().setImage(image);
+        repository.save(workspace.get());
+        return image;
     }
 
 }

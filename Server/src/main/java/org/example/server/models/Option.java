@@ -25,7 +25,6 @@ public class Option implements Serializable {
     @Serial
     private static final long serialVersionUID = 41331228378L;
 
-
     @Id
     @GeneratedValue
     private Long id;

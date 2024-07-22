@@ -68,9 +68,7 @@ public class User implements UserDetails, Serializable {
     private List<Workspace> workspaces;//joined
 
 
-
-
-
+    private Boolean online;
     // Return User role
     //  authority in a String format.
     @Override

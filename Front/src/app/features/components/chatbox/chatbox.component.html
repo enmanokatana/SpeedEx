@@ -1,0 +1,47 @@
+<div (click)="open=!open" tabindex="0" role="button"
+     class="px-4 rounded-md  transition duration-300 flex items-center">
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+       class="size-6">
+    <path stroke-linecap="round" stroke-linejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 5.25h.008v.008H12v-.008Z" />
+  </svg>
+</div>
+<div *ngIf="open" id="chat-container" class="fixed bottom-16 right-4 w-96">
+  <div class=" shadow-md rounded-lg max-w-lg w-full">
+    <div class="p-4 border-b bg-gray-900 text-white rounded-t-lg flex justify-between items-center">
+      <p class="text-lg font-semibold">Admin Bot</p>
+      <button id="close-chat" class="text-gray-300 hover:text-gray-400 focus:outline-none focus:text-gray-400">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+    </div>
+    <div id="chatbox" class="p-4 h-80 overflow-y-auto">
+      <!-- Chat messages will be displayed here -->
+      <div class="chat chat-start">
+
+        <div class="chat-bubble">
+          It's over Anakin,
+          <br />
+          I have the high ground.
+        </div>
+        <div class="avatar placeholder">
+          <div class="bg-neutral text-neutral-content w-8 rounded-full">
+            <span class="text-xs">UI</span>
+          </div>
+        </div>
+      </div>
+      <div class="chat chat-end">
+        <div class="chat-bubble">You underestimate my power!</div>
+        <div class="avatar placeholder">
+          <div class="bg-neutral text-neutral-content w-8 rounded-full">
+            <span class="text-xs">Me</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="p-4 border-t flex">
+      <input type="text" placeholder="Type here" class="input input-bordered w-full max-w-xs" />
+      <button id="send-button" class=" btn px-4 py-2   transition duration-300">Send</button>
+    </div>
+  </div>
+</div>

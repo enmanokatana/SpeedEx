@@ -1,0 +1,15 @@
+<div *ngIf="showToast" class="fixed top-4 right-4 z-50">
+  <div class="flex flex-col text-white rounded-3xl shadow-lg" [ngClass]="onGetStyle()">
+    <div class="p-4">
+      <span>{{ message }}</span>
+      <button class="ml-4 rounded px-2 py-1" (click)="closeToast()">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+    <div class="mt-auto px-4 py-1">
+      <progress class="progress  w-full"  [ngClass]="onGetProgressStyle()"  [value]="progressValue" [max]="100"></progress>
+    </div>
+  </div>
+</div>

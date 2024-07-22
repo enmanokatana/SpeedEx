@@ -1,12 +1,12 @@
 package org.example.server.controllers;
 
-import io.swagger.v3.oas.annotations.info.Info;
 import lombok.RequiredArgsConstructor;
 import org.example.server.Dtos.WorkSpaceDto;
+import org.example.server.exceptions.WorkSpaceDoesNotExistException;
 import org.example.server.models.ResponseDto;
-import org.example.server.models.Workspace;
 import org.example.server.services.WorkSpaceService;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/v1/Workspace")
@@ -141,6 +141,13 @@ public class WorkspaceController {
             @RequestParam String code
     ){
         return workSpaceService.joinUserToWorkSpaceByCode(id,code);
+    }
+    @PostMapping("/{id}/changeImage")
+    public String upload(
+            @RequestParam("file") MultipartFile multipartFile,
+            @PathVariable Long id
+    ) throws WorkSpaceDoesNotExistException {
+        return workSpaceService.changeWorkSpaceImage(id,multipartFile);
     }
 
 }

@@ -67,4 +67,24 @@ export class UserService {
     return this.http.get(requestUrl,{headers});
   }
 
+  updateProfile(body :any){
+    const requestUrl = `${this.url}/updateProfile/${localStorage.getItem('id')}`;
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${this.token}`
+    });
+
+    return this.http.put(requestUrl,body,{headers});
+
+  }
+
+
+  updateProfilePic(formData : FormData){
+    const requestUrl = `${this.url}/UpdateProfilePicture/${localStorage.getItem('id')}`;
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${this.token}`
+    });
+    return this.http.post(requestUrl,formData,{headers});
+  }
+
 }

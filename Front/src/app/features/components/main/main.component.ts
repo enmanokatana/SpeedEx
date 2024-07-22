@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {NgForOf} from "@angular/common";
+import {NgForOf, NgIf} from "@angular/common";
 import {StoreService} from "../../../core/services/store/store.service";
 import {AuthService} from "../../../core/services/Auth/auth.service";
 import {WorkspaceService} from "../../../core/services/workspace/workspace.service";
@@ -9,10 +9,11 @@ import {RouterLink} from "@angular/router";
 @Component({
   selector: 'app-main',
   standalone: true,
-  imports: [
-    NgForOf,
-    RouterLink
-  ],
+    imports: [
+        NgForOf,
+        RouterLink,
+        NgIf
+    ],
   templateUrl: './main.component.html',
   styleUrl: './main.component.css'
 })
@@ -20,6 +21,7 @@ export class MainComponent implements OnInit{
   loggeduser:any = '';
   workspaces:any[]=[];
   userWorkspaces:any[]= [];
+  loading: boolean=true;
 
   constructor(private store:StoreService,
               private service:AuthService,
@@ -36,6 +38,10 @@ export class MainComponent implements OnInit{
     }else {
       this.onGetMyWorkspaces();
     }
+    setTimeout(() => {
+
+      this.loading = !this.loading;
+    },3000);
   }
 
   onGetWorkspacesUser(){

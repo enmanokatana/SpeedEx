@@ -5,18 +5,22 @@ import org.example.server.Dtos.ExamDto;
 import org.example.server.Dtos.RequestDto;
 import org.example.server.Dtos.UserDto;
 import org.example.server.Dtos.WorkSpaceDto;
+import org.example.server.exceptions.UserDoesNotExistException;
+import org.example.server.mappers.UserDtoMapper;
 import org.example.server.models.Exam;
 import org.example.server.models.ResponseDto;
 import org.example.server.models.User;
 import org.example.server.models.Workspace;
 import org.example.server.repositories.UserRepository;
 import org.example.server.repositories.WorkspaceRepository;
+import org.example.server.utils.TokenRegistry;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -25,9 +29,22 @@ public class UserService
     private final UserRepository userRepository;
     private final ImageService imageService;
     private final WorkspaceRepository workspaceRepository;
-    private RequestDto requestDto =new RequestDto();
-    private ResponseDto responseDto = new ResponseDto();
+    private final ResponseDto responseDto = new ResponseDto();
 
+
+    private final UserDtoMapper mapper = new UserDtoMapper();
+    private final TokenRegistry tokenRegistry;
+
+
+
+    public Boolean IsUserOnline(Integer id) throws UserDoesNotExistException {
+        var user = userRepository.findById(id).orElseThrow(()->new UserDoesNotExistException("user Doesn't Exist") );
+        return getOnlineUsers().contains(user.getEmail());
+    }
+
+    public List<String> getOnlineUsers(){
+        return tokenRegistry.getActiveTokens().values().stream().distinct().collect(Collectors.toList());
+    }
 
     public ResponseDto GetListOfUsersByIds(List<Integer> ids){
         var users =  userRepository.findAllById(ids);
@@ -147,7 +164,7 @@ public class UserService
             Optional<User> user= userRepository.findById(id);
             if (user.isPresent()){
                 user.get().setProfileImg(image);
-                userRepository.save(user.get());
+                var usertest = userRepository.save(user.get());
                 return image;
             }else{
                 System.out.println("User Doesn't Exist DOESNT EXIST");
@@ -213,6 +230,25 @@ public class UserService
             return exams;
         }
         return null;
+    }
+
+    public ResponseDto UpdateProfile(UserDto userDto, Integer id  ){
+        var user = userRepository.findById(id);
+        if (user.isEmpty()){
+            responseDto.setResult(null);
+            responseDto.setWorked(false);
+            responseDto.setMessage("Couldn't find USER or USER doesn't Exist ");
+            return responseDto;
+        }
+
+        user.get().setFirstname(userDto.getFirstname());
+        user.get().setLastname(userDto.getLastname());
+        var response =  mapper.apply(userRepository.save(user.get()));
+        responseDto.setResult(response);
+        responseDto.setWorked(true);
+        responseDto.setMessage("Updated profile with success");
+        return responseDto;
+
     }
 
     }

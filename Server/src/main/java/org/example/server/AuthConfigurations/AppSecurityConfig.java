@@ -1,6 +1,7 @@
 package org.example.server.AuthConfigurations;
 
 import lombok.RequiredArgsConstructor;
+import org.example.server.services.Auth.LogoutService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -8,12 +9,9 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
-
-import java.util.List;
 
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
@@ -24,9 +22,10 @@ public class AppSecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthFilter;
     private final AuthenticationProvider authenticationProvider;
-    private final  List<String> WHITE_LIST ; // Will contain endpoints that dont require authentication
+    //private final  List<String> WHITE_LIST ; // Will contain endpoints that dont require authentication
     private final LogoutHandler logoutHandler;
-
+    private final LogoutService logoutService;
+    private final CustomLogoutSuccessHandler customLogoutSuccessHandler;
     // At startup spring security looks for a bean of type SecurityFilterChain
     @Bean public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
@@ -48,8 +47,11 @@ public class AppSecurityConfig {
                                 ,"swagger-ui.html"
                                 ,"/app"
                                 ,"/api/v1/Invitations/**"
+                                ,"/"
+                                ,"ws/**"
+                                ,"/ws/**"
+                                ,"/api/v1/chatAi/**"
                         )
-
                         .permitAll()
                         .requestMatchers(HttpMethod.POST,"/api/v1/Workspace/**",
                                 "/api/v1/Exam",
@@ -61,10 +63,11 @@ public class AppSecurityConfig {
                         .requestMatchers(HttpMethod.PUT,"/api/v1/Workspace/**",
                                 "/api/v1/Exam",
                                 "api/v1/Question",
-                                "api/v1/Option")
+                                "api/v1/Option",
+                                "/api/v1/User/**")
 
 
-                        .hasAnyAuthority("ADMIN")
+                        .hasAnyAuthority("ADMIN","USER")
                         .requestMatchers(HttpMethod.DELETE,"/api/v1/Workspace/**",
                                 "/api/v1/Exam/**",
                                 "api/v1/Question/**",
@@ -80,8 +83,6 @@ public class AppSecurityConfig {
                         //.authenticated()
                         .anyRequest()
                         .authenticated()
-
-
                 )
                 // No state saving : Each http request should be authenticated
                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
@@ -90,16 +91,15 @@ public class AppSecurityConfig {
                 // Prioritizing the processing of JWT-based authentication over form-based authentication
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .logout(logout ->
-                        logout.logoutUrl("/logout")
+                        logout.logoutUrl("/logout-handler")
                                 .addLogoutHandler(logoutHandler)
-                                .logoutSuccessHandler(
-                                        (request, response, authentication) -> SecurityContextHolder.clearContext())
-                );
+                                .addLogoutHandler(logoutService)
+                                .logoutSuccessHandler(customLogoutSuccessHandler));
+
+
 
                 return http.build();
 
     }
-
-
-
 }
+

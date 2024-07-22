@@ -69,6 +69,7 @@ export class WorkspaceComponent implements OnInit{
         }
       }
     })
+    this.onGetMyWorkspaces();
 
 
 
@@ -91,6 +92,7 @@ export class WorkspaceComponent implements OnInit{
     }
   })
 }
+
   ongGetWorkSpaceUsers(id:any){
   this.workspaceService.getWorkSpaceUsersIds(id).subscribe({
     next:(response)=>{
@@ -108,7 +110,7 @@ export class WorkspaceComponent implements OnInit{
     this.workspaceService.getWorkSpaces(localStorage.getItem('id')).subscribe({
       next:(response)=>{
         //console.log(response);
-        //console.log('wss',response);
+       console.log('wss',response);
         this.workspaces=response.result;
 
 
@@ -121,6 +123,11 @@ export class WorkspaceComponent implements OnInit{
         //console.log("Completed getting WSS")
         }
     })
+  }
+  navigate(id:number){
+    this.router.navigate(['/Workspace',id]).then(()=> {
+    window.location.reload();
+    });
   }
 
   onLoadUsers(ids:any){
@@ -136,133 +143,7 @@ export class WorkspaceComponent implements OnInit{
       })
     }
   }
-  onGetAdmin(){
-    this.workspaceService.getWorkSpaceAdmin(this.id).subscribe({
-      next:(response)=>{
 
-        this.WorkSpaceAdmin = response.result;
-      },
-      error:(e)=>{
-        //console.log(e);
-      },
-      complete:()=>{
-
-      }
-    })
-  }
-
-  onGetExams(id:any){
-    if (localStorage.getItem('role') === 'ADMIN'){
-    this.workspaceService.getWorkSpaceExams(id).subscribe({
-      next:(response)=>{
-        console.log("Exams : ",response.result);
-        this.exams = response.result;
-        if (localStorage.getItem('role') === 'ADMIN'){
-          for (let exam in this.exams){
-              this.exams = this.exams.filter(i=>i.student ==0);
-          }
-          //console.log(this.exams);
-        }else {
-          for (let exam in this.exams){
-            this.exams = this.exams.filter(i=>i.student ==localStorage.getItem('id'));
-          }
-          //console.log(this.exams);
-        }
-
-
-      },
-      error:(e)=>{
-        //console.log(e);
-      },
-      complete:()=>{
-
-      }
-    });
-    }else {
-      this.workspaceService.getWorkSpaceExamsForUser(id,localStorage.getItem('id')).subscribe({
-        next:(response)=>{
-          console.log("Exams : ",response.result);
-          this.exams = response.result;
-          if (localStorage.getItem('role') === 'ADMIN'){
-            for (let exam in this.exams){
-              this.exams = this.exams.filter(i=>i.student ==0);
-            }
-            //console.log(this.exams);
-          }else {
-            for (let exam in this.exams){
-              this.exams = this.exams.filter(i=>i.student ==localStorage.getItem('id'));
-            }
-            //console.log(this.exams);
-          }
-
-
-        },
-        error:(e)=>{
-          //console.log(e);
-        },
-        complete:()=>{
-
-        }
-      });
-    }
-
-  }
-  onFindUser():any{
-    //console.log("email : ",this.emailForm.value.email)
-    this.userService.getUserDtoByEmail(this.emailForm.value.email).subscribe({
-      next:(response)=>{
-        //console.log("User Response",response);
-        this.user = response.result;
-        this.emailForm.reset();
-      },
-      error:(e)=>{
-        //console.log(e);
-      },
-      complete:()=>{
-        this.loading=!this.loading;
-        //console.log(this.loading);
-      }
-    })
-
-  }
-
-
-  onAddUser(){
-    this.workspaceService.inviteUser(this.user.id,this.id).subscribe({
-      next:(response)=>{
-        //console.log(response);
-      },
-      error:(err)=>{
-        //console.log(err);
-      },
-      complete:()=>{
-      }
-    })
-  }
-
-  onRemoveUser(id:any){
-    this.workspaceService.RemoveUserFromWs(id,this.id).subscribe({
-      next:(response)=>{
-        //console.log(response);
-      },
-      error:(err)=>{
-        //console.log(err);
-      },
-      complete:()=>{
-        //console.log("removed user with id " , id);
-
-      }
-    })
-
-  }
-
-  onsetUser(user:any){
-    this.user2.id=user.id;
-    this.user2.firstname=user.firstname;
-    this.user2.lastname=user.lastname;
-    this.user2.email=user.email;
-
-  }
 
 
   protected readonly localStorage = localStorage;

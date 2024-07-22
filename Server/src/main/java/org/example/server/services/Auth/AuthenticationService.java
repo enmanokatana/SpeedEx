@@ -6,8 +6,8 @@ import org.example.server.models.User;
 import org.example.server.repositories.Auth.TokenRepository;
 import org.example.server.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authentication.*;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -21,7 +21,7 @@ public class AuthenticationService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
     private final TokenRepository tokenRepository;
-    public AuthenticationResponse signup(SignUpRequest request) {
+    public AuthenticationResponse signup(SignUpRequest request) throws Exception {
 
         // this will be replaced with DTOs or Optional Objects in the next version
         if (request.getFirstname() == null ||
@@ -52,7 +52,8 @@ public class AuthenticationService {
                 .build();
     }
 
-    public AuthenticationResponse login(LogInRequest request) {
+    @Deprecated
+    public AuthenticationResponse loginOld(LogInRequest request) throws Exception {
         // authenticating user using Authentication Provider mechanism
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -67,6 +68,61 @@ public class AuthenticationService {
                 .role(user.getRole())
                 .userID(user.getId())
                 .build();
+    }
+
+
+    public AuthenticationResponse login(LogInRequest request) throws AuthenticationException {
+        // authenticating user using Authentication Provider mechanism
+        ValidateRequest(request);
+        try{
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            request.getEmail(), request.getPassword())
+            );
+
+            var user = userRepository.findByEmail(request.getEmail())
+                    .orElseThrow(
+                            () -> new UsernameNotFoundException("User not found"));
+
+            var jwToken = jwtService.generateToken(user);
+
+            revokeAllUserTokens(user);
+
+            saveUserToken(user, jwToken);
+
+            return AuthenticationResponse.builder()
+                    .accessToken(jwToken)
+                    .role(user.getRole())
+                    .userID(user.getId())
+                    .build();
+
+        }catch (BadCredentialsException e){
+            throw new BadCredentialsException("Invalid email or password");
+        }catch (DisabledException e) {
+            throw new DisabledException("User account is disabled");
+        } catch (LockedException e) {
+            throw new LockedException("User account is locked");
+        } catch (AuthenticationCredentialsNotFoundException e) {
+            throw new AuthenticationCredentialsNotFoundException("Authentication credentials not found");
+        } catch (AuthenticationException e) {
+            throw new RuntimeException("Authentication process failed", e);  // Catching other possible AuthenticationExceptions
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+
+
+
+    private void ValidateRequest(LogInRequest request){
+        if (request.getEmail() == null || request.getEmail().isEmpty()) {
+            throw new IllegalArgumentException("Email must not be empty");
+        }
+        if (request.getPassword() == null || request.getPassword().isEmpty()) {
+            throw new IllegalArgumentException("Password must not be empty");
+        }
+
     }
 
     private void saveUserToken(User dbsaveduser, String Token) {

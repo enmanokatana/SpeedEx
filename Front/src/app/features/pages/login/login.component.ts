@@ -1,11 +1,12 @@
-import { Component, OnInit } from '@angular/core';
-import { AuthService } from '../../../core/services/Auth/auth.service';
-import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
-import { LoginRequestDto } from '../../../core/Models/login-request-dto';
-import { StoreService } from '../../../core/services/store/store.service';
-import {UserService} from "../../../core/services/User/user.service";
+import {Component, OnInit} from '@angular/core';
+import {AuthService} from '../../../core/services/Auth/auth.service';
+import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import {Router, RouterLink} from '@angular/router';
+import {StoreService} from '../../../core/services/store/store.service';
 import {NgIf} from "@angular/common";
+import {ToastService} from "../../../core/services/toast/toast.service";
+import {ToastType} from "../../../core/enums/ToastType";
+import {HttpErrorResponse} from "@angular/common/http";
 
 @Component({
   selector: 'app-login',
@@ -22,7 +23,6 @@ import {NgIf} from "@angular/common";
 export class LoginComponent implements OnInit {
   token: string = '';
   worked:boolean=false;
-  error:boolean = false;
   loginrequest: any = {
     email: '',
     password: '',
@@ -32,7 +32,7 @@ export class LoginComponent implements OnInit {
     private service: AuthService,
     private builder: FormBuilder,
     private router: Router,
-    private userService:UserService,
+    private toastService:ToastService,
     private store:StoreService,
   ) {}
   loginForm!: FormGroup;
@@ -58,22 +58,30 @@ export class LoginComponent implements OnInit {
 
 
       },
-      error: (error) => {
+      error: (error:HttpErrorResponse) => {
         console.error('Login error', error);
-        this.error = true;
-        setTimeout(() => {
-          // Code to execute after the specified delay
-          console.log('Delayed code executed after 2000 milliseconds');
-        },3000);
-        this.error =false;
+        let errorMessage = '';
+        if (error.error instanceof ErrorEvent) {
+          // Client-side error
+          errorMessage = `Error: ${error.error.message}`;
+        } else {
+          switch (error.status) {
+            case 401:
+              errorMessage = 'Username or password Incorrect';
+              break;
+            case 403:
+              errorMessage = 'Forbidden. You do not have permission to access.';
+              break;
+            default:
+              errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
+              break;
+          }
+        }
+        this.toastService.show(errorMessage,3000,ToastType.Error);
+
       },
       complete: () => {
-        this.worked=true;
-        setTimeout(() => {
-          // Code to execute after the specified delay
-          console.log('Delayed code executed after 2000 milliseconds');
-        },3000);
-        this.worked =false;
+        this.toastService.show("Logged in successfully ",3000,ToastType.Success);
       },
     });
   }

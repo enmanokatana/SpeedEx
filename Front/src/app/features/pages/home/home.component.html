@@ -1,16 +1,24 @@
-<div  *ngIf="loading" class="hero min-h-screen bg-base-200">
-  <div class="hero-content text-center">
-    <div class="max-w-md">
-      <span class=" loading loading-spinner loading-lg"></span>
 
-    </div>
-  </div>
-</div>
 
-<div *ngIf="!loading" >
+<div  >
   <app-header [drawerCheckboxId]="'my-drawer-4'" [modalInput]="'my_modal_1'"></app-header>
 
   <router-outlet></router-outlet>
+  <app-chatbox></app-chatbox>
+
+
+  <dialog id="my_modal_2" class="modal">
+    <div class="modal-box">
+      <h3 class="text-lg font-bold">Are you sure you want to logout</h3>
+      <div class="modal-action">
+        <form method="dialog">
+          <!-- if there is a button in form, it will close the modal -->
+          <button (click)="onLogout()" class="btn btn-error mr-5">Logout</button>
+          <button class="btn">Close</button>
+        </form>
+      </div>
+    </div>
+  </dialog>
 
   <div class="drawer drawer-end">
   <input id="my-drawer-4" type="checkbox" class="drawer-toggle" />
@@ -23,7 +31,14 @@
     <label for="my-drawer-4" aria-label="close sidebar" class="drawer-overlay"></label>
     <ul class="menu bg-base-200 text-base-content min-h-full w-80 p-4">
       <!-- Sidebar content here -->
-      <li><a>Sidebar Item 1</a></li>
+      <li onclick="my_modal_2.showModal()">
+        <a>
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15M12 9l-3 3m0 0 3 3m-3-3h12.75" />
+          </svg>
+          logout
+        </a>
+      </li>
       <li><a>Sidebar Item 2</a></li>
     </ul>
   </div>

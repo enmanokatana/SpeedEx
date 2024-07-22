@@ -10,6 +10,7 @@
     "noFallthroughCasesInSwitch": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true, // Added this line
     "sourceMap": true,
     "declaration": false,
     "experimentalDecorators": true,
@@ -39,5 +40,13 @@
     "strictInjectionParameters": true,
     "strictInputAccessModifiers": true,
     "strictTemplates": true
-  }
+  },
+  "include": [
+    "src",
+    "typings.d.ts"
+  ],
+  "files": [
+    "src/main.ts",
+    "src/polyfills.ts"
+  ]
 }
