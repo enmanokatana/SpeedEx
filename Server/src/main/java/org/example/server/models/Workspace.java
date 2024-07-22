@@ -6,10 +6,13 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.example.server.Documentation.Document;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @NoArgsConstructor
@@ -47,6 +50,8 @@ public class Workspace implements Serializable {
 
     private String image;
 
+    @ManyToMany(mappedBy = "workspaces")
+    private Set<Document> documents = new HashSet<>();
 
     @Override
     public String toString() {
