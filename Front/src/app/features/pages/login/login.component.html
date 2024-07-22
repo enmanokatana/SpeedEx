@@ -1,12 +1,5 @@
 <div class="hero min-h-screen bg-base-200">
-  <div class="toast toast-top toast-end">
-    <div *ngIf="error" class="alert alert-error">
-      <span>Login error .</span>
-    </div>
-    <div *ngIf="worked" class="alert alert-success">
-      <span>Log in successfully</span>
-    </div>
-  </div>
+
   <div class="hero-content flex-col lg:flex-row-reverse">
     <div class="text-center lg:text-left">
       <h1 class="text-5xl font-bold">Login now!</h1>
@@ -40,13 +33,15 @@
             required
           />
           <label class="label">
-            <a routerLink="/Register" class="label-text-alt link link-hover"
-              >Create an account</a
-            >
+            <a routerLink="/Register" class="label-text-alt link link-hover">
+              Create an account
+            </a>
           </label>
+
         </div>
+
         <div class="form-control mt-6">
-          <button class="btn btn-primary">Login</button>
+          <button type="submit" class="btn btn-primary">Login</button>
         </div>
       </form>
     </div>

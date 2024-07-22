@@ -35,6 +35,7 @@ public class EntityCleanupTask {
     }
 
     //Notify Users of their upcoming exams
+    @Transactional
     @Scheduled(fixedRate =86400000 )
     public void NotifyUserUpComingExams(){
         LocalDateTime now = LocalDateTime.now();

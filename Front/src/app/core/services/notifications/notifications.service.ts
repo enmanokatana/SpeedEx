@@ -19,7 +19,6 @@ export class NotificationsService {
   connect() {
     const socket = new SockJS('http://localhost:8080/ws');
     this.stompClient = Stomp.over(socket);
-    this.stompClient.debug = () => {};// to stop logging
 
     this.stompClient.connect({}, (frame: any) => {
      // console.log('Connected: ' + frame);

@@ -3,6 +3,8 @@ import {UserService} from "../../../core/services/User/user.service";
 import {StoreService} from "../../../core/services/store/store.service";
 import {NgForOf, NgIf} from "@angular/common";
 import {RouterLink} from "@angular/router";
+import {HeaderComponent} from "../../../core/componenets/header/header.component";
+import {FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 
 @Component({
   selector: 'app-profile',
@@ -10,7 +12,10 @@ import {RouterLink} from "@angular/router";
   imports: [
     NgIf,
     RouterLink,
-    NgForOf
+    NgForOf,
+    HeaderComponent,
+    FormsModule,
+    ReactiveFormsModule
   ],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.css'
@@ -27,12 +32,25 @@ export class ProfileComponent implements OnInit{
   }
   files: any = [];
 
-  constructor(private userService : UserService
-  ,private store:StoreService) {
+  imagePreview : string|ArrayBuffer|null = '';
+  profileForm!:FormGroup;
+  constructor(private userService : UserService,
+              private store:StoreService,
+              private builder:FormBuilder) {
   }
+
 
   ngOnInit(): void {
     this.onGetUser();
+
+    this.profileForm = this.builder.group({
+      firstname: this.builder.control('', Validators.required),
+      lastname: this.builder.control('',Validators.required),
+      email: this.builder.control(
+        this.user.email,
+        Validators.compose([Validators.required, Validators.email])
+      ),
+    })
 
   }
 
@@ -45,8 +63,13 @@ export class ProfileComponent implements OnInit{
           lastname:response.result.lastname,
           email:response.result.email,
           role:response.result.role,
-          image:localStorage.getItem('image')
+          image:response.result.profileImg
         }
+        this.profileForm.patchValue({
+          firstname: this.user.firstname,
+          lastname: this.user.lastname,
+          email: this.user.email,
+        });
 
       },
       error:(error) => {
@@ -58,50 +81,61 @@ export class ProfileComponent implements OnInit{
   }
   onShowMore(){
     this.showMore=!this.showMore;
-    console.log(this.showMore);
   }
 
-  onDragOver(event: DragEvent): void {
-    event.preventDefault();
-  }
 
-  onDragLeave(event: DragEvent): void {
-    event.preventDefault();
-  }
-  onDrop(event: DragEvent): void {
-    event.preventDefault();
-    const files = event.dataTransfer?.files; // Optional chaining
-    if (files) {
-      this.addFiles(files);
-    }
-  }
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
-    if (input.files) {
-      this.addFiles(input.files);
+    if (input.files && input.files[0]) {
+      const file = input.files[0];
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.imagePreview = reader.result;
+      };
+      reader.readAsDataURL(file);
+
     }
   }
 
-  addFiles(files: FileList): void {
-    for (let i = 0; i < files.length; i++) {
-      this.files.push(files.item(i)!);
+
+ onUpdateProfile(){
+    const userDto = {
+       id:localStorage.getItem('id'),
+       firstname:this.profileForm.value.firstname,
+       lastname:this.profileForm.value.lastname,
+       email:null,
+       profileImg:null,
+       role: null
     }
+
+
+    const  formData = new FormData();
+    formData.append('userDto', );
+    if (this.files.length > 0) {
+     formData.append('file', this.files[0]);
+    }
+    console.log(this.files.length);
+    this.userService.updateProfile(formData).subscribe({
+      next:(response) => {
+        console.log(response) ;
+      },error:(error) => {
+        console.error('Login error', error);
+      },
+      complete:() => {
+
+      }
+    })
+ }
+
+  get firstname(): FormControl {
+    return this.profileForm.get('firstname') as FormControl;
+  }
+  get lastname(): FormControl {
+    return this.profileForm.get('lastname') as FormControl;
   }
 
-  removeFile(file: File): void {
-    const index = this.files.indexOf(file);
-    if (index !== -1) {
-      this.files.splice(index, 1);
-    }
-  }
-
-  humanFileSize(size: number): string {
-    const i = Math.floor(Math.log(size) / Math.log(1024));
-    return (
-       1 +
-      " " +
-      ["B", "kB", "MB", "GB", "TB"][i]
-    );
+  get Email(): FormControl {
+    return this.profileForm.get('email') as FormControl;
   }
   protected readonly console = console;
 }

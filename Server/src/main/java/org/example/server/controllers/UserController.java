@@ -1,5 +1,7 @@
 package org.example.server.controllers;
 
+import org.example.server.Dtos.UpdateProfileRequest;
+import org.example.server.Dtos.UserDto;
 import org.springframework.web.bind.annotation.*;
 import lombok.RequiredArgsConstructor;
 import org.example.server.models.Exam;
@@ -74,6 +76,21 @@ public class UserController
     ){
         return userService.GetUsersWorkSpaces(id);
     }
+
+    @PutMapping("updateProfile")
+    public ResponseDto updateProfile(
+
+            @RequestPart("userDto") UserDto userDto,
+            @RequestPart("file") MultipartFile file
+            ){
+        return userService.UpdateProfile(userDto, file);
+    }
+
+
+
+
+
+
    /* @GetMapping("/workspacesdtos")
     public ResponseDto GetWorkSpacesDtos(
             @RequestBody List<Long> ids

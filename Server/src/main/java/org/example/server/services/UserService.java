@@ -161,7 +161,7 @@ public class UserService
             Optional<User> user= userRepository.findById(id);
             if (user.isPresent()){
                 user.get().setProfileImg(image);
-                userRepository.save(user.get());
+                var usertest = userRepository.save(user.get());
                 return image;
             }else{
                 System.out.println("User Doesn't Exist DOESNT EXIST");
@@ -227,6 +227,36 @@ public class UserService
             return exams;
         }
         return null;
+    }
+
+    public ResponseDto UpdateProfile(UserDto userDto , MultipartFile image){
+        var user = userRepository.findById(userDto.getId());
+        if (user.isEmpty()){
+            responseDto.setResult(null);
+            responseDto.setWorked(false);
+            responseDto.setMessage("Couldn't find USER or USER doesn't Exist ");
+            return responseDto;
+        }
+
+
+
+        if(image != null){
+            var result = saveImage(image , userDto.getId());
+
+            if (result != null){
+                responseDto.setResult(null);
+                responseDto.setWorked(false);
+                responseDto.setMessage("Couldn't save  Image");
+                return responseDto;
+            }
+        }
+        user.get().setFirstname(userDto.getFirstname());
+        user.get().setLastname(userDto.getLastname());
+        responseDto.setResult(userRepository.save(user.get()));
+        responseDto.setWorked(true);
+        responseDto.setMessage("Updated profile with success");
+        return responseDto;
+
     }
 
     }

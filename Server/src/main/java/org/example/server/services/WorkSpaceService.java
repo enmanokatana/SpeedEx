@@ -5,6 +5,7 @@ import org.example.server.Dtos.ExamDto;
 import org.example.server.Dtos.UserDto;
 import org.example.server.Dtos.WorkSpaceDto;
 import org.example.server.enums.Result;
+import org.example.server.exceptions.WorkSpaceDoesNotExistException;
 import org.example.server.models.Exam;
 import org.example.server.models.ResponseDto;
 import org.example.server.models.User;
@@ -14,7 +15,9 @@ import org.example.server.repositories.ExamRepository;
 import org.example.server.repositories.UserRepository;
 import org.example.server.repositories.WorkspaceRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.util.*;
 
 
@@ -26,13 +29,12 @@ import java.util.*;
 @RequiredArgsConstructor
 public class WorkSpaceService {
 
-    private final NotificationController notificationController;
     private final WorkspaceRepository repository;
     private final UserRepository userRepository;
     private final ExamService examService;
     private final ExamRepository examRepository;
     private final ResponseDto responseDto = new ResponseDto();
-    private final UserService userService;
+    private final ImageService imageService;
 
     public ResponseDto getWorkSpaceAdmin(Long id){
         var ws = repository.findById(id);
@@ -613,6 +615,21 @@ public class WorkSpaceService {
     }
     private String generateWorkSpaceCode(){
         return UUID.randomUUID().toString().substring(0,8).toUpperCase();
+    }
+
+
+    public String changeWorkSpaceImage(Long id, MultipartFile file) throws WorkSpaceDoesNotExistException {
+        var workspace = repository.findById(id);
+        if (workspace.isEmpty()){
+            throw new WorkSpaceDoesNotExistException("workspace doesn't exist");
+        }
+        String image = imageService.upload(file);
+        if (image != null){
+            image = image.replace("<bucket-name>" ,"library-b3d3f.appspot.com" );
+        }
+        workspace.get().setImage(image);
+        repository.save(workspace.get());
+        return image;
     }
 
 }

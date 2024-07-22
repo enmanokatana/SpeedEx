@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {RouterLink, RouterOutlet} from '@angular/router';
+import {Router, RouterLink, RouterOutlet} from '@angular/router';
 import { StoreService } from '../../../core/services/store/store.service';
 import { AuthService } from '../../../core/services/Auth/auth.service';
 import {HeaderComponent} from "../../../core/componenets/header/header.component";
@@ -20,7 +20,15 @@ export class HomeComponent implements OnInit {
   loading:boolean = true;
 
   constructor(
+    private authService:AuthService,
+    private router:Router
     ) {
+
+  }
+  onLogout(){
+    this.authService.logout();
+    this.router.navigate(['Login']);
+
 
   }
 
@@ -28,10 +36,7 @@ export class HomeComponent implements OnInit {
 
 
 
-    setTimeout(() => {
 
-      this.loading = !this.loading;
-       },1000);
 
 
   }

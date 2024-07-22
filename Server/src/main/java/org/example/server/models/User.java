@@ -69,12 +69,6 @@ public class User implements UserDetails, Serializable {
 
 
     private Boolean online;
-
-
-
-
-
-
     // Return User role
     //  authority in a String format.
     @Override

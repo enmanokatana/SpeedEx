@@ -1,6 +1,5 @@
-package org.example.server.config;
+package org.example.server.cachingConfig;
 
-import org.example.server.Dtos.OptionDto;
 import org.springframework.boot.autoconfigure.cache.CacheManagerCustomizer;
 import org.springframework.cache.concurrent.ConcurrentMapCacheManager;
 import org.springframework.context.annotation.Configuration;

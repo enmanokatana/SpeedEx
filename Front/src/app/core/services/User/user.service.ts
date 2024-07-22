@@ -67,4 +67,14 @@ export class UserService {
     return this.http.get(requestUrl,{headers});
   }
 
+  updateProfile(body :FormData){
+    const requestUrl = `${this.url}/updateProfile`;
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${this.token}`
+    });
+
+    return this.http.put(requestUrl,body,{headers});
+
+  }
+
 }

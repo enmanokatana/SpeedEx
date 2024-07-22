@@ -179,6 +179,13 @@ export class WorkspaceService {
     });
 
   }
+  changeWorkSpaceImage(id: number, formData: FormData): Observable<any> {
+    const requestUrl = `${this.url}/${id}/changeImage`;
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${this.token}`
+    });
+    return this.http.post(requestUrl, formData, { headers, responseType: 'text' });
+  }
 
 
 }
