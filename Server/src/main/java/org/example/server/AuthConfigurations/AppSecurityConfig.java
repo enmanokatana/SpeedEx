@@ -63,10 +63,11 @@ public class AppSecurityConfig {
                         .requestMatchers(HttpMethod.PUT,"/api/v1/Workspace/**",
                                 "/api/v1/Exam",
                                 "api/v1/Question",
-                                "api/v1/Option")
+                                "api/v1/Option",
+                                "/api/v1/User/**")
 
 
-                        .hasAnyAuthority("ADMIN")
+                        .hasAnyAuthority("ADMIN","USER")
                         .requestMatchers(HttpMethod.DELETE,"/api/v1/Workspace/**",
                                 "/api/v1/Exam/**",
                                 "api/v1/Question/**",

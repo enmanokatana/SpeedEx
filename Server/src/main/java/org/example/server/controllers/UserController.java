@@ -1,5 +1,6 @@
 package org.example.server.controllers;
 
+import lombok.extern.slf4j.Slf4j;
 import org.example.server.Dtos.UpdateProfileRequest;
 import org.example.server.Dtos.UserDto;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +16,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/User")
 @RequiredArgsConstructor
+@Slf4j
 public class UserController
 {
     private final UserService userService;
@@ -77,15 +79,23 @@ public class UserController
         return userService.GetUsersWorkSpaces(id);
     }
 
-    @PutMapping("updateProfile")
+    @PutMapping("updateProfile/{id}")
     public ResponseDto updateProfile(
 
-            @RequestPart("userDto") UserDto userDto,
-            @RequestPart("file") MultipartFile file
+            @RequestBody UserDto userDto,
+            @PathVariable Integer id
             ){
-        return userService.UpdateProfile(userDto, file);
+        return userService.UpdateProfile(userDto,id);
     }
 
+
+    @PostMapping("UpdateProfilePicture/{id}")
+    public String updateProfilePicture(
+            @RequestBody MultipartFile file,
+            @PathVariable Integer id){
+        log.info("the FILE :"+file.toString());
+        return userService.saveImage(file,id);
+    }
 
 
 

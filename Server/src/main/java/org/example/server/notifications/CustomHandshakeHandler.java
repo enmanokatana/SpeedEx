@@ -24,7 +24,7 @@ public class CustomHandshakeHandler extends DefaultHandshakeHandler {
                     return new Principal() {
                         @Override
                         public String getName() {
-                            return userDetails.getUsername();
+                            return (String) userDetails.getUsername();
                         }
                     };
                 }

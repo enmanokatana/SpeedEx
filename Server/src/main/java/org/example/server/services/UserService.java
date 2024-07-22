@@ -6,6 +6,7 @@ import org.example.server.Dtos.RequestDto;
 import org.example.server.Dtos.UserDto;
 import org.example.server.Dtos.WorkSpaceDto;
 import org.example.server.exceptions.UserDoesNotExistException;
+import org.example.server.mappers.UserDtoMapper;
 import org.example.server.models.Exam;
 import org.example.server.models.ResponseDto;
 import org.example.server.models.User;
@@ -30,6 +31,8 @@ public class UserService
     private final WorkspaceRepository workspaceRepository;
     private final ResponseDto responseDto = new ResponseDto();
 
+
+    private final UserDtoMapper mapper = new UserDtoMapper();
     private final TokenRegistry tokenRegistry;
 
 
@@ -229,8 +232,8 @@ public class UserService
         return null;
     }
 
-    public ResponseDto UpdateProfile(UserDto userDto , MultipartFile image){
-        var user = userRepository.findById(userDto.getId());
+    public ResponseDto UpdateProfile(UserDto userDto, Integer id  ){
+        var user = userRepository.findById(id);
         if (user.isEmpty()){
             responseDto.setResult(null);
             responseDto.setWorked(false);
@@ -238,21 +241,10 @@ public class UserService
             return responseDto;
         }
 
-
-
-        if(image != null){
-            var result = saveImage(image , userDto.getId());
-
-            if (result != null){
-                responseDto.setResult(null);
-                responseDto.setWorked(false);
-                responseDto.setMessage("Couldn't save  Image");
-                return responseDto;
-            }
-        }
         user.get().setFirstname(userDto.getFirstname());
         user.get().setLastname(userDto.getLastname());
-        responseDto.setResult(userRepository.save(user.get()));
+        var response =  mapper.apply(userRepository.save(user.get()));
+        responseDto.setResult(response);
         responseDto.setWorked(true);
         responseDto.setMessage("Updated profile with success");
         return responseDto;

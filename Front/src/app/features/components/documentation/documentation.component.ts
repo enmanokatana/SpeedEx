@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 
 @Component({
   selector: 'app-documentation',
@@ -7,6 +7,18 @@ import { Component } from '@angular/core';
   templateUrl: './documentation.component.html',
   styleUrl: './documentation.component.css'
 })
-export class DocumentationComponent {
+export class DocumentationComponent implements OnInit{
 
+
+
+  constructor() {
+
+  }
+
+  ngOnInit() {
+  }
+
+  handleFileInput($event: Event) {
+
+  }
 }

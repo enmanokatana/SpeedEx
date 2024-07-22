@@ -1,1 +1,22 @@
-<p>documentation works!</p>
+
+
+<div class="hero min-h-screen flex items-center justify-center">
+  <div class="hero-content text-center">
+    <div class="max-w-md">
+      <h1 class="text-5xl font-bold">Docs</h1>
+      <p class="py-6">
+        No Documentation has been uploaded
+      </p>
+      <div class="relative">
+        <!-- Hidden file input -->
+        <input type="file" id="file-upload" class="absolute opacity-0 w-0 h-0 " (change)="handleFileInput($event)">
+
+        <!-- Label styled as a button -->
+        <label for="file-upload" class="btn btn-primary cursor-pointer">
+          Upload Now
+        </label>
+      </div>
+
+    </div>
+  </div>
+</div>

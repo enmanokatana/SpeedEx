@@ -134,17 +134,12 @@ export class MyExamsComponent implements OnInit{
   filterExams(): void {
     // Filter exams based on user role and id
     const userId = localStorage.getItem('id');
-    if (localStorage.getItem('role') === 'ADMIN') {
-      this.filteredExams = this.exams.filter(exam => exam.student === 0);
-    } else {
-      this.filteredExams = this.exams.filter(exam => exam.student === userId);
-    }
 
 
     // Sort filtered exams based on sortOption
     switch (this.sortOption) {
       case 'date':
-        this.filteredExams.sort((a, b) => {
+       this.filteredExams.sort((a, b) => {
           // Ensure both a and b have a valid createdOn date
           if (!a.createdOn || !b.createdOn) return 0;
 
@@ -165,9 +160,11 @@ export class MyExamsComponent implements OnInit{
 
 
     if (this.searchQuery) {
-      this.filteredExams = this.filteredExams.filter(exam =>
+      this.filteredExams = this.exams.filter(exam =>
         exam.name.toLowerCase().includes(this.searchQuery.toLowerCase())
       );
+    }else {
+      this.filteredExams = [...this.exams];
     }
   }
 

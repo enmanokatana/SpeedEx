@@ -31,6 +31,7 @@ export class ProfileComponent implements OnInit{
     image:''
   }
   files: any = [];
+  selectedFile:File |null = null;
 
   imagePreview : string|ArrayBuffer|null = '';
   profileForm!:FormGroup;
@@ -45,11 +46,7 @@ export class ProfileComponent implements OnInit{
 
     this.profileForm = this.builder.group({
       firstname: this.builder.control('', Validators.required),
-      lastname: this.builder.control('',Validators.required),
-      email: this.builder.control(
-        this.user.email,
-        Validators.compose([Validators.required, Validators.email])
-      ),
+      lastname: this.builder.control('',Validators.required)
     })
 
   }
@@ -88,6 +85,9 @@ export class ProfileComponent implements OnInit{
     const input = event.target as HTMLInputElement;
     if (input.files && input.files[0]) {
       const file = input.files[0];
+      if (file){
+        this.selectedFile = file;
+      }
       const reader = new FileReader();
       reader.onload = () => {
         this.imagePreview = reader.result;
@@ -95,33 +95,44 @@ export class ProfileComponent implements OnInit{
       reader.readAsDataURL(file);
 
     }
-  }
+    }
+  onUpdateProfilePic(){
+    if(this.selectedFile){
+      const formData = new FormData();
+      formData.append('file', this.selectedFile);
+      this.userService.updateProfilePic(formData).subscribe({
+        next: (response) => {
+          console.log(response);
+        }, error: (error) => {
+          console.error('Login error', error);
+        },
+        complete: () => {
 
+        }
+      })
+    }else {
+      console.log("nope ")
+    }
+
+
+    }
 
  onUpdateProfile(){
-    const userDto = {
-       id:localStorage.getItem('id'),
-       firstname:this.profileForm.value.firstname,
-       lastname:this.profileForm.value.lastname,
-       email:null,
-       profileImg:null,
-       role: null
+
+    const userDto =  {
+      firstname: this.profileForm.value.firstname ,
+      lastname: this.profileForm.value.lastname
     }
 
-
-    const  formData = new FormData();
-    formData.append('userDto', );
-    if (this.files.length > 0) {
-     formData.append('file', this.files[0]);
-    }
-    console.log(this.files.length);
-    this.userService.updateProfile(formData).subscribe({
+    this.userService.updateProfile(userDto).subscribe({
       next:(response) => {
         console.log(response) ;
       },error:(error) => {
         console.error('Login error', error);
       },
       complete:() => {
+        this.onUpdateProfilePic();
+
 
       }
     })
